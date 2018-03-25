@@ -165,3 +165,10 @@ End of assembler dump.
 Note that in address `0x080484cf <+40>` a call to `function` is produced and the return address `0x080484d4` (the address of the next assembly instruction) is pushed into the stack.
 
 Putting all together, the `overflow.c` program is modifying the *return address* and adding 8 bytes pointing to `0x080484dc` so that the instruction at `0x080484d4` (`movl   $0x1,0x1c(%esp)`) is skipped which results in the program printing the initial value of variable `x`.
+
+### Bibliography
+
+- M. Hicks (2014), 'Software Security', Coursera, Cybersecurity Specialization, University of Maryland, College Park, <https://www.coursera.org/learn/software-security>.
+- CERN Computer Security Team (2018, February 12). *Memory Layout of C Programs*. Retrieved from https://security.web.cern.ch/security/recommendations/en/codetools/c.shtml
+- A. One (1996). Smashing the Stack for Fun and Profit. Phrack, 7.
+- P. Bright (2015), *How security flaws work: The buffer overflow*. Retrieved from https://arstechnica.com/information-technology/2015/08/how-security-flaws-work-the-buffer-overflow/
