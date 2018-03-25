@@ -32,14 +32,17 @@ RUN wget -P ~ git.io/.gdbinit
 #--------------------
 # Copy source files
 #--------------------
-COPY overflow.c /root
+COPY shellcode.c /root
+COPY shellcodeasm.c /root
+COPY test_shellcode.c /root
 
 #--------------------
 # Compile code
 #--------------------
-RUN gcc overflow.c -g -o overflow
+RUN gcc -o shellcode -ggdb -static shellcode.c
+RUN gcc -o shellcodeasm -g -ggdb shellcodeasm.c
 # Compile without tricks to avoid overflows
-# RUN gcc overflow.c -g -o overflow -fno-stack-protector -z execstack
+RUN gcc test_shellcode.c -g -o test_shellcode -fno-stack-protector -z execstack
 
 #--------------------
 # Entry point
