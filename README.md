@@ -3,7 +3,7 @@ An introductory series of cybersecurity with comprehensive step-by-step tutorial
 
 - [Tutorial 1: Buffer overflows](tutorial1/)
 - [Tutorial 2: Building shellcode](tutorial2/)
-- [Tutorial 3: Return-Oriented Programming (ROP)](#)
+- [Tutorial 3: Return-Oriented Programming (ROP)](#) (**ongoing**)
 - Tutorial 4: Pen Testing
 
 
