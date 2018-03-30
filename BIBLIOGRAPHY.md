@@ -14,4 +14,7 @@
 ### Tutorial 3
 
 - [1] M. Hicks (2014), *Software Security*, Coursera, Cybersecurity Specialization, University of Maryland, College Park, <https://www.coursera.org/learn/software-security>.
-- [2] Hovav Shacham. 2007. The geometry of innocent flesh on the bone: return-into-libc without function calls (on the x86). In Proceedings of the 14th ACM conference on Computer and communications security (CCS '07). ACM, New York, NY, USA, 552-561. DOI: https://doi.org/10.1145/1315245.1315313
+- [2] Hovav Shacham (2007), *The geometry of innocent flesh on the bone: return-into-libc without function calls (on the x86)*. In Proceedings of the 14th ACM conference on Computer and communications security (CCS '07). ACM, New York, NY, USA, 552-561. DOI: https://doi.org/10.1145/1315245.1315313
+- [3] Alex Reece (2013). *Introduction to return oriented programming (ROP)*. Retrieved from http://codearcana.com/posts/2013/05/28/introduction-to-return-oriented-programming-rop.html.
+- [4] Wikipedia. *Return-to-libc attack*. Retrieved from https://en.wikipedia.org/wiki/Return-to-libc_attack.
+- [5] Wikipedia. *Address space layout randomization*. Retrieved from https://en.wikipedia.org/wiki/Address_space_layout_randomization.
