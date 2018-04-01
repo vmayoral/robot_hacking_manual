@@ -88,14 +88,14 @@ right before the call to `strcpy@plt`, the stack and registers looks like:
 ```
 A different representation of the stack available at [3] is:
 ```
-| <arguments2>        |
-| <return address>    |
-| <old %ebp>          | <= %ebp
-| <0x6c bytes of      |
-|       ...           |
-|       buffer>       |
-| <arguments1>        |
-| <address of buffer> | <= %esp
+higher  | <arguments2>        |
+address | <return address>    |
+        | <old %ebp>          | <= %ebp
+        | <0x6c bytes of      |
+        |       ...           |
+        |       buffer>       |
+        | <arguments1>        |
+lower   | <address of buffer> | <= %esp
 ```
 Note that the starting of the stack has get filled with the parameters for the call to `strcpy` (`arguments2`).
 
