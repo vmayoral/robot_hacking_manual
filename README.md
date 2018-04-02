@@ -9,6 +9,8 @@ An introductory series of cybersecurity with comprehensive step-by-step tutorial
 
 ### Ideas
 
+- Tutorial Z: Fuzzing
+   - https://fuzzing-project.org/tutorial1.html   
 - Tutorial Y: Pen Testing
 - Tutorial X: Remote buffer overflow exploiting
    - https://www.areanetworking.it/explanation-of-a-remote-buffer-overflow-vulnerability.html
