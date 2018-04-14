@@ -8,6 +8,7 @@ An introductory series of cybersecurity with comprehensive step-by-step tutorial
 - [Tutorial 5: Remote shell](tutorial5/)
 
 ### Ideas
+- Tutorial A: Remote shell through remote vulnerability (e.g. buffer overflow)
 
 - Tutorial Z: Fuzzing
    - https://fuzzing-project.org/tutorial1.html   

@@ -24,8 +24,10 @@ RUN apt-get update
 
 # Utilities for the hack
 RUN apt-get install -y vim \
-  less python3 python wget bsdmainutils
+  less python3 python wget bsdmainutils tcpdump \
+  net-tools
 
+RUN apt-get update
 RUN apt-get install -y git cowsay
 
 #--------------------
