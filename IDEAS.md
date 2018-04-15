@@ -1,6 +1,10 @@
 # Ideas
 A few ideas to implement/try in the future:
 
+- Tutorial B: Remote Exploit. Shellcode without Sockets
+  - https://0x00sec.org/t/remote-exploit-shellcode-without-sockets/1440
+- Tutorial C: Infecting Running Processes
+  - https://0x00sec.org/t/linux-infecting-running-processes/1097
 - Tutorial A: Remote shell through remote vulnerability (e.g. buffer overflow)
 - Tutorial Z: Fuzzing
    - https://fuzzing-project.org/tutorial1.html   
