@@ -275,3 +275,4 @@ efeidiedae
 - https://github.com/Alpackers/CTF-Writeups/tree/master/Misc/OverTheWire/Narnia
 - http://bt3gl.github.io/smashing-the-stack-for-fun-or-wargames-narnia-0-4.html
 - https://hackmethod.com/overthewire-narnia-0/
+- https://github.com/rshipp/awesome-malware-analysis

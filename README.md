@@ -8,4 +8,4 @@ An introductory series of cybersecurity with comprehensive step-by-step tutorial
 - [Tutorial 5: Remote shell](tutorial5/)
 
 Also, Capture The Flag exercises available at:
-- [Bandit: a basic CTF](CTF/bandit/)
+- [CTF](CTF/)
