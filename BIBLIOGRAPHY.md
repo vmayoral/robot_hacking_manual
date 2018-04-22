@@ -44,3 +44,7 @@
 - [2] Gallopsled, *pwntools Docs*. Retrieved from https://docs.pwntools.com/en/stable/index.html.
 - [3] Exploit Database. Retrieved from https://www.exploit-db.com/.
 - [4] University Politehnica of Bucharest, Computer Science and Engineering Department, Computer and Network Security. *Lab 07 - Exploiting. Shellcodes (Part 2)*. Retrieved from https://ocw.cs.pub.ro/courses/cns/labs/lab-07.
+- [5] nnamon. *linux-exploitation-course*. Retrieved from https://github.com/nnamon/linux-exploitation-course.
+- [6] nnamon. *linux-exploitation-course 2*. Retrieved from https://github.com/nnamon/linux-exploitation-course-2.
+- [7] Eadom. *Pwntools Quick Reference Guide*. Retrieved from https://blog.eadom.net/uncategorized/pwntools-quick-reference-guide/.
+- [8] University Politehnica of Bucharest, Computer Science and Engineering Department, Computer and Network Security. *Lab 06 - Exploiting. Shellcodes*. Retrieved from https://ocw.cs.pub.ro/courses/cns/labs/lab-06#phase_1recon.

