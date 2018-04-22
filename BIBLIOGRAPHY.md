@@ -38,3 +38,9 @@
 - [2] picoFlamingo, *0x00sec_code*, Github. Retrieved from https://github.com/0x00pf/0x00sec_code/tree/master/remote_shell.
 - [3] 0x00pf (2016), *Remote Shells Part IV. The Invisible Remote Shell*. Retrieved from  https://0x00sec.org/t/remote-shells-part-iv-the-invisible-remote-shell/743
 - [4] 0x00pf (2016), *Remote Shells. Part II. Crypt your link*. Retrieved from https://0x00sec.org/t/remote-shells-part-ii-crypt-your-link/306.
+
+### Tutorial 6
+- [1] Gallopsled, *pwntools*. Retrieved from https://github.com/Gallopsled/pwntools.
+- [2] Gallopsled, *pwntools Docs*. Retrieved from https://docs.pwntools.com/en/stable/index.html.
+- [3] Exploit Database. Retrieved from https://www.exploit-db.com/.
+- [4] University Politehnica of Bucharest, Computer Science and Engineering Department, Computer and Network Security. *Lab 07 - Exploiting. Shellcodes (Part 2)*. Retrieved from https://ocw.cs.pub.ro/courses/cns/labs/lab-07.

