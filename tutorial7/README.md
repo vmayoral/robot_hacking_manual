@@ -1,0 +1,6 @@
+# Linux Binary Protections
+
+Available at https://github.com/nnamon/linux-exploitation-course/blob/master/lessons/5_protections/lessonplan.md.
+
+### Bibliography
+- [1] Linux exploitation course. Retrieved from https://github.com/nnamon/linux-exploitation-course.

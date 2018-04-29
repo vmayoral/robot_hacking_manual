@@ -7,6 +7,8 @@ An introductory series of cybersecurity with comprehensive step-by-step tutorial
 - [Tutorial 4: Return-Oriented Programming (ROP)](tutorial4/)
 - [Tutorial 5: Remote shell](tutorial5/)
 - [Tutorial 6: pwntools - CTF toolkit](tutorial6/)
+- [Tutorial 7: Linux Binary Protections](https://github.com/nnamon/linux-exploitation-course/blob/master/lessons/5_protections/lessonplan.md)
+
 
 Also, Capture The Flag exercises available at:
 - [CTF](CTF/)

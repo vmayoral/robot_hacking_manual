@@ -48,3 +48,6 @@
 - [6] nnamon. *linux-exploitation-course 2*. Retrieved from https://github.com/nnamon/linux-exploitation-course-2.
 - [7] Eadom. *Pwntools Quick Reference Guide*. Retrieved from https://blog.eadom.net/uncategorized/pwntools-quick-reference-guide/.
 - [8] University Politehnica of Bucharest, Computer Science and Engineering Department, Computer and Network Security. *Lab 06 - Exploiting. Shellcodes*. Retrieved from https://ocw.cs.pub.ro/courses/cns/labs/lab-06#phase_1recon.
+
+### Tutorial 7
+- [1] Linux exploitation course. Retrieved from https://github.com/nnamon/linux-exploitation-course.
