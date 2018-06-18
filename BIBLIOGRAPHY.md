@@ -51,3 +51,8 @@
 
 ### Tutorial 7
 - [1] Linux exploitation course. Retrieved from https://github.com/nnamon/linux-exploitation-course.
+- [2] `pwn-school`. Retrieved from https://github.com/Arusekk/pwn-school
+
+### Tutorial 8
+- [1] pwnbox. Retrieved from https://github.com/superkojiman/pwnbox.
+- [2] pwntools-docker. Retrieved from https://github.com/RobertLarsen/pwntools-docker.
