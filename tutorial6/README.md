@@ -3,7 +3,7 @@
 From [1]:
 > Pwntools is a CTF framework and exploit development library. Written in Python, it is designed for rapid prototyping and development, and intended to make exploit writing as simple as possible.
 
-The following tutorials build from [4]:
+The following tutorials builds from [4]:
 
 ### Assembly and ELF manipulation
 
