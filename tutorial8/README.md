@@ -47,3 +47,4 @@ docker run --privileged -it basic_cybersecurity8:latest
 ### Bibliography
 - [1] pwnbox. Retrieved from https://github.com/superkojiman/pwnbox.
 - [2] pwntools-docker. Retrieved from https://github.com/RobertLarsen/pwntools-docker.
+- [3] python3-pwntools. Retrieved from https://github.com/arthaud/python3-pwntools.
