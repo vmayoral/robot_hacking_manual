@@ -31,7 +31,18 @@ WORKDIR /root
 ENTRYPOINT ["/bin/bash"]
 ```
 
+Alternatively, the [Dockerfile](Dockerfile) provided in this folder contains a
+set of instructions to build a docker container from an Ubuntu machine that allows
+to use pwntools. To build and run it, proceed as follows:
 
+The container can be built with:
+```bash
+docker build -t basic_cybersecurity8:latest .
+```
+and runned with:
+```bash
+docker run --privileged -it basic_cybersecurity8:latest
+```
 
 ### Bibliography
 - [1] pwnbox. Retrieved from https://github.com/superkojiman/pwnbox.
