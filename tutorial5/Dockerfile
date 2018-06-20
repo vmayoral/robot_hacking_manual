@@ -24,10 +24,8 @@ RUN apt-get update
 
 # Utilities for the hack
 RUN apt-get install -y vim \
-  less python3 python wget bsdmainutils tcpdump \
-  net-tools
+  less python3 python wget bsdmainutils
 
-RUN apt-get update
 RUN apt-get install -y git cowsay
 
 #--------------------
@@ -53,24 +51,37 @@ RUN wget https://github.com/downloads/0vercl0k/rp/rp-lin-x86
 RUN mv rp-lin-x86 rp++
 RUN chmod +x rp++
 
-RUN apt-get update
-RUN apt-get install -y netcat
-
 #--------------------
 # Copy source files
 #--------------------
-COPY client.c /root
-COPY server.c /root
-COPY crypt_shell.c /root
-COPY icmp_shell.c /root
+COPY rop1.c /root
+COPY rop2.c /root
+COPY rop3.c /root
+COPY rop4.c /root
+COPY rop5.c /root
+COPY rop6.c /root
 
 #--------------------
 # Compile code
 #--------------------
-RUN gcc client.c -g -o client -fno-stack-protector -z execstack
-RUN gcc server.c -g -o server -fno-stack-protector -z execstack
-RUN gcc crypt_shell.c -g -o crypt_shell
-RUN gcc icmp_shell.c -g -o icmp_shell
+RUN gcc rop1.c -g -o rop1
+# Compile without tricks to avoid overflows
+RUN gcc rop1.c -g -o rop1_noprotection -fno-stack-protector -z execstack
+
+RUN gcc rop2.c -g -o rop2
+# Compile without tricks to avoid overflows
+RUN gcc rop2.c -g -o rop2_noprotection -fno-stack-protector -z execstack
+
+RUN gcc -m32 -g -O0 -fno-stack-protector -o rop3 rop3.c -ldl
+RUN gcc -m32 -g -fno-stack-protector -o rop4 rop4.c
+RUN gcc -m32 -g -fno-stack-protector -o rop5 rop5.c
+
+RUN gcc rop6.c -g -o rop6 -fno-stack-protector -z execstack
+COPY rop6_exploit.py /root
+
+# Avoid re-running the whole file
+RUN rm /root/.gdbinit
+RUN wget -P ~ git.io/.gdbinit
 
 #--------------------
 # Entry point
