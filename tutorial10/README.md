@@ -8,11 +8,11 @@ Also known as Data Execution Prevention (DEP), this protection marks writable re
 
 **Note**: as in previous tutorials, there's a docker container that facilitates reproducing the work of this tutorial. The container can be built with:
 ```bash
-docker build -t basic_cybersecurity9:latest .
+docker build -t basic_cybersecurity10:latest .
 ```
 and run with:
 ```bash
-docker run --privileged -v $(pwd):/root/tutorial -it basic_cybersecurity9:latest
+docker run --privileged -v $(pwd):/root/tutorial -it basic_cybersecurity10:latest
 ```
 
 ----
@@ -158,7 +158,7 @@ In another terminal, we connect to the docker container through:
 ```bash
 $ docker ps
 CONTAINER ID        IMAGE                         COMMAND             CREATED             STATUS              PORTS               NAMES
-9a78bba9592e        basic_cybersecurity9:latest   "/bin/bash"         About an hour ago   Up About an hour                        heuristic_gates
+9a78bba9592e        basic_cybersecurity10:latest   "/bin/bash"         About an hour ago   Up About an hour                        heuristic_gates
 victor at Victors-MacBook in ~/web on bounties*
 $ docker exec -it 9a78bba9592e bash
 root@9a78bba9592e:~#

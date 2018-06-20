@@ -6,11 +6,11 @@ According to [4], a "return-to-libc" attack is a computer security attack usuall
 
 **Note**: as in previous tutorials, there's a docker container that facilitates reproducing the work of this tutorial. The container can be built with:
 ```bash
-docker build -t basic_cybersecurity3:latest .
+docker build -t basic_cybersecurity4:latest .
 ```
 and runned with:
 ```bash
-docker run --privileged -it basic_cybersecurity3:latest
+docker run --privileged -it basic_cybersecurity4:latest
 ```
 
 ----
