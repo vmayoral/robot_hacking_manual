@@ -44,6 +44,8 @@ and runned with:
 docker run --privileged -it basic_cybersecurity8:latest
 ```
 
+**Edit: This last method presented issues with the `checksec` tool.**
+
 ### Bibliography
 - [1] pwnbox. Retrieved from https://github.com/superkojiman/pwnbox.
 - [2] pwntools-docker. Retrieved from https://github.com/RobertLarsen/pwntools-docker.
