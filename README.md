@@ -10,6 +10,7 @@ An introductory series of cybersecurity with comprehensive step-by-step tutorial
 - [Tutorial 7: pwntools - CTF toolkit](tutorial7/)
 - [Tutorial 8: Linux Binary Protections](https://github.com/nnamon/linux-exploitation-course/blob/master/lessons/5_protections/lessonplan.md) (external)
 - [Tutorial 9: Building a pwnbox](tutorial9/)
+- [Tutorial 10: Bypassing NX with Return Oriented Programming](tutorial10/)
 
 
 Also, Capture The Flag exercises available at:
