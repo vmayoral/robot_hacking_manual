@@ -1,1 +1,2 @@
 *.gdb_history
+.vagrant

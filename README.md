@@ -34,7 +34,8 @@ An `exploit` is a piece of software, a chunk of data, or a sequence of commands 
 - [Tutorial 12: Unauthenticated updates in publisher list for specified topic](robot_exploitation/tutorial12)
 
 #### Robot reversing
-Software reverse engineering (or *reversing*) is the process of extracting the knowledge or design blueprints from any software.
+Software reverse engineering (or *reversing*) is the process of extracting the knowledge or design blueprints from any software. In a similar manner, forensics extracts also knowledge that's typically used as evidence for a particular investigation.
+- [Basic robot forensics, an unauthenticated unregistration in ROS](robot_reversing/tutorial1/)
 
 *None for now*
 
