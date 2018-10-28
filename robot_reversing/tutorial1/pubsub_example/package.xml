@@ -1,0 +1,10 @@
+<package format="2">
+  <name>scenario1</name>
+  <version>0.0.1</version>
+  <description>
+    Scenario 5 Robotics CTF
+  </description>
+  <maintainer email="alex@aliasrobotics.com">Alejandro Hernández</maintainer>
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+</package>
