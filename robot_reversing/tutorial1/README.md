@@ -528,15 +528,22 @@ Interestingly, socket `10.0.2.15:40961` gets into `CLOSE_WAIT` state so we can d
 
 Let's then extend the previous volatity plugin `linux_rosnode` and include this finding to mark nodes as unregistered.
 
-#### A forensics analysis
+#### A forensics analysis of unauthenticated unregistration attacks
 
-...
-
-(explore a case where only a memory dump is available and try to determine what happened, no prior dump available)
-Summary of forensics analysis on a ROS system under an `Unauthenticated unregistration attack`.
+With the `linux_rosnode` plugin we're now able to detected unregistered nodes through volatity:
 
 
 ```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ vol.py --plugins=/vagrant/ros_volatility --profile LinuxUbuntu14045x64 -f robot_hacked.lime linux_rosnode
+Volatility Foundation Volatility Framework 2.6
+rosout
+talker (unregistered)
+listener
+vagrant@vagrant-ubuntu-trusty-64:~$ vol.py --plugins=/vagrant/ros_volatility --profile LinuxUbuntu14045x64 -f robot.lime linux_rosnode
+Volatility Foundation Volatility Framework 2.6
+rosout
+talker
+listener
 ```
 
 
