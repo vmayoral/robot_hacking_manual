@@ -33,7 +33,7 @@ vagrant up --provision
 This will get us a VM. We can ssh into it with `vagrant ssh`.
 
 
-#### Forensic analysis
+#### Exploring forensics
 
 For the forensics, we'll use volatility project [7]. The first thing with volatility is to determine the profile. The docker container already has copied one within the source of volatility. We can verify this by doing:
 
@@ -247,15 +247,298 @@ Volatility Foundation Volatility Framework 2.6
 > TCP      10.0.2.15       :47785 10.0.2.15       :54442 CLOSE_WAIT                 talker/11452
 ```
 
+From this, it seems obvious there's something wrong. Moreover:
+```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ vol.py --profile LinuxUbuntu14045x64 -f robot_hacked.lime linux_netstat -p 11452
+Volatility Foundation Volatility Framework 2.6
+TCP      127.0.0.1       :51871 127.0.0.1       :11311 CLOSE_WAIT                 talker/11452
+TCP      0.0.0.0         :47785 0.0.0.0         :    0 LISTEN                     talker/11452
+UDP      0.0.0.0         :47573 0.0.0.0         :    0                            talker/11452
+TCP      0.0.0.0         :59585 0.0.0.0         :    0 LISTEN                     talker/11452
+TCP      10.0.2.15       :47785 10.0.2.15       :54442 CLOSE_WAIT                 talker/11452
+```
+Shows how the file descriptor in port 55442 is actually closed which shows a finished communication of some kind.
 
-#### Summary of forensics
+Another plugin that's interesting is `linux_library_list` which shows the libraries loaded into a process. Pretty interesting for determining which of the processes in a memory dump are actually running the ROS libraries and thereby, are using ROS in one way or the other:
+```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ vol.py --profile LinuxUbuntu14045x64 -f robot.lime linux_library_list -p 11452
+Volatility Foundation Volatility Framework 2.6
+Task             Pid      Load Address       Path
+---------------- -------- ------------------ ----
+talker              11452 0x00007f45dbe8e000 /home/vagrant/ros_catkin_ws/install_isolated/lib/libroscpp.so
+talker              11452 0x00007f45dbc5f000 /home/vagrant/ros_catkin_ws/install_isolated/lib/librosconsole.so
+talker              11452 0x00007f45dba5c000 /home/vagrant/ros_catkin_ws/install_isolated/lib/libroscpp_serialization.so
+talker              11452 0x00007f45db830000 /home/vagrant/ros_catkin_ws/install_isolated/lib/librostime.so
+talker              11452 0x00007f45db52c000 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+talker              11452 0x00007f45db316000 /lib/x86_64-linux-gnu/libgcc_s.so.1
+talker              11452 0x00007f45daf4d000 /lib/x86_64-linux-gnu/libc.so.6
+talker              11452 0x00007f45dad2e000 /home/vagrant/ros_catkin_ws/install_isolated/lib/libxmlrpcpp.so
+talker              11452 0x00007f45dab25000 /home/vagrant/ros_catkin_ws/install_isolated/lib/libcpp_common.so
+talker              11452 0x00007f45da921000 /usr/lib/x86_64-linux-gnu/libboost_system.so.1.54.0
+talker              11452 0x00007f45da70b000 /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.54.0
+talker              11452 0x00007f45da4ed000 /lib/x86_64-linux-gnu/libpthread.so.0
+talker              11452 0x00007f45da2e6000 /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.54.0
+talker              11452 0x00007f45da0d0000 /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.54.0
+talker              11452 0x00007f45d9dca000 /lib/x86_64-linux-gnu/libm.so.6
+talker              11452 0x00007f45d9bb6000 /home/vagrant/ros_catkin_ws/install_isolated/lib/librosconsole_log4cxx.so
+...
+```
+
+Let's now use some ROS related volatility plugins:
+```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ vol.py --plugins=/vagrant/ros_volatility --profile LinuxUbuntu14045x64 -f robot.lime linux_rosnode
+Volatility Foundation Volatility Framework 2.6
+rosout
+talker
+listener
+```
+
+or more specifically:
+
+```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ ./voltest.sh "linux_rosnode"
+Volatility Foundation Volatility Framework 2.6
+Volatility Foundation Volatility Framework 2.6
+```
+no difference. As expected, this doesn't tell us much because the processes are still running, only communications have been severed after the `Unauthenticated unregistration attack`.
+
+
+#### Looking for correlations
+There seems to be a correlation between what's LISTENING AND ESTABLISHED when things work the way expected.
+Communications are covered in some detail at http://wiki.ros.org/ROS/Technical%20Overview. Looking at the `listener`:
+and the `talker` sockets:
+
+`listener`:
+```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ vol.py --profile LinuxUbuntu14045x64 -f robot.lime linux_netstat -p 11586
+Volatility Foundation Volatility Framework 2.6
+TCP      127.0.0.1       :51885 127.0.0.1       :11311 CLOSE_WAIT               listener/11586
+TCP      0.0.0.0         :48750 0.0.0.0         :    0 LISTEN                   listener/11586
+UDP      0.0.0.0         :42045 0.0.0.0         :    0                          listener/11586
+TCP      0.0.0.0         :36180 0.0.0.0         :    0 LISTEN                   listener/11586
+TCP      10.0.2.15       :54457 10.0.2.15       :47785 ESTABLISHED              listener/11586
+TCP      10.0.2.15       :48750 10.0.2.15       :48981 ESTABLISHED              listener/11586
+vagrant@vagrant-ubuntu-trusty-64:~$ vol.py --profile LinuxUbuntu14045x64 -f robot_hacked.lime linux_netstat -p 11586
+Volatility Foundation Volatility Framework 2.6
+TCP      127.0.0.1       :51885 127.0.0.1       :11311 CLOSE_WAIT               listener/11586
+TCP      0.0.0.0         :48750 0.0.0.0         :    0 LISTEN                   listener/11586
+UDP      0.0.0.0         :42045 0.0.0.0         :    0                          listener/11586
+TCP      0.0.0.0         :36180 0.0.0.0         :    0 LISTEN                   listener/11586
+TCP      10.0.2.15       :36180 10.0.2.15       :52730 ESTABLISHED              listener/11586
+TCP      10.0.2.15       :48750 10.0.2.15       :48981 ESTABLISHED              listener/11586
+```
+`talker`:
+```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ vol.py --profile LinuxUbuntu14045x64 -f robot.lime linux_netstat -p 11452
+Volatility Foundation Volatility Framework 2.6
+TCP      127.0.0.1       :51871 127.0.0.1       :11311 CLOSE_WAIT                 talker/11452
+TCP      0.0.0.0         :47785 0.0.0.0         :    0 LISTEN                     talker/11452
+UDP      0.0.0.0         :47573 0.0.0.0         :    0                            talker/11452
+TCP      0.0.0.0         :59585 0.0.0.0         :    0 LISTEN                     talker/11452
+TCP      10.0.2.15       :47785 10.0.2.15       :54442 ESTABLISHED                talker/11452
+TCP      10.0.2.15       :47785 10.0.2.15       :54457 ESTABLISHED                talker/11452
+vagrant@vagrant-ubuntu-trusty-64:~$ vol.py --profile LinuxUbuntu14045x64 -f robot_hacked.lime linux_netstat -p 11452
+Volatility Foundation Volatility Framework 2.6
+TCP      127.0.0.1       :51871 127.0.0.1       :11311 CLOSE_WAIT                 talker/11452
+TCP      0.0.0.0         :47785 0.0.0.0         :    0 LISTEN                     talker/11452
+UDP      0.0.0.0         :47573 0.0.0.0         :    0                            talker/11452
+TCP      0.0.0.0         :59585 0.0.0.0         :    0 LISTEN                     talker/11452
+TCP      10.0.2.15       :47785 10.0.2.15       :54442 CLOSE_WAIT                 talker/11452
+```
+
+It seems pretty obvious that the talker's sockets have been closed and we can identify past nodes this way but let's look more closely at the listener who shows an interesting behavior: intuition obtained from these numbers tells that once a particular node whose communication (topic) get compromised, the `listener`'s `ESTABLISHED` port change. In particular, it changes from an arbitrary port in the local address of the socket (`54457`) to the one where the socket was first listening (`36180`).
+
+Reproducing the same issues with a different memory dump (re-generated) confirms the same behavior:
+```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ ./voltest.sh "linux_netstat -p 2420"
+Volatility Foundation Volatility Framework 2.6
+Volatility Foundation Volatility Framework 2.6
+7c7
+< TCP      10.0.2.15       :52496 10.0.2.15       :47061 ESTABLISHED              listener/2420
+---
+> TCP      10.0.2.15       :51910 10.0.2.15       :53929 ESTABLISHED              listener/2420
+```
+
+note the correlation:
+```
+vagrant@vagrant-ubuntu-trusty-64:~$  netstat -aeltnp| grep 51910
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       User       Inode       PID/Program name
+tcp        0      0 0.0.0.0:51910           0.0.0.0:*               LISTEN      1000       14729       2420/listener
+tcp        0      0 10.0.2.15:51910         10.0.2.15:53929         ESTABLISHED 1000       15026       2420/listener
+tcp        0      0 10.0.2.15:53929         10.0.2.15:51910         ESTABLISHED 1000       15025       2372/python
+```
+
+Let's look a bit closer to the `listener`'s behavior by making use of `netstat` instead of the memory capture. In particular, let's check if the same happens by simply closing talkers naturally using `Ctrl-C`:
+
+```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4013
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:46653           0.0.0.0:*               LISTEN      1000       21596       4013/listener
+tcp        0      0 0.0.0.0:47724           0.0.0.0:*               LISTEN      1000       21592       4013/listener
+tcp        0      0 127.0.0.1:59300         127.0.0.1:11311         CLOSE_WAIT  1000       21615       4013/listener
+tcp        0      0 10.0.2.15:47724         10.0.2.15:47536         ESTABLISHED 1000       21634       4013/listener
+vagrant@vagrant-ubuntu-trusty-64:~$ rosrun scenario1 talker __name:=talker3 &
+[3] 4041
+vagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4013
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:46653           0.0.0.0:*               LISTEN      1000       21596       4013/listener
+tcp        0      0 0.0.0.0:47724           0.0.0.0:*               LISTEN      1000       21592       4013/listener
+tcp        0      0 10.0.2.15:53675         10.0.2.15:45981         ESTABLISHED 1000       21790       4013/listener
+tcp        0      0 127.0.0.1:59300         127.0.0.1:11311         CLOSE_WAIT  1000       21615       4013/listener
+tcp        0      0 10.0.2.15:46653         10.0.2.15:58694         ESTABLISHED 1000       21775       4013/listener
+tcp        0      0 10.0.2.15:47724         10.0.2.15:47536         ESTABLISHED 1000       21634       4013/listener
+vagrant@vagrant-ubuntu-trusty-64:~$ fg
+rosrun scenario1 talker __name:=talker3
+^Cvagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4013
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:46653           0.0.0.0:*               LISTEN      1000       21596       4013/listener
+tcp        0      0 0.0.0.0:47724           0.0.0.0:*               LISTEN      1000       21592       4013/listener
+tcp        0      0 127.0.0.1:59300         127.0.0.1:11311         CLOSE_WAIT  1000       21615       4013/listener
+tcp        0      0 10.0.2.15:46653         10.0.2.15:58694         ESTABLISHED 1000       21775       4013/listener
+tcp        0      0 10.0.2.15:47724         10.0.2.15:47536         ESTABLISHED 1000       21634       4013/listener
+```
+Complete dump of tests at https://gist.github.com/vmayoral/e45f0208b84ea46b5148ff9deb53de5e.
+
+What's observed is that the listener creates two sockets when the first publisher is detected in the topic. One at the `46653` local port and another one at an arbitrary port for each talker in the topic (in the example above, port `53675`). Through tests, it's been made obvious that the arbitrary ports get closed when these talkers stop their activity while the `46653` remains. This can be taken as a "sign of the pressence of publishers in the topic" but not much additional information can be taken from it.
+
+
+Reading from https://github.com/ros/ros_comm/issues/610, it seems that the underlying httplib in `ros_comm` implements that connections are only closed if you are sending the header "connection: close". Although a client might close the connection, the socket remains in the `CLOSE_WAIT state then. https://github.com/ros/ros_comm/pull/1104 fixes this behavior but it should be considered in older versions of ROS (before the patch was applied, kinetic).
+
+------
+
+**Note**: This is a vulnerability worth exploring and that applies to distributions before kinetic.
+
+------
+
+It interesting to note that the `robot.lime` shows only 2 sockets for the listener process (when three are expected according the last findings above). Nevertheless, it doesn't seem we can take much from the listener's memory information (except noticing the presence of publishers) so we'll leave it aside and focus instead on the `talker`.
+
+Looking at the talker's more closely. First, let's observe what happens iteratively with the sockets when we launch a `talker`, later, when a `listener` is introduced into the network and finally, when the `talker` is unregistered exploiting the vulnerability:
+
+```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ rosrun scenario1 talker __name:=talker1 &
+[2] 4449
+vagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4449
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:48049           0.0.0.0:*               LISTEN      1000       23716       4449/talker
+tcp        0      0 0.0.0.0:50595           0.0.0.0:*               LISTEN      1000       23720       4449/talker
+tcp        0      0 10.0.2.15:48049         10.0.2.15:39551         ESTABLISHED 1000       23748       4449/talker
+tcp        0      0 127.0.0.1:59510         127.0.0.1:11311         CLOSE_WAIT  1000       23729       4449/talker
+vagrant@vagrant-ubuntu-trusty-64:~$ rosrun scenario1 listener __name:=listener2> /tmp/listener2.txt &
+[3] 4469
+vagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4449
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:48049           0.0.0.0:*               LISTEN      1000       23716       4449/talker
+tcp        0      0 0.0.0.0:50595           0.0.0.0:*               LISTEN      1000       23720       4449/talker
+tcp        0      0 10.0.2.15:48049         10.0.2.15:39566         ESTABLISHED 1000       23883       4449/talker
+tcp        0      0 10.0.2.15:48049         10.0.2.15:39551         ESTABLISHED 1000       23748       4449/talker
+tcp        0      0 127.0.0.1:59510         127.0.0.1:11311         CLOSE_WAIT  1000       23729       4449/talker
+vagrant@vagrant-ubuntu-trusty-64:~$ rosnode list
+/listener2
+/rosout
+/talker1
+vagrant@vagrant-ubuntu-trusty-64:~$ roschaos master unregister node --node_name /talker1
+Unregistering /talker1
+vagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4449
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:48049           0.0.0.0:*               LISTEN      1000       23716       4449/talker
+tcp        0      0 0.0.0.0:50595           0.0.0.0:*               LISTEN      1000       23720       4449/talker
+tcp        1      0 10.0.2.15:48049         10.0.2.15:39551         CLOSE_WAIT  1000       23748       4449/talker
+tcp        0      0 127.0.0.1:59510         127.0.0.1:11311         CLOSE_WAIT  1000       23729       4449/talker
+```
+
+Let's now compare this with the natural unregistration of the listener (which is closed through Ctrl-C) and observe the sockets in the same `talker`:
+
+```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ rosrun scenario1 talker __name:=talker1 &
+[2] 4567
+vagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4449
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+vagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4567
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:57695           0.0.0.0:*               LISTEN      1000       24183       4567/talker
+tcp        0      0 0.0.0.0:40961           0.0.0.0:*               LISTEN      1000       24179       4567/talker
+tcp        0      0 127.0.0.1:59568         127.0.0.1:11311         CLOSE_WAIT  1000       24192       4567/talker
+tcp        0      0 10.0.2.15:40961         10.0.2.15:55407         ESTABLISHED 1000       24211       4567/talker
+vagrant@vagrant-ubuntu-trusty-64:~$ rosrun scenario1 listener __name:=listener2> /tmp/listener2.txt &
+[3] 4589
+vagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4567
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:57695           0.0.0.0:*               LISTEN      1000       24183       4567/talker
+tcp        0      0 0.0.0.0:40961           0.0.0.0:*               LISTEN      1000       24179       4567/talker
+tcp        0      0 10.0.2.15:40961         10.0.2.15:55422         ESTABLISHED 1000       24353       4567/talker
+tcp        0      0 127.0.0.1:59568         127.0.0.1:11311         CLOSE_WAIT  1000       24192       4567/talker
+tcp        0      0 10.0.2.15:40961         10.0.2.15:55407         ESTABLISHED 1000       24211       4567/talker
+vagrant@vagrant-ubuntu-trusty-64:~$ fg
+rosrun scenario1 listener __name:=listener2 > /tmp/listener2.txt
+^Cvagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4567
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:57695           0.0.0.0:*               LISTEN      1000       24183       4567/talker
+tcp        0      0 0.0.0.0:40961           0.0.0.0:*               LISTEN      1000       24179       4567/talker
+tcp        0      0 127.0.0.1:59568         127.0.0.1:11311         CLOSE_WAIT  1000       24192       4567/talker
+tcp        0      0 10.0.2.15:40961         10.0.2.15:55407         ESTABLISHED 1000       24211       4567/talker
+vagrant@vagrant-ubuntu-trusty-64:~$ rosrun scenario1 listener __name:=listener3> /tmp/listener2.txt &
+[3] 4622
+vagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4567
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:57695           0.0.0.0:*               LISTEN      1000       24183       4567/talker
+tcp        0      0 0.0.0.0:40961           0.0.0.0:*               LISTEN      1000       24179       4567/talker
+tcp        0      0 127.0.0.1:59568         127.0.0.1:11311         CLOSE_WAIT  1000       24192       4567/talker
+tcp        0      0 10.0.2.15:40961         10.0.2.15:55440         ESTABLISHED 1000       24477       4567/talker
+tcp        0      0 10.0.2.15:40961         10.0.2.15:55407         ESTABLISHED 1000       24211       4567/talker
+vagrant@vagrant-ubuntu-trusty-64:~$ fg
+rosrun scenario1 listener __name:=listener3 > /tmp/listener2.txt
+^Cvagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4567
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:57695           0.0.0.0:*               LISTEN      1000       24183       4567/talker
+tcp        0      0 0.0.0.0:40961           0.0.0.0:*               LISTEN      1000       24179       4567/talker
+tcp        0      0 127.0.0.1:59568         127.0.0.1:11311         CLOSE_WAIT  1000       24192       4567/talker
+tcp        0      0 10.0.2.15:40961         10.0.2.15:55407         ESTABLISHED 1000       24211       4567/talker
+```
+
+So far, expected but, what happens in this last case if we unregister the `talker` using `roschaos`?
+
+```bash
+vagrant@vagrant-ubuntu-trusty-64:~$ roschaos master unregister node --node_name /talker1
+Unregistering /talker1
+vagrant@vagrant-ubuntu-trusty-64:~$ netstat -aeltnp |grep 4567
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:57695           0.0.0.0:*               LISTEN      1000       24183       4567/talker
+tcp        0      0 0.0.0.0:40961           0.0.0.0:*               LISTEN      1000       24179       4567/talker
+tcp        0      0 127.0.0.1:59568         127.0.0.1:11311         CLOSE_WAIT  1000       24192       4567/talker
+tcp        1      0 10.0.2.15:40961         10.0.2.15:55407         CLOSE_WAIT  1000       24211       4567/talker
+
+```
+
+Interestingly, socket `10.0.2.15:40961` gets into `CLOSE_WAIT` state so we can determine that a publisher having a socket in the same port both in `LISTEN` and `CLOSE_WAIT` status was likely unregistered.
+
+Let's then extend the previous volatity plugin `linux_rosnode` and include this finding to mark nodes as unregistered.
+
+#### A forensics analysis
+
+...
+
+(explore a case where only a memory dump is available and try to determine what happened, no prior dump available)
 Summary of forensics analysis on a ROS system under an `Unauthenticated unregistration attack`.
 
-| Memory file |  `linux_pslist` | `linux_proc_maps`| `linux_psaux` | `linux_lsof` |
-|-------------|-----------------| -----------------| ------|----|
-| *The memory acquired and being analyzed.*  | *A volatility plugin to enumerate processes* | *Enumerating process mappings, useful to see injections.* | *Analyzing command line arguments.* | *walks a process file descriptor table and prints the file descriptor number and path for each entry* |
-| robot.lime  | - | - | - | `11452       12 socket:[106140]` |
-| robot_hacked.lime | -  | - | - | Does not include the 12th fd. |
+
+```bash
+```
+
 
 ### Bibliography
 - [1] Mendia, G. O., Juan, L. U. S., Bascaran, X. P., Calvo, A. B., Cordero, A. H., Ugarte, I. Z., ... & Vilches, V. M. (2018). Robotics CTF (RCTF), a playground for robot hacking. arXiv preprint arXiv:1810.02690.
