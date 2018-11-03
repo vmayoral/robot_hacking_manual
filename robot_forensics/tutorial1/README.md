@@ -413,6 +413,8 @@ Reading from https://github.com/ros/ros_comm/issues/610, it seems that the under
 
 **Note**: This is a vulnerability worth exploring and that applies to distributions before kinetic.
 
+**Update**: the vulnerability has been reported at https://github.com/aliasrobotics/RVDP/issues/90.
+
 ------
 
 It interesting to note that the `robot.lime` shows only 2 sockets for the listener process (when three are expected according the last findings above). Nevertheless, it doesn't seem we can take much from the listener's memory information (except noticing the presence of publishers) so we'll leave it aside and focus instead on the `talker`.
