@@ -37,7 +37,7 @@ An `exploit` is a piece of software, a chunk of data, or a sequence of commands 
 
 #### Robot forensics
 Robot forensics proposes a number of scientific tests and methods to obtain, preserve and document evidence from robot-related crimes. In particular, it focuses on recovering data from robotic systems to establish who committed the crime.
-- [Basic robot forensics, an unauthenticated unregistration in ROS](robot_forensics/tutorial1/)
+- [Tutorial 1: Basic robot forensics, an unauthenticated unregistration in ROS](robot_forensics/tutorial1/)
 
 #### Robot reversing
 Software reverse engineering (or *reversing*) is the process of extracting the knowledge or design blueprints from any software. When applied to robotics, robot reversing can be understood as the process of extracting information about the design elements in a robotic system.

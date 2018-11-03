@@ -43,5 +43,5 @@ When entering `vim` from `more`, editing the file `/tmp/bandit27.swp` (`:e /tmp/
 
 Solved at http://codebluedev.blogspot.com.es/2015/07/overthewire-bandit-level-26.html.
 
-### Bibliography
+### Resources
 - https://infamoussyn.com/2013/11/08/overthewire-bandit-level-0-25-writeup-completed
