@@ -151,8 +151,107 @@ Offset             Pid      Name                 Start              End         
 
 Unfortunately, there's nothing about the file we're trying to get :(.
 
-**Unfinished**
+Let's try reviewing the information about the `rosmaster` process using the `linux_volshell` volatility plugin:
+```
+vagrant@vagrant-ubuntu-trusty-64:~$ vol.py --plugins=/vagrant/ros_volatility --profile LinuxUbuntu14045x64 -f robot_hacked.lime linux_volshell
+Volatility Foundation Volatility Framework 2.6
+Current context: process init, pid=1 DTB=0x1dfb4000
+Welcome to volshell! Current memory image is:
+file:///home/vagrant/robot_hacked.lime
+To get help, type 'hh()'
+>>> ps()
+Name             PID    Offset
+init             1      0xffff88001dc38000
+kthreadd         2      0xffff88001dc39800
+ksoftirqd/0      3      0xffff88001dc3b000
+kworker/0:0      4      0xffff88001dc3c800
+kworker/0:0H     5      0xffff88001dc3e000
+rcu_sched        7      0xffff88001dcd1800
+rcuos/0          8      0xffff88001dcd3000
+rcu_bh           9      0xffff88001dcd4800
+rcuob/0          10     0xffff88001dcd6000
+migration/0      11     0xffff88001dd00000
+watchdog/0       12     0xffff88001dd01800
+khelper          13     0xffff88001dd03000
+kdevtmpfs        14     0xffff88001dd04800
+netns            15     0xffff88001dd06000
+writeback        16     0xffff88001dd68000
+kintegrityd      17     0xffff88001dd69800
+bioset           18     0xffff88001dd6b000
+kworker/u3:0     19     0xffff88001dd6c800
+kblockd          20     0xffff88001dd6e000
+ata_sff          21     0xffff88001de10000
+khubd            22     0xffff88001de11800
+md               23     0xffff88001de13000
+devfreq_wq       24     0xffff88001de14800
+kworker/0:1      25     0xffff88001de16000
+khungtaskd       27     0xffff88001c6a9800
+kswapd0          28     0xffff88001c6ab000
+vmstat           29     0xffff88001c6ac800
+ksmd             30     0xffff88001c6ae000
+fsnotify_mark    31     0xffff88001c700000
+ecryptfs-kthrea  32     0xffff88001c701800
+crypto           33     0xffff88001c703000
+kthrotld         45     0xffff88001c74e000
+deferwq          65     0xffff88001f083000
+charger_manager  66     0xffff88001f084800
+scsi_eh_0        108    0xffff88001c734800
+kpsmoused        109    0xffff88001c730000
+kworker/u2:2     111    0xffff88001f068000
+kworker/u2:3     127    0xffff88001f424800
+jbd2/sda1-8      173    0xffff88001c733000
+ext4-rsv-conver  174    0xffff88001c6a8000
+upstart-udev-br  386    0xffff88001dfa9800
+systemd-udevd    394    0xffff88001c749800
+iprt             436    0xffff88001c706000
+dhclient         514    0xffff88001f0c9800
+kworker/u3:1     619    0xffff88001f4d3000
+rpcbind          625    0xffff88001d429800
+rpc.statd        677    0xffff88001c629800
+upstart-socket-  680    0xffff88001c62c800
+rpciod           752    0xffff88001dfac800
+dbus-daemon      762    0xffff88001f0c8000
+nfsiod           766    0xffff88001f06b000
+rpc.idmapd       810    0xffff88001c62e000
+systemd-logind   836    0xffff88001cf36000
+rsyslogd         865    0xffff88001c628000
+upstart-file-br  887    0xffff88001c688000
+getty            961    0xffff88001d65c800
+getty            964    0xffff88001f4d1800
+getty            968    0xffff88001cf34800
+getty            969    0xffff88001cf30000
+getty            971    0xffff88001c748000
+sshd             1013   0xffff88001cfac800
+atd              1015   0xffff88001cfae000
+cron             1016   0xffff88001cfa9800
+acpid            1017   0xffff88001cfa8000
+VBoxService      1059   0xffff88001f0cc800
+puppet           1106   0xffff88001f0cb000
+ruby             1136   0xffff88001cff4800
+getty            1163   0xffff88001d65e000
+kauditd          1185   0xffff88001cff3000
+sshd             1512   0xffff88001f420000
+sshd             1582   0xffff88001f06c800
+bash             1583   0xffff88001c704800
+roscore          2360   0xffff88001dcd0000
+rosmaster        2372   0xffff88001f06e000
+rosout           2385   0xffff88001d65b000
+talker           2402   0xffff88001c68b000
+listener         2420   0xffff88001f4d4800
+sudo             2481   0xffff88001d330000
+insmod           2482   0xffff88001d334800
+systemd-udevd    2483   0xffff88001d336000
+```
 
+let's change the context to the process we're interested in:
+```
+>>> cc(0xffff88001f06e000)
+Current context: process rosmaster, pid=2372 DTB=0x1dfec000
+```
+(or also `cc(pid=2372)`)
+
+
+**No clear result has been achieved from the available memory capture**.
 
 ### Resources
 - [1] Mendia, G. O., Juan, L. U. S., Bascaran, X. P., Calvo, A. B., Cordero, A. H., Ugarte, I. Z., ... & Vilches, V. M. (2018). Robotics CTF (RCTF), a playground for robot hacking. arXiv preprint arXiv:1810.02690.

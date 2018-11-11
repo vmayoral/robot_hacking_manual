@@ -38,7 +38,7 @@ An `exploit` is a piece of software, a chunk of data, or a sequence of commands 
 #### Robot forensics
 Robot forensics proposes a number of scientific tests and methods to obtain, preserve and document evidence from robot-related crimes. In particular, it focuses on recovering data from robotic systems to establish who committed the crime.
 - [Tutorial 1: Basic robot forensics, an unauthenticated unregistration in ROS](robot_forensics/tutorial1/)
-- [Tutorial 2: Locating ROS logs in memory](robot_forensics/tutorial2/) (**unfinished, help needed**)
+- [Tutorial 2: Locating ROS logs in memory](robot_forensics/tutorial2/) (**failed**)
 - [Tutorial 3: Capturing memory in Linux-based robots](robot_forensics/tutorial3/)
 
 #### Robot reversing
