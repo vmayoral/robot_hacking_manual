@@ -10,8 +10,9 @@ An introductory series of security and cybersecurity for robots with comprehensi
 
 
 #### Robot footprinting
-*None for now*
-
+Footprinting, (also known as *reconnaissance*) is the technique used for gathering information about digital systems and the entities they belong to.
+- [Tutorial 1: Footprinting ROS systems](robot_footprinting/tutorial1/)
+-
 #### Robot enumeration
 - Basic enumeration of a robotic system can be done with [ROSPenTo](https://github.com/jr-robotics/ROSPenTo)
 
