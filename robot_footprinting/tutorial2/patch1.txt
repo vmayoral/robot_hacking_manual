@@ -1,0 +1,10 @@
+--- /root/sros_catkin_ws/src/ros_comm/clients/roscpp/src/libros/transport/transport_udp.cpp.old	2018-11-24 21:54:16.186147747 +0000
++++ /root/sros_catkin_ws/src/ros_comm/clients/roscpp/src/libros/transport/transport_udp.cpp	2018-11-24 21:54:31.157669941 +0000
+@@ -35,6 +35,7 @@
+ #include "ros/transport/transport_udp.h"
+ #include "ros/poll_set.h"
+ #include "ros/file_log.h"
++#include <sys/uio.h>
+
+ #include <ros/assert.h>
+ #include <boost/bind.hpp>
