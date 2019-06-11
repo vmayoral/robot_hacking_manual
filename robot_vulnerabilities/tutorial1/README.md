@@ -5,6 +5,9 @@ Sanitizers are dynamic bug finding tools[1]. In this tutorial we'll use some com
 The first few sections provide a walkthrough on the attempt to make things run in OS X. The sections that follow automate the process through a Docker container.
 
 ## OS X
+
+<details><summary>Setup in OS X, natively</summary>
+
 ### Setup
 For the setup, I'm working in an OS X 10.14 machine:
 ```bash
@@ -154,6 +157,7 @@ Complete dump at https://gist.github.com/vmayoral/ffcba20d29fc3546ceffeb112d473d
 ```bash
 DYLD_INSERT_LIBRARIES=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/10.0.1/lib/darwin/libclang_rt.asan_osx_dynamic.dylib
 ```
+<details>
 
 ## Docker
 ```bash
@@ -166,6 +170,129 @@ colcon test --build-base=build-asan --install-base=install-asan \
   --event-handlers sanitizer_report+ --packages-up-to test_communication
 ```
 results are under `/tmp/log`.
+
+## Analyzing results
+### Analyzing example
+I'll try and analyze here the example provided at https://github.com/colcon/colcon-sanitizer-reports/blob/master/README.rst before jumping into a new one to gain additional understanding:
+
+It appears that ASan detected memory leaks in the `rcpputils` module:
+```bash
+grep -R '==.*==ERROR: .*Sanitizer' -A 3
+[..]
+--
+rcpputils/stdout_stderr.log:1: ==32481==ERROR: LeakSanitizer: detected memory leaks
+rcpputils/stdout_stderr.log-1:
+rcpputils/stdout_stderr.log-1: Direct leak of 4 byte(s) in 1 object(s) allocated from:
+rcpputils/stdout_stderr.log-1:     #0 0x7f7d99dac458 in operator new(unsigned long) (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xe0458)
+```
+
+Particularly, it appears that the leaks are as follows:
+```bash
+Direct leak of 4 byte(s) in 1 object(s) allocated from:
+    #0 0x7fbefcd0b458 in operator new(unsigned long) (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xe0458)
+    #1 0x5620b4c650a9 in FakeGuarded::FakeGuarded() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x190a9)
+    #2 0x5620b4c63444 in **test_tsa_shared_capability_Test**::TestBody() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x17444)
+    #3 0x5620b4cdc4fd in void testing::internal::HandleSehExceptionsInMethodIfSupported<testing::Test, void>(testing::Test*, void (testing::Test::*)(), char const*) (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x904fd)
+    #4 0x5620b4cce1e7 in void testing::internal::HandleExceptionsInMethodIfSupported<testing::Test, void>(testing::Test*, void (testing::Test::*)(), char const*) (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x821e7)
+    #5 0x5620b4c79f0f in testing::Test::Run() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x2df0f)
+    #6 0x5620b4c7b33a in testing::TestInfo::Run() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x2f33a)
+    #7 0x5620b4c7bede in testing::TestCase::Run() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x2fede)
+    #8 0x5620b4c96fef in testing::internal::UnitTestImpl::RunAllTests() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x4afef)
+    #9 0x5620b4cdefb0 in bool testing::internal::HandleSehExceptionsInMethodIfSupported<testing::internal::UnitTestImpl, bool>(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x92fb0)
+    #10 0x5620b4cd04b0 in bool testing::internal::HandleExceptionsInMethodIfSupported<testing::internal::UnitTestImpl, bool>(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x844b0)
+    #11 0x5620b4c93d83 in testing::UnitTest::Run() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x47d83)
+    #12 0x5620b4c672d2 in RUN_ALL_TESTS() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x1b2d2)
+    #13 0x5620b4c67218 in main (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x1b218)
+    #14 0x7fbefc09bb96 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21b96)
+
+Direct leak of 4 byte(s) in 1 object(s) allocated from:
+    #0 0x7fbefcd0b458 in operator new(unsigned long) (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xe0458)
+    #1 0x5620b4c650a9 in FakeGuarded::FakeGuarded() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x190a9)
+    #2 0x5620b4c62d4b in **test_tsa_capability_Test**::TestBody() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x16d4b)
+    #3 0x5620b4cdc4fd in void testing::internal::HandleSehExceptionsInMethodIfSupported<testing::Test, void>(testing::Test*, void (testing::Test::*)(), char const*) (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x904fd)
+    #4 0x5620b4cce1e7 in void testing::internal::HandleExceptionsInMethodIfSupported<testing::Test, void>(testing::Test*, void (testing::Test::*)(), char const*) (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x821e7)
+    #5 0x5620b4c79f0f in testing::Test::Run() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x2df0f)
+    #6 0x5620b4c7b33a in testing::TestInfo::Run() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x2f33a)
+    #7 0x5620b4c7bede in testing::TestCase::Run() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x2fede)
+    #8 0x5620b4c96fef in testing::internal::UnitTestImpl::RunAllTests() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x4afef)
+    #9 0x5620b4cdefb0 in bool testing::internal::HandleSehExceptionsInMethodIfSupported<testing::internal::UnitTestImpl, bool>(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x92fb0)
+    #10 0x5620b4cd04b0 in bool testing::internal::HandleExceptionsInMethodIfSupported<testing::internal::UnitTestImpl, bool>(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x844b0)
+    #11 0x5620b4c93d83 in testing::UnitTest::Run() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x47d83)
+    #12 0x5620b4c672d2 in RUN_ALL_TESTS() (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x1b2d2)
+    #13 0x5620b4c67218 in main (/home/ANT.AMAZON.COM/tmoulard/ros2_ws/build-asan/rcpputils/test_basic+0x1b218)
+    #14 0x7fbefc09bb96 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21b96)
+```
+
+Inspecting the dumps, there seems to be an issue in `test_basic` related to `FakeGuarded::FakeGuarded()`. In particular, this [line](https://github.com/ros2/rcpputils/pull/9/files#diff-be1f2d1334d30376c4dec7b53eda0f55L247) wasn't necessary and was replaced by a destructor instead.
+
+
+### Processing new bugs
+Let's now analyze a new bug and try to provide a fix for it. Let's take the first the `sanitizer_report.csv` generated and from it, the first item:
+
+```bash
+rcl,detected memory leaks,__default_zero_allocate /opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56,2,
+ "#0 0x7f1475ca7d38 in __interceptor_calloc (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xded38)
+  #1 0x7f14753f34d6 in __default_zero_allocate /opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56
+  #2 0x7f1475405e77 in rcutils_string_array_init /opt/ros2_asan_ws/src/ros2/rcutils/src/string_array.c:54
+  #3 0x7f14751e4b4a in rmw_names_and_types_init /opt/ros2_asan_ws/src/ros2/rmw/rmw/src/names_and_types.c:66
+  #4 0x7f1472cda362 in rmw_fastrtps_shared_cpp::__copy_data_to_results(std::map<std::__cxx11::basic_string<char,
+    std::char_traits<char>, std::allocator<char> >, std::set<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::set<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > > > const&, rcutils_allocator_t*, bool, rmw_names_and_types_t*) /opt/ros2_asan_ws/src/ros2/rmw_fastrtps/rmw_fastrtps_shared_cpp/src/rmw_node_info_and_types.cpp:199
+  #5 0x7f1472cdcc4d in rmw_fastrtps_shared_cpp::__rmw_get_topic_names_and_types_by_node(char const*, rmw_node_t const*,
+    rcutils_allocator_t*, char const*, char const*, bool, std::function<LockedObject<TopicCache> const& (CustomParticipantInfo&)>&, rmw_names_and_types_t*) /opt/ros2_asan_ws/src/ros2/rmw_fastrtps/rmw_fastrtps_shared_cpp/src/rmw_node_info_and_types.cpp:349
+  #6 0x7f1472cdd0d4 in rmw_fastrtps_shared_cpp::__rmw_get_publisher_names_and_types_by_node(char const*, rmw_node_t const*,
+    rcutils_allocator_t*, char const*, char const*, bool, rmw_names_and_types_t*) /opt/ros2_asan_ws/src/ros2/rmw_fastrtps/rmw_fastrtps_shared_cpp/src/rmw_node_info_and_types.cpp:385
+  #7 0x7f14756a11eb in rmw_get_publisher_names_and_types_by_node /opt/ros2_asan_ws/src/ros2/rmw_fastrtps/rmw_fastrtps_cpp/src/rmw_node_info_and_types.cpp:53
+  #8 0x7f14759669b5 in rcl_get_publisher_names_and_types_by_node /opt/ros2_asan_ws/src/ros2/rcl/rcl/src/rcl/graph.c:60
+  #9 0x55d928637fdd in TestGraphFixture__rmw_fastrtps_cpp_test_rcl_get_publisher_names_and_types_by_node_Test::TestBody() 
+    /opt/ros2_asan_ws/src/ros2/rcl/rcl/test/rcl/test_graph.cpp:342
+  #10 0x55d9286f0105 in void testing::internal::HandleSehExceptionsInMethodIfSupported<testing::Test, 
+    void>(testing::Test*, void (testing::Test::*)(), char const*) /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2447
+  #11 0x55d9286e2259 in void testing::internal::HandleExceptionsInMethodIfSupported<testing::Test, void>(testing::Test*, 
+    void (testing::Test::*)(), char const*) /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2483
+  #12 0x55d92868ed41 in testing::Test::Run() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2522
+  #13 0x55d92869016c in testing::TestInfo::Run() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2703
+  #14 0x55d928690d10 in testing::TestCase::Run() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2825
+  #15 0x55d9286abe21 in testing::internal::UnitTestImpl::RunAllTests() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/
+    gtest_vendor/./src/gtest.cc:5216
+  #16 0x55d9286f2bb8 in bool testing::internal::HandleSehExceptionsInMethodIfSupported<testing::internal::UnitTestImpl, 
+    bool>(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2447
+  #17 0x55d9286e4522 in bool testing::internal::HandleExceptionsInMethodIfSupported<testing::internal::UnitTestImpl,
+   bool>(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2483
+  #18 0x55d9286a8bb5 in testing::UnitTest::Run() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:4824
+  #19 0x55d92867c104 in RUN_ALL_TESTS() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/include/gtest/gtest.h:2370
+  #20 0x55d92867c04a in main /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/src/gtest_main.cc:36
+  #21 0x7f1474449b96 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21b96)"
+```
+
+When browsing through `ros2_asan_ws/log/latest_test`, we can find a similar report under rcl (in the `rcl/stdout_stderr.log` file):
+```bash
+14: Direct leak of 8 byte(s) in 1 object(s) allocated from:
+14:     #0 0x7f1475ca7d38 in __interceptor_calloc (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xded38)
+14:     #1 0x7f14753f34d6 in __default_zero_allocate /opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56
+14:     #2 0x7f1475405e77 in rcutils_string_array_init /opt/ros2_asan_ws/src/ros2/rcutils/src/string_array.c:54
+14:     #3 0x7f14751e4b4a in rmw_names_and_types_init /opt/ros2_asan_ws/src/ros2/rmw/rmw/src/names_and_types.c:66
+14:     #4 0x7f1472cda362 in rmw_fastrtps_shared_cpp::__copy_data_to_results(std::map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::set<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::set<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > > > const&, rcutils_allocator_t*, bool, rmw_names_and_types_t*) /opt/ros2_asan_ws/src/ros2/rmw_fastrtps/rmw_fastrtps_shared_cpp/src/rmw_node_info_and_types.cpp:199
+14:     #5 0x7f1472cdcc4d in rmw_fastrtps_shared_cpp::__rmw_get_topic_names_and_types_by_node(char const*, rmw_node_t const*, rcutils_allocator_t*, char const*, char const*, bool, std::function<LockedObject<TopicCache> const& (CustomParticipantInfo&)>&, rmw_names_and_types_t*) /opt/ros2_asan_ws/src/ros2/rmw_fastrtps/rmw_fastrtps_shared_cpp/src/rmw_node_info_and_types.cpp:349
+14:     #6 0x7f1472cdd0d4 in rmw_fastrtps_shared_cpp::__rmw_get_publisher_names_and_types_by_node(char const*, rmw_node_t const*, rcutils_allocator_t*, char const*, char const*, bool, rmw_names_and_types_t*) /opt/ros2_asan_ws/src/ros2/rmw_fastrtps/rmw_fastrtps_shared_cpp/src/rmw_node_info_and_types.cpp:385
+14:     #7 0x7f14756a11eb in rmw_get_publisher_names_and_types_by_node /opt/ros2_asan_ws/src/ros2/rmw_fastrtps/rmw_fastrtps_cpp/src/rmw_node_info_and_types.cpp:53
+14:     #8 0x7f14759669b5 in rcl_get_publisher_names_and_types_by_node /opt/ros2_asan_ws/src/ros2/rcl/rcl/src/rcl/graph.c:60
+14:     #9 0x55d928637fdd in TestGraphFixture__rmw_fastrtps_cpp_test_rcl_get_publisher_names_and_types_by_node_Test::TestBody() /opt/ros2_asan_ws/src/ros2/rcl/rcl/test/rcl/test_graph.cpp:342
+14:     #10 0x55d9286f0105 in void testing::internal::HandleSehExceptionsInMethodIfSupported<testing::Test, void>(testing::Test*, void (testing::Test::*)(), char const*) /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2447
+14:     #11 0x55d9286e2259 in void testing::internal::HandleExceptionsInMethodIfSupported<testing::Test, void>(testing::Test*, void (testing::Test::*)(), char const*) /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2483
+14:     #12 0x55d92868ed41 in testing::Test::Run() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2522
+14:     #13 0x55d92869016c in testing::TestInfo::Run() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2703
+14:     #14 0x55d928690d10 in testing::TestCase::Run() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2825
+14:     #15 0x55d9286abe21 in testing::internal::UnitTestImpl::RunAllTests() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:5216
+14:     #16 0x55d9286f2bb8 in bool testing::internal::HandleSehExceptionsInMethodIfSupported<testing::internal::UnitTestImpl, bool>(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2447
+14:     #17 0x55d9286e4522 in bool testing::internal::HandleExceptionsInMethodIfSupported<testing::internal::UnitTestImpl, bool>(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:2483
+14:     #18 0x55d9286a8bb5 in testing::UnitTest::Run() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/./src/gtest.cc:4824
+14:     #19 0x55d92867c104 in RUN_ALL_TESTS() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/include/gtest/gtest.h:2370
+14:     #20 0x55d92867c04a in main /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/src/gtest_main.cc:36
+14:     #21 0x7f1474449b96 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21b96)
+```
+
+which means that the corresponding test that triggers this memory leak lives within `build-asan/rcl`. Reviewing stack and the directory, it's fairly easy to find that `test_graph__rmw_fastrtps_cpp` is the test that triggers this error https://gist.github.com/vmayoral/44214f6290a6647e606d716d8fe2ca68.
+
 
 ## Resources
 - [1] https://arxiv.org/pdf/1806.04355.pdf

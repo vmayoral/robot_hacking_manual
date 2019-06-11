@@ -58,7 +58,10 @@ RUN cd src/eProsima/Fast-RTPS/ && git checkout master && git pull
 RUN apt install --no-install-recommends -y \
   libasio-dev \
   libtinyxml2-dev \
-  liblog4cxx-dev
+  liblog4cxx-dev \
+  less \
+  tmux \
+  vim
 
 # RUN rosdep init 
 RUN rosdep update && \
