@@ -33,7 +33,7 @@ RUN ccache -M 10G
 ENV CC=/usr/lib/ccache/gcc
 ENV CXX=/usr/lib/ccache/g++
 
-# Download moveit source, so that we can get necessary dependencies
+# Download sources of ROS 2 Dashing
 RUN mkdir -p $ROS_WS/src \
     && wget https://raw.githubusercontent.com/ros2/ros2/release-latest/ros2.repos \
     && vcs import src < ros2.repos
