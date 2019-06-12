@@ -157,7 +157,7 @@ Complete dump at https://gist.github.com/vmayoral/ffcba20d29fc3546ceffeb112d473d
 ```bash
 DYLD_INSERT_LIBRARIES=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/10.0.1/lib/darwin/libclang_rt.asan_osx_dynamic.dylib
 ```
-<details>
+</details>
 
 ## Docker
 ```bash
