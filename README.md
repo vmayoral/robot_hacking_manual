@@ -10,6 +10,7 @@ An introductory series of security and cybersecurity for robots with comprehensi
   - [Robot forensics](#robot-forensics)
   - [Robot reversing](#robot-reversing)
   - [CTF](#CTF)
+  - [Web](#web)
 
 
 ## Robot reconnaissance
@@ -54,6 +55,9 @@ The difference is better understood by the following table (also from the paper)
 
 The following tutorials provide an introduction on how to run sanitizers in robot specific code:
 - [Tutorial 1: Robot sanitizers in ROS 2 Dashing](robot_vulnerabilities/tutorial1/)
+- [Tutorial 2: Robot sanitizers in MoveIt 2](robot_vulnerabilities/tutorial2/)
+- Tutorial 3: Robot sanitizers with GDB: TODO
+- Tutorial 4: Robot sanitizers with Gazebo: TODO
 
 ## Robot exploitation
 An `exploit` is a piece of software, a chunk of data, or a sequence of commands that takes advantage of a bug or vulnerability to cause unintended or unanticipated behavior to occur on computer software, hardware, or something electronic (usually computerized). Exploitation is the art of taking advantage of vulnerabilities.
@@ -94,6 +98,11 @@ Software reverse engineering (or *reversing*) is the process of extracting the k
 #### CTF
 Capture The Flag exercises available at:
 - [CTF](CTF/)
+
+#### Web
+Web security is of relevance to most companies. Robotics' ones aren't any different. Often, the website of each one these companies reflects the reputation and its maintenance if of critical relevance. This section will cover some web aspects that most robotic companies should take into account. The content here represents merely a learning experience. **By no means I want to encourage or promote the unauthorized tampering of robotic systems or robotic-related services/infrastructure**,
+- [Tutorial 1](web/)
+
 
 ## Future, next steps
 - Continue with tutorials at https://github.com/nnamon/linux-exploitation-course
