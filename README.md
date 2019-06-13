@@ -101,7 +101,8 @@ Capture The Flag exercises available at:
 
 #### Web
 Web security is of relevance to most companies. Robotics' ones aren't any different. Often, the website of each one these companies reflects the reputation and its maintenance if of critical relevance. This section will cover some web aspects that most robotic companies should take into account. The content here represents merely a learning experience. **By no means I want to encourage or promote the unauthorized tampering of robotic systems or robotic-related services/infrastructure**,
-- [Tutorial 1](web/)
+- [Tutorial 1: Damn Vulnerable Web Application (DVWA)](web/tutorial1/)
+- [~~Tutorial 2: BadStore.net~~](web/tutorial2/) (**unfinished**)
 
 
 ## Future, next steps
