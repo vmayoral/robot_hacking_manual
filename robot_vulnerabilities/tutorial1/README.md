@@ -294,6 +294,8 @@ When browsing through `ros2_asan_ws/log/latest_test`, we can find a similar repo
 which means that the corresponding test that triggers this memory leak lives within `build-asan/rcl`. Reviewing stack and the directory, it's fairly easy to find that `test_graph__rmw_fastrtps_cpp` is the test that triggers this error https://gist.github.com/vmayoral/44214f6290a6647e606d716d8fe2ca68.
 
 
+A complete report with all the vulns found is available at [sanitizer_report_ros2dashing.csv](sanitizer_report_ros2dashing.csv).
+
 ## Resources
 - [1] https://arxiv.org/pdf/1806.04355.pdf
 - [2] https://discourse.ros.org/t/introducing-ros2-sanitizer-report-and-analysis/9287

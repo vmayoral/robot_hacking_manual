@@ -27,16 +27,28 @@ Footprinting, (also known as *reconnaissance*) is the technique used for gatheri
 ## Robot Threat Modeling & Vulnerability Identification
 Once you feel you have sufficient info about the robot, you can start modeling the threats that the client/user would realistically face and identify vulnerabilities that will allow for those attacks.
 
-#### Threat modeling
+### Threat modeling
+<details><summary>Attack surface generated while in a thread modeling process</summary>
+
 ![](http://design.ros2.org/articles/ros2_threat_model/threat_model_mara.png)
 
 Refer to http://design.ros2.org/articles/ros2_threat_model.html#threat-analysis-for-the-mara-robotic-platform for a first publication on a preliminar thread model on an industrial robot manipulator. The analysis has been done from the perspective of ROS 2.
 
+</details>
+
+### Static analysis
+Static analysis means inspecting the code to look for faults. Static analysis is using a program (instead of a human) to inspect the code for faults.
+
+### Dynamic analysis
+Dynamic analysis, simply called “testing” as a rule, means executing the code while looking for errors and failures. 
+
 #### Fuzzing
 TODO
 
-#### Sanitizers
-Sanitizers are dynamic bug finding tools. They analyze a single program excution and output a precise analysis result valid for  that specific execution.
+#### Sanitizers (dynamic analysis)
+Sanitizers are dynamic bug finding tools. Sanitizers analyze a single program excution and output a precise analysis result valid for  that specific execution.
+
+<details><summary>More details about sanitizers</summary>
 
 As explained at https://arxiv.org/pdf/1806.04355.pdf: 
 
@@ -52,6 +64,8 @@ The difference is better understood by the following table (also from the paper)
 | **Policy violations lead to ...** | Program termination | Problem diagnosis |
 | **Violations triggered at location of bug ...** | Sometimes  | Always |
 | **Surviving benign errors is ...** | Desired | Not desired |
+
+</details>
 
 The following tutorials provide an introduction on how to run sanitizers in robot specific code:
 - [Tutorial 1: Robot sanitizers in ROS 2 Dashing](robot_vulnerabilities/tutorial1/)

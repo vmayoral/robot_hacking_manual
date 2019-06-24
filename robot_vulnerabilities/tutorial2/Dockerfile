@@ -78,7 +78,7 @@ RUN \
 ##########################################################
 
 # Fetch some additional dependencies
-RUN apt-get update && apt-get install -y libompl-dev python-vcstool python3-colcon-common-extensions 
+RUN apt-get update && apt-get install -y libompl-dev python-vcstool python3-colcon-common-extensions libasan5
 
 # Build code
 # RUN /bin/bash -c "source /opt/ros/dashing/setup.bash && colcon build"
