@@ -1,9 +1,53 @@
 # Static analysis of PyRobot
 
 ## Discussing PyRobot
-TODO
+This section briefly discusses `pyrobot` and provides a biased opinion on how valid the contribution is for the AI and robotic communities.
+
+### The rationale behind PyRobot
+PyRobot has been developed and published by Facebook Artificial Intelligence research group. From the Facebook announcement:
+
+>PyRobot is a framework and ecosystem that enables AI researchers and students to get up and running with a robot in just a few hours, without specialized knowledge of the hardware or of details such as device drivers, control, and planning. PyRobot will help Facebook AI advance our long-term robotics research, which aims to develop embodied AI systems that can learn efficiently by interacting with the physical world. We are now open-sourcing PyRobot to help others in the AI and robotics community as well.
+
+From this text one could say that the original authors not only aim to apply AI techniques to robots but specifically, come from an AI background and found the overall ROS ecosystem "too complex" (from my experience this is often the case of many software engineers diving into robotics). AI engineers often tend to disregard the complexity of robots and attempt find shortcuts that leave aside relevant technical aspects:
+
+> PyRobot abstracts away details about low-level controllers and interprocess communication, so machine learning (ML) experts and others can simply focus on building high-level AI robotics applications.
+
+There's still a strong discussion in the robotics community on whether AI techniques do actually outperform formal methods (traditional control mechanisms). This might indeed be the case on vision-powered applications but applying machine learning techniques end-to-end might not deliver the most optimal results as already reported in several articles.
+
+Robotics is the art of system integration and requires roboticists to care strongly about things such as determinism, real-time, security or safety. These aspects aren't often the first priority for most AI engineers (changing policies is typically what most would expect). This is a recurrent situation that's happening over and over with engineers jumping from AI-related areas to robotics. The desire of AI-oriented groups to apply "only AI" in robotics justifies the creation of yet new robotic frameworks *reinventing the wheel* unnecessarily. This happens every now and then. Most of these tools fail to grasp the technical aspects of robots and fail to provide means for complying with critical aspects in robotics.
+
+### Diving into PyRobot's architecture
+
+According to its official paper [2], PyRobot is an open-source robotics framework for research and benchmarking. More specifically, PyRobot is defined as a *light-weight, high-level interface* **on top of ROS** *that provides a consistent set of hardware independent midlevel APIs to control different robots*.
+
+(*this sounds surprisingly close to ROS 1 original goals in a way, years after though*)
+
+![](pyrobot.png)
+
+According to its authors, the main problems that this framework solves are:
+
+>**ROS requires expertise**: Dominant robotic software packages like ROS and MoveIt! are complex and require
+a substantial breadth of knowledge to understand the full stack of planners, kinematics libraries and low-level controllers. On the other hand, most new users do not have the necessary expertise or time to acquire a thorough understanding of the software stack. A light weight, high-level interface would ease the learning curve for AI practitioners, students and hobbyists interested in getting started in robotics.
+
+This has historically been one of the main criticisims about ROS. ROS indeed has a learning curve however, there're good reasons behind the complexity and layered architecture of the framework. Building a robotic application is a complicated task and reusing software requires a modular architecture. ROS was originally designed with an academic purpose and later on extended for its deployment in the PR2.
+
+Over the last few years ROS has transitioned from a research-oriented tool to an industrial-grade set of tools that power nowdays most complicated robotic behaviors. The result of this growth is clear when looking at ROS 2 which has been thought for industry-related use cases and with active discussions around security, safety or real-time.
+
+>**Lack of hardware-independent APIs**: Writing hardware-independant software is extremely challenging. In the ROS ecosystem, this was partly handled by encapsulating hardware-specific details in the Universal Robot Description Format (URDF) which other downstream services
+
+I'd argue against this. In fact, ROS is well known for its hardware abstraction layer that allows dozens of sensors and/or actuators to interoperate. Motion planning, manipulation and navigation stacks in the ROS world (namely the nav stack or moveit) have been built in a hardware agnostic manner and provide means of extension.
+
+The most striking fact about PyRobot is that it seems to ommit that ROS provides upper layers of abstraction (what would match as High-Level in the ROS section of the graph above) that capture complete robots. ROS-I official repos[4] group a number of such.
+
+----
+
+While the aim of PyRobot seems to be clearly centered around *"accelerating AI robotics research"*, a somewhat simple way to compare PyRobot to existing de facto standards frameworks in robotics (such as ROS abstractions for a variety of robots) is to analyze the quality of the code generated. Quality Assurance (QA) methods are common in robotics and there're several open source  and community projects pushing towards the enhancement of open tools in the ROS community. 
+
+There's a variety of ways to review the quality of code. One simple manner is to perform a static analysis of the overall framework code and assess potential security flaws. The next section looks into this.
 
 ## Performing a static analysis in the code
+
+Let's quickly 
 
 ### Results of `bandit`
 
@@ -45,6 +89,53 @@ Test results:
 47
 
 ...
+--------------------------------------------------
+
+Code scanned:
+	Total lines of code: 10588
+	Total lines skipped (#nosec): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0.0
+		Low: 105.0
+		Medium: 6.0
+		High: 2.0
+	Total issues (by confidence):
+		Undefined: 0.0
+		Low: 0.0
+		Medium: 0.0
+		High: 113.0
+Files skipped (1):
+	./examples/sim2real/test.py (syntax error while parsing AST from file)
+```
+
+8 relevant security issues with either Medium or High severity. This differs strongly from ROS python layers with approximately the same LOC. E.g. rclpy in ROS 2:
+
+```bash
+bandit -r ros2/rclpy/
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[main]	INFO	running on Python 3.7.3
+...
+Code scanned:
+	Total lines of code: 10516
+	Total lines skipped (#nosec): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0.0
+		Low: 256.0
+		Medium: 0.0
+		High: 0.0
+	Total issues (by confidence):
+		Undefined: 0.0
+		Low: 0.0
+		Medium: 0.0
+		High: 256.0
+Files skipped (0):
 ```
 
 *Complete dump at https://gist.github.com/vmayoral/de2a2792e043b4c40b0380daff8a9760*
@@ -54,6 +145,7 @@ The two test results above display two potential points of code injection in the
 ### Results of `rats`
 
 ```bash
+...
 ./examples/grasping/grasp_samplers/grasp_model.py:46: High: system
 ./examples/crash_detection/locobot_kobuki.py:57: High: system
 Argument 1 to this function call should be checked to ensure that it does not
@@ -120,3 +212,9 @@ Warning: unpinned requirement 'pyassimp' found in requirements.txt, unable to ch
 │ No known security vulnerabilities found.                                     │
 ╘══════════════════════════════════════════════════════════════════════════════╛
 ```
+
+## Resources
+- [1] https://github.com/facebookresearch/pyrobot
+- [2] https://arxiv.org/pdf/1906.08236.pdf
+- [3] https://ai.facebook.com/blog/open-sourcing-pyrobot-to-accelerate-ai-robotics-research/
+- [4] https://github.com/ros-industrial

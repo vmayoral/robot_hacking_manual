@@ -227,7 +227,7 @@ Inspecting the dumps, there seems to be an issue in `test_basic` related to `Fak
 
 
 ### Processing new bugs
-Let's now analyze a new bug and try to provide a fix for it. Let's take the first the `sanitizer_report.csv` generated and from it, the first item:
+Let's now analyze a new bug and try to reason about it. Let's take the first the `sanitizer_report.csv` generated and from it, the first item (dumped at [sanitizer_report_ros2dashing_asan.csv](sanitizer_report_ros2dashing_asan.csv)):
 
 ```bash
 rcl,detected memory leaks,__default_zero_allocate /opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56,2,
@@ -293,8 +293,47 @@ When browsing through `ros2_asan_ws/log/latest_test`, we can find a similar repo
 
 which means that the corresponding test that triggers this memory leak lives within `build-asan/rcl`. Reviewing stack and the directory, it's fairly easy to find that `test_graph__rmw_fastrtps_cpp` is the test that triggers this error https://gist.github.com/vmayoral/44214f6290a6647e606d716d8fe2ca68.
 
+According to ASan documentation [8]:
 
-A complete report with all the vulns found is available at [sanitizer_report_ros2dashing.csv](sanitizer_report_ros2dashing.csv).
+> LSan also differentiates between direct and indirect leaks in its output. This gives useful information about which leaks should be prioritized, because fixing the direct leaks is likely to fix the indirect ones as well.
+
+which tells us where to focus first. Direct leaks from this first report are:
+```
+Direct leak of 56 byte(s) in 1 object(s) allocated from:
+    #0 0x7f4eaf189d38 in __interceptor_calloc (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xded38)
+    #1 0x7f4eae8d54d6 in __default_zero_allocate /opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56
+    #2 0x7f4eae6c6c7e in rmw_names_and_types_init /opt/ros2_asan_ws/src/ros2/rmw/rmw/src/names_and_types.c:72
+    ...
+```
+and
+```
+Direct leak of 8 byte(s) in 1 object(s) allocated from:
+    #0 0x7f4eaf189d38 in __interceptor_calloc (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xded38)
+    #1 0x7f4eae8d54d6 in __default_zero_allocate /opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56
+    #2 0x7f4eae8e7e77 in rcutils_string_array_init /opt/ros2_asan_ws/src/ros2/rcutils/src/string_array.c:54
+    ...
+```
+Both correspond to the `calloc` call at https://github.com/ros2/rcutils/blob/master/src/allocator.c#L56 however with different callers:
+- https://github.com/ros2/rcutils/blob/master/src/string_array.c#L54 (1)
+- https://github.com/ros2/rmw/blob/master/rmw/src/names_and_types.c#L72 (2)
+
+A complete report with all the bugs found is available at [sanitizer_report_ros2dashing_asan.csv](sanitizer_report_ros2dashing_asan.csv).
+
+A further discussion into this bug and an analysis with GDB is available at [tutorial3](../tutorial3).
+
+## Looking for bugs and vulnerabilities with ThreadSanitizer (TSan)
+
+Similar to ASan, we can use the ThreadSanitizer:
+
+```bash
+docker build -t basic_cybersecurity_vulnerabilities1:latest .
+docker run --privileged -it -v /tmp/log:/opt/ros2_moveit2_ws/log basic_cybersecurity_vulnerabilities1:latest /bin/bash
+colcon test --build-base=build-tsan --install-base=install-tsan --event-handlers sanitizer_report+ --packages-up-to test_communication
+```
+
+A complete report with all the bugs found is available at [sanitizer_report_ros2dashing_tsan.csv](sanitizer_report_ros2dashing_tsan.csv).
+
+
 
 ## Resources
 - [1] https://arxiv.org/pdf/1806.04355.pdf
@@ -304,3 +343,4 @@ A complete report with all the vulns found is available at [sanitizer_report_ros
 - [5] https://github.com/ccache/ccache
 - [6] https://github.com/google/sanitizers/wiki/AddressSanitizer
 - [7] https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual
+- [8] https://github.com/google/sanitizers/wiki/AddressSanitizerLeakSanitizerVsHeapChecker

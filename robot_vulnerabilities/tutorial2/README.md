@@ -17,7 +17,7 @@ colcon test --build-base=build-asan --install-base=install-asan \
   --event-handlers sanitizer_report+ --merge-install --packages-up-to moveit_core
 ```
 
-*NOTE: To keep things simpmle I've restricted the packages reviewed to moveit_core and its core dependencies solely. A complete review including all moveit packages is recommended in case one wanted to catch all bugs*.
+*NOTE: To keep things simple I've restricted the packages reviewed to moveit_core and its core dependencies solely. A complete review including all moveit packages is recommended in case one wanted to catch all bugs*.
 
 Results are summarized in the `sanitizer_report.csv` (https://gist.github.com/vmayoral/25b3cff2c954b099eeb4d1471c1830e2). A quick look through the `log/` directory gives us an intuition into the different bugs detected:
 ```bash
@@ -196,6 +196,19 @@ root@bf916bb1a977:/opt/ros2_moveit2_ws# build-asan/moveit_core/planning_scene/te
 [  PASSED  ] 6 tests.
 ```
 
+## Looking for bugs and vulnerabilities in MoveIt 2 with ThreadSanitizer (TSan)
+
+To use TSan [3] we rebuild the container (uncommenting and commenting the right sections) access it and manually launch the tests:
+
+```bash
+docker build -t basic_cybersecurity_vulnerabilities2:latest .
+docker run --privileged -it -v /tmp/log:/opt/ros2_moveit2_ws/log basic_cybersecurity_vulnerabilities2:latest /bin/bash
+colcon test --build-base=build-tsan --install-base=install-tsan --event-handlers sanitizer_report+ --packages-up-to moveit_core --merge-install
+```
+
+No issues where found while running TSan (up until `moveit_core`).
+
 ## Resources
 - [1] https://github.com/colcon/colcon-sanitizer-reports/blob/master/README.rst
 - [2] https://discourse.ros.org/t/exploring-package-dependencies/4719
+- [3] TSan Cpp manual https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual

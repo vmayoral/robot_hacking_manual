@@ -64,20 +64,20 @@ RUN apt install --no-install-recommends -y \
   vim
 
 # RUN rosdep init 
-RUN rosdep update && \
+RUN apt-get update && rosdep update && \
   rosdep install --from-paths src --ignore-src --rosdistro dashing -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 rti-connext-dds-5.3.1 urdfdom_headers"
   
 ##########################################################
 #       ASan
 ##########################################################
 # Build code
-RUN colcon build --build-base=build-asan --install-base=install-asan \
-    --cmake-args -DOSRF_TESTING_TOOLS_CPP_DISABLE_MEMORY_TOOLS=ON \
-                 -DINSTALL_EXAMPLES=OFF -DSECURITY=ON --no-warn-unused-cli \
-                 -DCMAKE_BUILD_TYPE=Debug \
-    --mixin asan-gcc \
-    --packages-up-to test_communication \
-    --symlink-install
+# RUN colcon build --build-base=build-asan --install-base=install-asan \
+#     --cmake-args -DOSRF_TESTING_TOOLS_CPP_DISABLE_MEMORY_TOOLS=ON \
+#                  -DINSTALL_EXAMPLES=OFF -DSECURITY=ON --no-warn-unused-cli \
+#                  -DCMAKE_BUILD_TYPE=Debug \
+#     --mixin asan-gcc \
+#     --packages-up-to test_communication \
+#     --symlink-install
 
 # # Launch tests 
 # RUN colcon test --build-base=build-asan --install-base=install-asan \
@@ -86,6 +86,16 @@ RUN colcon build --build-base=build-asan --install-base=install-asan \
 ##########################################################
 #       TSan
 ##########################################################
-# TODO
+RUN colcon build --build-base=build-tsan --install-base=install-tsan \
+    --cmake-args -DOSRF_TESTING_TOOLS_CPP_DISABLE_MEMORY_TOOLS=ON \
+                 -DINSTALL_EXAMPLES=OFF -DSECURITY=ON --no-warn-unused-cli \
+                 -DCMAKE_BUILD_TYPE=Debug \
+    --mixin tsan \
+    --packages-up-to test_communication \
+    --symlink-install
+
+# RUN colcon test --build-base=build-tsan --install-base=install-tsan \
+#     --event-handlers sanitizer_report+ --packages-up-to moveit_core
+
 
 CMD ["bash"]

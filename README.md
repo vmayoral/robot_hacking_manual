@@ -38,6 +38,7 @@ Refer to http://design.ros2.org/articles/ros2_threat_model.html#threat-analysis-
 
 ### Static analysis
 Static analysis means inspecting the code to look for faults. Static analysis is using a program (instead of a human) to inspect the code for faults.
+- [Tutorial 5: Static analysis of PyRobot](robot_vulnerabilities/tutorial5/)
 
 ### Dynamic analysis
 Dynamic analysis, simply called “testing” as a rule, means executing the code while looking for errors and failures. 
@@ -70,7 +71,7 @@ The difference is better understood by the following table (also from the paper)
 The following tutorials provide an introduction on how to run sanitizers in robot specific code:
 - [Tutorial 1: Robot sanitizers in ROS 2 Dashing](robot_vulnerabilities/tutorial1/)
 - [Tutorial 2: Robot sanitizers in MoveIt 2](robot_vulnerabilities/tutorial2/)
-- Tutorial 3: Robot sanitizers with GDB: TODO
+- [Tutorial 3: Debugging output of robot sanitizers with GDB, hunting and fixing bugs](robot_vulnerabilities/tutorial3/) (*UNFINISHED*)
 - Tutorial 4: Robot sanitizers with Gazebo: TODO
 
 ## Robot exploitation

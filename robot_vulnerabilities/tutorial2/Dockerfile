@@ -72,24 +72,24 @@ RUN \
     rosdep install -q -y --from-paths . --ignore-src --rosdistro ${ROS_DISTRO} --as-root=apt:false || true && \
     # Clear apt-cache to reduce image size
     rm -rf /var/lib/apt/lists/*
+
+# Fetch some additional dependencies
+RUN apt-get update && apt-get install -y libompl-dev python-vcstool python3-colcon-common-extensions libasan5
     
 ##########################################################
 #       ASan
 ##########################################################
 
-# Fetch some additional dependencies
-RUN apt-get update && apt-get install -y libompl-dev python-vcstool python3-colcon-common-extensions libasan5
-
 # Build code
 # RUN /bin/bash -c "source /opt/ros/dashing/setup.bash && colcon build"
 # Connected with https://github.com/AcutronicRobotics/moveit2/issues/112, we use --merge-install instead
-RUN /bin/bash -c "source /opt/ros/dashing/setup.bash \
-                    && colcon build --build-base=build-asan --install-base=install-asan\
-                    --cmake-args -DOSRF_TESTING_TOOLS_CPP_DISABLE_MEMORY_TOOLS=ON \
-                                 -DINSTALL_EXAMPLES=OFF -DSECURITY=ON --no-warn-unused-cli \
-                                 -DCMAKE_BUILD_TYPE=Debug \
-                    --mixin asan-gcc --merge-install \
-                    --packages-up-to moveit_core"
+# RUN /bin/bash -c "source /opt/ros/dashing/setup.bash \
+#                     && colcon build --build-base=build-asan --install-base=install-asan\
+#                     --cmake-args -DOSRF_TESTING_TOOLS_CPP_DISABLE_MEMORY_TOOLS=ON \
+#                                  -DINSTALL_EXAMPLES=OFF -DSECURITY=ON --no-warn-unused-cli \
+#                                  -DCMAKE_BUILD_TYPE=Debug \
+#                     --mixin asan-gcc --merge-install \
+#                     --packages-up-to moveit_core"
 
 # # Launch tests 
 # RUN colcon test --build-base=build-asan --install-base=install-asan \
@@ -98,6 +98,17 @@ RUN /bin/bash -c "source /opt/ros/dashing/setup.bash \
 ##########################################################
 #       TSan
 ##########################################################
-# TODO
+
+RUN /bin/bash -c "source /opt/ros/dashing/setup.bash \
+                    && colcon build --build-base=build-tsan --install-base=install-tsan \
+    --cmake-args -DOSRF_TESTING_TOOLS_CPP_DISABLE_MEMORY_TOOLS=ON \
+                 -DINSTALL_EXAMPLES=OFF -DSECURITY=ON --no-warn-unused-cli \
+                 -DCMAKE_BUILD_TYPE=Debug \
+    --mixin tsan \
+    --packages-up-to moveit_core \
+    --merge-install"
+
+# RUN colcon test --build-base=build-tsan --install-base=install-tsan \
+#     --event-handlers sanitizer_report+ --packages-up-to moveit_core
 
 CMD ["bash"]
