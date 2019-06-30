@@ -71,7 +71,7 @@ The difference is better understood by the following table (also from the paper)
 The following tutorials provide an introduction on how to run sanitizers in robot specific code:
 - [Tutorial 1: Robot sanitizers in ROS 2 Dashing](robot_vulnerabilities/tutorial1/)
 - [Tutorial 2: Robot sanitizers in MoveIt 2](robot_vulnerabilities/tutorial2/)
-- [Tutorial 3: Debugging output of robot sanitizers with GDB, hunting and fixing bugs](robot_vulnerabilities/tutorial3/) (*UNFINISHED*)
+- [Tutorial 3: Debugging output of robot sanitizers with GDB, hunting and fixing bugs](robot_vulnerabilities/tutorial3/)
 - Tutorial 4: Robot sanitizers with Gazebo: TODO
 
 ## Robot exploitation

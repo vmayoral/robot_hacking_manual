@@ -1,4 +1,4 @@
-# Debugging output of robot sanitizers with GDB, hunting and fixing bugs (*UNFINISHED*)
+# Debugging output of robot sanitizers with GDB, hunting and fixing bugs
 
 This article aims to describe the process of introspecting memory leaks by directly connecting the debugger with the sanitizer-tests/binaries. The tutorial builds on top of the previous two articles, refer to [tutorial1](../tutorial1) and [tutorial2](../tutorial2).
 
@@ -1094,7 +1094,7 @@ bt
 
 Note that this comes from [rcl/test/rcl/test_graph.cpp#L172](https://github.com/ros2/rcl/blob/master/rcl/test/rcl/test_graph.cpp#L172). Inspecting the code that creates the leak below, we observe that there's simply no call to such `rcl_names_and_types_fini` function.
 
-Fix for the bug is available at https://github.com/vmayoral/rcl/commit/ec0e62cd04453f7968fa47f580289d3d06734a1d.
+Fix for the bug is available at https://github.com/vmayoral/rcl/commit/ec0e62cd04453f7968fa47f580289d3d06734a1d. Sent it upstream https://github.com/ros2/rcl/pull/468.
 
 
 ## Resources
