@@ -1,10 +1,11 @@
 # Basic robot cybersecurity
 An introductory series of security and cybersecurity for robots with comprehensive step-by-step tutorials. The material available here is a personal learning attempt and it's disconnected from any particular organization. **By no means I want to encourage or promote the unauthorized tampering of robotic systems**.
 
+## Index
 - [Robot reconnaissance](#robot-reconnaissance)
   - [Robot footprinting](#robot-footprinting)
   - [Robot enumeration](#robot-enumeration)
-- Robot Threat Modeling & Robot Vulnerability Identification
+- Robot Threat Modeling, bugs & vulnerability Identification
 - [Robot exploitation](#robot-exploitation)
 - [Other](#other)
   - [Robot forensics](#robot-forensics)
@@ -12,6 +13,13 @@ An introductory series of security and cybersecurity for robots with comprehensi
   - [CTF](#CTF)
   - [Web](#web)
 
+
+## List of security issues fixed and contributions
+| robotics component or robot | report | fix |
+|----------|------|------|
+| rcl `test_graph` | https://github.com/ros2/rcl/pull/468  | https://github.com/ros2/rcl/pull/468  |
+| moveit2 moveit_core | https://github.com/AcutronicRobotics/moveit2/pull/113 | https://github.com/AcutronicRobotics/moveit2/pull/113 |
+| rcl `test_subscription`  | https://github.com/ros2/rcl/issues/469  |   |
 
 ## Robot reconnaissance
 Reconnaissance is the act of gathering preliminary data or intelligence on your target. The data is gathered in order to better plan for your attack. Reconnaissance can be performed actively (meaning that you are directly touching the target) or passively (meaning that your recon is being performed through an intermediary).
@@ -24,7 +32,7 @@ Footprinting, (also known as *reconnaissance*) is the technique used for gatheri
 #### Robot enumeration
 - Basic enumeration of a robotic system can be done with [ROSPenTo](https://github.com/jr-robotics/ROSPenTo)
 
-## Robot Threat Modeling & Vulnerability Identification
+## Robot Threat Modeling, bugs & vulnerability Identification
 Once you feel you have sufficient info about the robot, you can start modeling the threats that the client/user would realistically face and identify vulnerabilities that will allow for those attacks.
 
 ### Threat modeling
@@ -118,7 +126,6 @@ Capture The Flag exercises available at:
 Web security is of relevance to most companies. Robotics' ones aren't any different. Often, the website of each one these companies reflects the reputation and its maintenance if of critical relevance. This section will cover some web aspects that most robotic companies should take into account. The content here represents merely a learning experience. **By no means I want to encourage or promote the unauthorized tampering of robotic systems or robotic-related services/infrastructure**,
 - [Tutorial 1: Damn Vulnerable Web Application (DVWA)](web/tutorial1/)
 - [~~Tutorial 2: BadStore.net~~](web/tutorial2/) (**unfinished**)
-
 
 ## Future, next steps
 - Continue with tutorials at https://github.com/nnamon/linux-exploitation-course
