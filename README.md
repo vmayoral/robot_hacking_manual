@@ -5,7 +5,7 @@ An introductory series of security and cybersecurity for robots with comprehensi
 - [Robot reconnaissance](#robot-reconnaissance)
   - [Robot footprinting](#robot-footprinting)
   - [Robot enumeration](#robot-enumeration)
-- Robot Threat Modeling, bugs & vulnerability Identification
+- [Robot Threat Modeling, bugs & vulnerability Identification](https://github.com/vmayoral/basic_robot_cybersecurity#robot-threat-modeling-bugs--vulnerability-identification)
 - [Robot exploitation](#robot-exploitation)
 - [Other](#other)
   - [Robot forensics](#robot-forensics)
