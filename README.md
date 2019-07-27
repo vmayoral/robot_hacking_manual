@@ -1,3 +1,19 @@
+---
+title: "Robot Hacking Manual"
+author: [Víctor Mayoral Vilches]
+date: "2019-07-20"
+toc: true
+subject: "Markdown"
+keywords: [Robotics, Hacking, Robot]
+subtitle: "An introductory series of cybersecurity for robots with a somewhat comprehensive step-by-step tutorials."
+lang: "en"
+titlepage: true
+titlepage-color: "313131"
+titlepage-text-color: "FFFFFF"
+titlepage-rule-color: "FFFFFF"
+titlepage-rule-height: 1
+...
+
 # Basic robot cybersecurity
 An introductory series of security and cybersecurity for robots with comprehensive step-by-step tutorials. The material available here is a personal learning attempt and it's disconnected from any particular organization. **By no means I want to encourage or promote the unauthorized tampering of robotic systems**.
 
