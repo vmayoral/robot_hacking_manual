@@ -30,13 +30,6 @@ An introductory series of security and cybersecurity for robots with comprehensi
   - [Web](#web)
 
 
-## List of security issues fixed and contributions
-| robotics component or robot | report | fix |
-|----------|------|------|
-| rcl `test_graph` | https://github.com/ros2/rcl/pull/468  | https://github.com/ros2/rcl/pull/468  |
-| moveit2 `moveit_core` | https://github.com/AcutronicRobotics/moveit2/pull/113 | https://github.com/AcutronicRobotics/moveit2/pull/113 |
-| rcl `test_subscription`  | https://github.com/ros2/rcl/issues/469  |   |
-
 ## Robot reconnaissance
 Reconnaissance is the act of gathering preliminary data or intelligence on your target. The data is gathered in order to better plan for your attack. Reconnaissance can be performed actively (meaning that you are directly touching the target) or passively (meaning that your recon is being performed through an intermediary).
 
