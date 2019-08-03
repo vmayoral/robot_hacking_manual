@@ -18,3 +18,7 @@ A few ideas to implement/try in the future:
 - Tutorial D: Docker for forensics
    - https://hub.docker.com/r/nov3mb3r/dfir/~/dockerfile/
    - https://0x00sec.org/t/forensics-docker/6220
+
+ - Continue with tutorials at https://github.com/nnamon/linux-exploitation-course
+ - https://sploitfun.wordpress.com/2015/06/26/linux-x86-exploit-development-tutorial-series/
+ - Automatic Exploit Generation (AEG) (https://github.com/ChrisTheCoolHut/Zeratool)

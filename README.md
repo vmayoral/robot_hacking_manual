@@ -125,7 +125,10 @@ Review https://github.com/Cugu/awesome-forensics
 #### Robot reversing
 Software reverse engineering (or *reversing*) is the process of extracting the knowledge or design blueprints from any software. When applied to robotics, robot reversing can be understood as the process of extracting information about the design elements in a robotic system.
 
-*None for now*
+*None for now*. Some pointers:
+- https://twitter.com/daeken/status/1025123319824244738
+  - http://www.informatik.uni-bremen.de/agbkb/lehre/ccfl/Material/ALSUdragonbook.pdf
+
 
 #### CTF
 Capture The Flag exercises available at:
@@ -137,6 +140,4 @@ Web security is of relevance to most companies. Robotics' ones aren't any differ
 - [~~Tutorial 2: BadStore.net~~](web/tutorial2/) (**unfinished**)
 
 ## Future, next steps
-- Continue with tutorials at https://github.com/nnamon/linux-exploitation-course
-- https://sploitfun.wordpress.com/2015/06/26/linux-x86-exploit-development-tutorial-series/
-- Automatic Exploit Generation (AEG) (https://github.com/ChrisTheCoolHut/Zeratool)
+See [IDEAS](IDEAS.md).
