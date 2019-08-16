@@ -126,9 +126,34 @@ Review https://github.com/Cugu/awesome-forensics
 Software reverse engineering (or *reversing*) is the process of extracting the knowledge or design blueprints from any software. When applied to robotics, robot reversing can be understood as the process of extracting information about the design elements in a robotic system.
 
 *None for now*. Some pointers:
-- https://twitter.com/daeken/status/1025123319824244738
-  - http://www.informatik.uni-bremen.de/agbkb/lehre/ccfl/Material/ALSUdragonbook.pdf
+- https://twitter.com/daeken/status/1025123319824244738. *Listing things below*
 
+- [ ] Read: Reversing by Eldad Eilam 
+- [ ] Assembly 
+  - [ ] Do: Write some C, compile it, 
+  - [ ] disassemble, hand-decompile to C 
+  - [ ] Do: Have a friend write and compile some C, 
+  - [ ] then disassemble and hand-decompile it and have friend check your work
+- [ ] Do: Pick a game (some ideas in the CTF section, some hacking oriented games exist).  Reverse-engineer its archive format and write an unpacker 
+- [ ] Read: The Dragon Book (Compilers by Aho et al)
+- [ ] Do: Write a compiler from some high-level language (feel free to make one up) to another (Python) 7) 
+- [ ] Do: Write an assembler 
+- [ ] Do: Write a compiler from some language down to assembly 
+  - [ ] C https://norasandler.com/2017/11/29/Write-a-Compiler.html
+- [ ] Read: Reverse Compilation Techniques by Cifuentes [...]
+- [ ] Do: Write a decompiler for CIL and/or Dalvik bytecode 
+- [ ] Do: Write a decompiler for ARM (doesn't have to be ARM, but it's consistent and relatively sane) 
+- [ ] Read: The osdev wiki, until your eyes can't focus anymore [...]
+- [ ] Do: Write a toy kernel 
+  - [ ] Do: Write it again, with slightly less suck 
+  - [ ] Do: Port your kernel to a different platform 
+- [ ] Do: Pick a well-known platform and write an interpreting emulator 
+  - [ ] Do: Add a recompiler [...]
+- [ ] Do: Pick a slightly-unknown platform 
+  - [ ] Read: Everything you can find about it 
+  - [ ] Do: Begin writing an emulator 
+  - [ ] Read: All the assembly you can find, for bits that aren't known 
+  - [ ] Go back to 16b, continuing your work [...]
 
 #### CTF
 Capture The Flag exercises available at:

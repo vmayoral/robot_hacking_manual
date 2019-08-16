@@ -9,4 +9,4 @@ CTFs:
 - http://captf.com/practice-ctf/ (a list of CTFs to practice)
 
 ### Resources:
-- http://liveoverflow.com/binary_hacking/reverse_engineering.html
+- ~~http://liveoverflow.com/binary_hacking/reverse_engineering.html~~ search on https://old.liveoverflow.com/
