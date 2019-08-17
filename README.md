@@ -12,6 +12,11 @@ titlepage-color: "313131"
 titlepage-text-color: "FFFFFF"
 titlepage-rule-color: "FFFFFF"
 titlepage-rule-height: 1
+pandoc-latex-fontsize:
+  - classes: [smallcontent]
+    size: tiny
+  - classes: [largecontent, important]
+    size: huge
 ...
 
 # Basic robot cybersecurity

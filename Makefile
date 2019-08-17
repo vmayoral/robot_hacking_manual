@@ -1,11 +1,12 @@
 BUILDDIR := $(CURDIR)/build
 SOURCE_FILE := README.md $(CURDIR)/robot_footprinting/tutorial1/README.md
 EXTENSION := .pdf
-OUT_FILE := README
+OUT_FILE := RHM
 PANDOC_TEMPLATE := $(CURDIR)/templates/eisvogel.tex
 PANDOC_OPTIONS := \
-					--variable fontsize=12pt \
+					--variable fontsize=10pt \
 					--pdf-engine=xelatex \
+					--filter pandoc-latex-fontsize \
 					--filter pandoc-citeproc --template=$(PANDOC_TEMPLATE) $(SOURCE_FILE)					
 define exec_pandoc
 	@echo "Building..."

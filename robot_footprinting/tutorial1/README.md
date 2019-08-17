@@ -21,13 +21,17 @@ docker run --privileged -it basic_cybersecurity_footprinting1:latest
 ### ROS footprinting basics
 
 The first thing we do to test the capabilities of `aztarna` is to get a container with the right dependencies and the tool installed:
+~~~smallcontent
 ```bash
 # from this directory:
 docker build -t basic_cybersecurity_footprinting1:latest .
 ...
 ```
+~~~
 
 Let's launch an instance of ROS in the default port and see how `aztarna` can detect it:
+
+~~~smallcontent
 ```bash
 docker run --privileged -it basic_cybersecurity_footprinting1:latest
 root@3c22d4bbf4e1:/# roscore -p 11311 &
@@ -56,8 +60,11 @@ root@432b0c5f61cc:~/aztarna# aztarna -t ROS -p 11311-11320 -a 127.0.0.1
 [+] ROS Host found at 127.0.0.1:11311
 
 ```
+~~~
 
 Launches and scans reasonably fast:
+
+~~~smallcontent
 ```bash
 root@3c22d4bbf4e1:/# time aztarna -t ROS -p 11311-11320 -a 127.0.0.1
 ...
@@ -65,8 +72,11 @@ real	0m0.687s
 user	0m0.620s
 sys	0m0.040s
 ```
+~~~
 
 More information about a particular ROS Host can be obtained with the `-e` flag:
+
+~~~smallcontent
 ```bash
 root@aa6b6d7f9bd3:/# aztarna -t ROS -p 11311 -a 127.0.0.1 -e
 [+] ROS Host found at 127.0.0.1:11311
@@ -95,9 +105,12 @@ Node: /rosout XMLRPCUri: http://aa6b6d7f9bd3:39719
 		 - Topic: /rosout_agg(Type: rosgraph_msgs/Log)
 		 - Subscribers:
 ```
+~~~
 
 ### Checking for all ROS instances in a machine
 A simple way to check for ROS within a particular machine is to chain the `aztarna` tool with other common bash utilities:
+
+~~~smallcontent
 ```bash
 root@bc6af321d62e:/# nmap -p 1-65535 127.0.0.1 | grep open | awk '{print $1}' | sed "s*/tcp**" | sed "s/^/aztarna -t ROS -p /" | sed "s/$/ -a 127.0.0.1/" | bash
 [+] ROS Host found at 127.0.0.1:11311
@@ -124,6 +137,7 @@ root@bc6af321d62e:/# nmap -p 1-65535 127.0.0.1 | grep open | awk '{print $1}' | 
 	Not a ROS host
 
 ```
+~~~
 
 ### Resources
 - [1] aztarna. Retrieved from https://github.com/aliasrobotics/aztarna.
