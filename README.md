@@ -17,6 +17,7 @@ pandoc-latex-fontsize:
     size: tiny
   - classes: [largecontent, important]
     size: huge
+bibliography: bibliography.bib
 ...
 
 # Basic robot cybersecurity
@@ -130,6 +131,9 @@ Review https://github.com/Cugu/awesome-forensics
 #### Robot reversing
 Software reverse engineering (or *reversing*) is the process of extracting the knowledge or design blueprints from any software. When applied to robotics, robot reversing can be understood as the process of extracting information about the design elements in a robotic system.
 
+
+<details><summary>Reversing roadmap</summary>
+
 *None for now*. Some pointers:
 - https://twitter.com/daeken/status/1025123319824244738. *Listing things below*
 
@@ -159,6 +163,8 @@ Software reverse engineering (or *reversing*) is the process of extracting the k
   - [ ] Do: Begin writing an emulator 
   - [ ] Read: All the assembly you can find, for bits that aren't known 
   - [ ] Go back to 16b, continuing your work [...]
+
+</details>
 
 #### CTF
 Capture The Flag exercises available at:

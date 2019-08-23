@@ -1,3 +1,10 @@
+# Bibliography
+
+<!--
+INVALID: see bibliography.bib
+
+## Robot exploitation
+
 ### Tutorial 1
 
 - [1] M. Hicks (2014), *Software Security*, Coursera, Cybersecurity Specialization, University of Maryland, College Park, <https://www.coursera.org/learn/software-security>.
@@ -59,3 +66,5 @@
 ### Tutorial 9
 - [1] pwnbox. Retrieved from https://github.com/superkojiman/pwnbox.
 - [2] pwntools-docker. Retrieved from https://github.com/RobertLarsen/pwntools-docker.
+
+-->

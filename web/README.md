@@ -2,8 +2,11 @@
 In this article I'll cover a variety of (like disorganized) topics that related to Web security. 
 
 ## Content
-- [Tutorial 1: Damn Vulnerable Web Application (DVWA)](tutorial1/)
-- [~~Tutorial 2: BadStore.net~~](tutorial2/) (**unfinished**)
+
+Yes, read **first tutorial 2**.
+
+- [Tutorial 2: BadStore.net](tutorial2/) (**unfinished**)
+- [Tutorial 1: Damn Vulnerable Web Application (DVWA)](tutorial1/) (**unfinished**)
 
 ## Notes 
 
