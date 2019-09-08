@@ -21,7 +21,7 @@ bibliography: bibliography.bib
 ...
 
 # Basic robot cybersecurity
-An introductory series of security and cybersecurity for robots with comprehensive step-by-step tutorials. The material available here is a personal learning attempt and it's disconnected from any particular organization. **By no means I want to encourage or promote the unauthorized tampering of robotic systems**.
+An introductory series about security and cybersecurity for robots and related topics, with comprehensive step-by-step tutorials. The material available here is a personal learning attempt and it's disconnected from any particular organization. **By no means I want to encourage or promote the unauthorized tampering of robotic systems or related technologies**.
 
 ## Index
 - [Robot reconnaissance](#robot-reconnaissance)
@@ -29,24 +29,38 @@ An introductory series of security and cybersecurity for robots with comprehensi
   - [Robot enumeration](#robot-enumeration)
 - [Robot Threat Modeling, bugs & vulnerability Identification](https://github.com/vmayoral/basic_robot_cybersecurity#robot-threat-modeling-bugs--vulnerability-identification)
 - [Robot exploitation](#robot-exploitation)
+- [Cases of study](#cases-of-study)
 - [Other](#other)
   - [Robot forensics](#robot-forensics)
   - [Robot reversing](#robot-reversing)
   - [CTF](#CTF)
   - [Web](#web)
+  - [Privacy](#privacy)
+  - [Cryptocurrencies](#privacy)
+  - [Standards and methodologies](#standards)
 
 
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!--        Robot reconnaissance  -->
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////// -->
 ## Robot reconnaissance
 Reconnaissance is the act of gathering preliminary data or intelligence on your target. The data is gathered in order to better plan for your attack. Reconnaissance can be performed actively (meaning that you are directly touching the target) or passively (meaning that your recon is being performed through an intermediary).
 
 #### Robot footprinting
 Footprinting, (also known as *reconnaissance*) is the technique used for gathering information about digital systems and the entities they belong to.
-- [Tutorial 1: Footprinting ROS systems](robot_footprinting/tutorial1/)
-- [Tutorial 2: Footprinting Secure ROS systems](robot_footprinting/tutorial2/)
+- [Tutorial 1: Footprinting ROS systems](1_reconnaissance/robot_footprinting/tutorial1/)
+- [Tutorial 2: Footprinting Secure ROS systems](1_reconnaissance/robot_footprinting/tutorial2/)
 
 #### Robot enumeration
 - Basic enumeration of a robotic system can be done with [ROSPenTo](https://github.com/jr-robotics/ROSPenTo)
 
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!--        Robot Threat Modeling, bugs & vulnerability Identification -->
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////// -->
 ## Robot Threat Modeling, bugs & vulnerability Identification
 Once you feel you have sufficient info about the robot, you can start modeling the threats that the client/user would realistically face and identify vulnerabilities that will allow for those attacks.
 
@@ -61,7 +75,7 @@ Refer to http://design.ros2.org/articles/ros2_threat_model.html#threat-analysis-
 
 ### Static analysis
 Static analysis means inspecting the code to look for faults. Static analysis is using a program (instead of a human) to inspect the code for faults.
-- [Tutorial 5: Static analysis of PyRobot](robot_vulnerabilities/tutorial5/)
+- [Tutorial 5: Static analysis of PyRobot](2_robot_vulnerabilities/tutorial5/)
 
 ### Dynamic analysis
 Dynamic analysis, simply called “testing” as a rule, means executing the code while looking for errors and failures. 
@@ -92,41 +106,61 @@ The difference is better understood by the following table (also from the paper)
 </details>
 
 The following tutorials provide an introduction on how to run sanitizers in robot specific code:
-- [Tutorial 1: Robot sanitizers in ROS 2 Dashing](robot_vulnerabilities/tutorial1/)
-- [Tutorial 2: Robot sanitizers in MoveIt 2](robot_vulnerabilities/tutorial2/)
-- [Tutorial 3: Debugging output of robot sanitizers with GDB, hunting and fixing bugs](robot_vulnerabilities/tutorial3/)
+- [Tutorial 1: Robot sanitizers in ROS 2 Dashing](2_robot_vulnerabilities/tutorial1/)
+- [Tutorial 2: Robot sanitizers in MoveIt 2](2_robot_vulnerabilities/tutorial2/)
+- [Tutorial 3: Debugging output of robot sanitizers with GDB, hunting and fixing bugs](2_robot_vulnerabilities/tutorial3/)
 - Tutorial 4: Robot sanitizers with Gazebo: TODO
 
+
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!--                          Robot exploitation -->
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////// -->
 ## Robot exploitation
 An `exploit` is a piece of software, a chunk of data, or a sequence of commands that takes advantage of a bug or vulnerability to cause unintended or unanticipated behavior to occur on computer software, hardware, or something electronic (usually computerized). Exploitation is the art of taking advantage of vulnerabilities.
 
 ###### General
-- [Tutorial 1: Buffer overflows](robot_exploitation/tutorial1/)
-- [Tutorial 2: Building shellcode](robot_exploitation/tutorial2/)
-- [Tutorial 3: Exploiting](robot_exploitation/tutorial3/)
-- [Tutorial 4: Return to `libc`](robot_exploitation/tutorial4/)
-- [Tutorial 5: Return-Oriented Programming (ROP)](robot_exploitation/tutorial5/)
-- [Tutorial 6: Remote shell](robot_exploitation/tutorial6/)
-- [Tutorial 7: pwntools - CTF toolkit](robot_exploitation/tutorial7/)
+- [Tutorial 1: Buffer overflows](3_robot_exploitation/tutorial1/)
+- [Tutorial 2: Building shellcode](3_robot_exploitation/tutorial2/)
+- [Tutorial 3: Exploiting](3_robot_exploitation/tutorial3/)
+- [Tutorial 4: Return to `libc`](3_robot_exploitation/tutorial4/)
+- [Tutorial 5: Return-Oriented Programming (ROP)](3_robot_exploitation/tutorial5/)
+- [Tutorial 6: Remote shell](3_robot_exploitation/tutorial6/)
+- [Tutorial 7: pwntools - CTF toolkit](3_robot_exploitation/tutorial7/)
 - [Tutorial 8: Linux Binary Protections](https://github.com/nnamon/linux-exploitation-course/blob/master/lessons/5_protections/lessonplan.md) (external)
-- [Tutorial 9: Building a pwnbox](robot_exploitation/tutorial9/)
-- [Tutorial 10: Bypassing NX with Return Oriented Programming](robot_exploitation/tutorial10/) (**WIP, unfinished**)
+- [Tutorial 9: Building a pwnbox](3_robot_exploitation/tutorial9/)
+- [Tutorial 10: Bypassing NX with Return Oriented Programming](3_robot_exploitation/tutorial10/) (**WIP, unfinished**)
 
 ###### Robotics-specific
-- [Tutorial 11: Unauthenticated registration/unregistration with ROS Master API](robot_exploitation/tutorial11/)
-- [Tutorial 12: Unauthenticated updates in publisher list for specified topic](robot_exploitation/tutorial12)
-- [Tutorial 13: Sockets left open and in CLOSE_WAIT state in ROS](robot_exploitation/tutorial13)
+- [Tutorial 11: Unauthenticated registration/unregistration with ROS Master API](3_robot_exploitation/tutorial11/)
+- [Tutorial 12: Unauthenticated updates in publisher list for specified topic](3_robot_exploitation/tutorial12)
+- [Tutorial 13: Sockets left open and in CLOSE_WAIT state in ROS](3_robot_exploitation/tutorial13)
 
+
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!--                          Cases of study -->
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////// -->
+## Cases of study
+TODO
+
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!--                          Other -->
+<!-- ///////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////// -->
 ## Other
 #### Robot forensics
 Robot forensics proposes a number of scientific tests and methods to obtain, preserve and document evidence from robot-related crimes. In particular, it focuses on recovering data from robotic systems to establish who committed the crime.
 
 Review https://github.com/Cugu/awesome-forensics
 
-- [Tutorial 1: Basic robot forensics, an unauthenticated unregistration in ROS](robot_forensics/tutorial1/)
-- [Tutorial 2: Locating ROS logs in memory](robot_forensics/tutorial2/) (**failed**)
-- [Tutorial 3: Capturing memory in Linux-based robots](robot_forensics/tutorial3/)
-- [Tutorial 4: Basic robot forensics 2, unauthenticated updates in publisher list for specified topic](robot_forensics/tutorial4/) (**ongoing**)
+- [Tutorial 1: Basic robot forensics, an unauthenticated unregistration in ROS](other/robot_forensics/tutorial1/)
+- [Tutorial 2: Locating ROS logs in memory](other/robot_forensics/tutorial2/) (**failed**)
+- [Tutorial 3: Capturing memory in Linux-based robots](other/robot_forensics/tutorial3/)
+- [Tutorial 4: Basic robot forensics 2, unauthenticated updates in publisher list for specified topic](other/robot_forensics/tutorial4/) (**ongoing**)
 
 #### Robot reversing
 Software reverse engineering (or *reversing*) is the process of extracting the knowledge or design blueprints from any software. When applied to robotics, robot reversing can be understood as the process of extracting information about the design elements in a robotic system.
@@ -175,5 +209,38 @@ Web security is of relevance to most companies. Robotics' ones aren't any differ
 - [Tutorial 1: Damn Vulnerable Web Application (DVWA)](web/tutorial1/)
 - [~~Tutorial 2: BadStore.net~~](web/tutorial2/) (**unfinished**)
 
-## Future, next steps
-See [IDEAS](IDEAS.md).
+#### Privacy
+WIP
+
+#### Cryptocurrencies
+WIP
+
+#### Standards
+WIP
+
+-----
+
+## Ideas and/or future, next steps?
+A few ideas to implement/try in the future:
+
+- Tutorial B: Remote Exploit. Shellcode without Sockets
+  - https://0x00sec.org/t/remote-exploit-shellcode-without-sockets/1440
+- Tutorial C: Infecting Running Processes
+  - https://0x00sec.org/t/linux-infecting-running-processes/1097
+- Tutorial A: Remote shell through remote vulnerability (e.g. buffer overflow)
+- Tutorial Z: Fuzzing
+   - https://fuzzing-project.org/tutorial1.html   
+- Tutorial Y: Pen Testing
+- Tutorial X: Remote buffer overflow exploiting
+   - https://www.areanetworking.it/explanation-of-a-remote-buffer-overflow-vulnerability.html
+   - https://www.cs.vu.nl/~herbertb/misc/bufferoverflow/
+- Tutorial U: Sniffers
+   - https://0x00sec.org/t/how-do-those-hackers-tools-work-sniffers-part-i/686
+   - https://0x00sec.org/t/how-do-those-hackers-tools-work-sniffers-part-ii/777
+- Tutorial D: Docker for forensics
+   - https://hub.docker.com/r/nov3mb3r/dfir/~/dockerfile/
+   - https://0x00sec.org/t/forensics-docker/6220
+
+ - Continue with tutorials at https://github.com/nnamon/linux-exploitation-course
+ - https://sploitfun.wordpress.com/2015/06/26/linux-x86-exploit-development-tutorial-series/
+ - Automatic Exploit Generation (AEG) (https://github.com/ChrisTheCoolHut/Zeratool)
