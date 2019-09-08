@@ -1,7 +1,7 @@
 BUILDDIR := $(CURDIR)/build
 SOURCE_FILE := \
 				README.md \
-				$(CURDIR)/reconnaissance/robot_footprinting/tutorial1/README.md \
+				$(CURDIR)/1_reconnaissance/robot_footprinting/tutorial1/README.md \
 				$(CURDIR)/other/web/tutorial2/README.md \
 				$(CURDIR)/BIBLIOGRAPHY.md
 EXTENSION := .pdf
