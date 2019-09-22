@@ -17,6 +17,15 @@ SOURCE_FILE := \
 				$(CURDIR)/3_robot_exploitation/tutorial2/README.md \
 				$(CURDIR)/3_robot_exploitation/tutorial3/README.md \
 				$(CURDIR)/3_robot_exploitation/tutorial4/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial5/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial6/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial7/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial8/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial9/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial10/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial11/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial12/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial13/README.md \
 				$(CURDIR)/other/README.md \
 				$(CURDIR)/other/web/tutorial2/README.md \
 				$(CURDIR)/BIBLIOGRAPHY.md
