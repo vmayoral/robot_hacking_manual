@@ -1,7 +1,23 @@
 BUILDDIR := $(CURDIR)/build
 SOURCE_FILE := \
 				README.md \
+				$(CURDIR)/1_reconnaissance/README.md \
 				$(CURDIR)/1_reconnaissance/robot_footprinting/tutorial1/README.md \
+				$(CURDIR)/1_reconnaissance/robot_footprinting/tutorial2/README.md \
+				$(CURDIR)/2_robot_vulnerabilities/README.md \
+				$(CURDIR)/2_robot_vulnerabilities/tutorial1/README.md \
+				$(CURDIR)/2_robot_vulnerabilities/tutorial2/README.md \
+				$(CURDIR)/2_robot_vulnerabilities/tutorial3/README.md \
+				$(CURDIR)/2_robot_vulnerabilities/tutorial4/README.md \
+				$(CURDIR)/2_robot_vulnerabilities/tutorial5/README.md \
+				$(CURDIR)/2_robot_vulnerabilities/tutorial6/README.md \
+				$(CURDIR)/2_robot_vulnerabilities/tutorial7/README.md \
+				$(CURDIR)/3_robot_exploitation/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial1/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial2/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial3/README.md \
+				$(CURDIR)/3_robot_exploitation/tutorial4/README.md \
+				$(CURDIR)/other/README.md \
 				$(CURDIR)/other/web/tutorial2/README.md \
 				$(CURDIR)/BIBLIOGRAPHY.md
 EXTENSION := .pdf

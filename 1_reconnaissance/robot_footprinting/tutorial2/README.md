@@ -1,4 +1,6 @@
-# Footprinting Secure ROS systems
+\newpage
+
+## Footprinting Secure ROS systems
 
 Following from the previous tutorial, in this one we'll analyze secure ROS setups using the SROS package.
 

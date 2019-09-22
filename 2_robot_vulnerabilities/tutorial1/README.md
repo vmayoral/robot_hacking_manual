@@ -1,10 +1,12 @@
-# Robot sanitizers in ROS 2 Dashing
+\newpage
+
+## Robot sanitizers in ROS 2 Dashing
 
 Sanitizers are dynamic bug finding tools[1]. In this tutorial we'll use some common and open source sanitizers over the ROS 2 codebase. In particular, by reproducing previously available results[2,3], we'll review the security status of ROS 2 Dashing Diademata.
 
 The first few sections provide a walkthrough on the attempt to make things run in OS X. The sections that follow automate the process through a Docker container.
 
-## OS X
+### OS X
 
 <details><summary>Setup in OS X, natively</summary>
 
@@ -58,8 +60,8 @@ touch src/ros2/common_interfaces/trajectory_msgs/COLCON_IGNORE
 
 ```
 
-### Compile the code with sanitizers enabled (OS X)
-#### AddressSanitizer (ASan)
+#### Compile the code with sanitizers enabled (OS X)
+##### AddressSanitizer (ASan)
 For ASan[6] we compile the ROS 2 Dashing code as follows:
 ```bash
 # Get last version of FastRTPS
@@ -91,7 +93,7 @@ colcon test --build-base=build-asan --install-base=install-asan \
     --event-handlers sanitizer_report+ --packages-up-to test_communication
 ```
 
-#### ThreadSanitizer (TSan)
+##### ThreadSanitizer (TSan)
 For TSan[7] TODO
 ```bash
 # Build the code with tsan
@@ -108,8 +110,8 @@ colcon test --build-base=build-tsan --install-base=install-tsan \
     --event-handlers sanitizer_report+ --packages-up-to test_communication
 ```
 
-### Known Issues
-#### Linking issues in FastRTPS when enabling security
+#### Known Issues
+##### Linking issues in FastRTPS when enabling security
 The following happens with the version included in the Dashing Release:
 ```bash
 --- stderr: fastrtps
@@ -131,7 +133,7 @@ Failed   <<< fastrtps	[ Exited with code 2 ]
 
 Solution: install latest version of Fast-RTPS
 
-#### Results of the test indicate `Interceptors are not working. This may be because AddressSanitizer is loaded too late ... interceptors not installed`
+##### Results of the test indicate `Interceptors are not working. This may be because AddressSanitizer is loaded too late ... interceptors not installed`
 
 ```bash
 ...
@@ -159,7 +161,7 @@ DYLD_INSERT_LIBRARIES=/Applications/Xcode.app/Contents/Developer/Toolchains/Xcod
 ```
 </details>
 
-## Docker
+### Docker
 ```bash
 docker build -t basic_cybersecurity_vulnerabilities1:latest .
 docker run --privileged -it -v /tmp/log:/opt/ros2_asan_ws/log basic_cybersecurity_vulnerabilities1:latest /bin/bash
@@ -171,8 +173,8 @@ colcon test --build-base=build-asan --install-base=install-asan \
 ```
 results are under `/tmp/log`.
 
-## Analyzing results
-### Analyzing example
+### Analyzing results
+#### Analyzing example
 I'll try and analyze here the example provided at https://github.com/colcon/colcon-sanitizer-reports/blob/master/README.rst before jumping into a new one to gain additional understanding:
 
 It appears that ASan detected memory leaks in the `rcpputils` module:
@@ -226,7 +228,7 @@ Direct leak of 4 byte(s) in 1 object(s) allocated from:
 Inspecting the dumps, there seems to be an issue in `test_basic` related to `FakeGuarded::FakeGuarded()`. In particular, this [line](https://github.com/ros2/rcpputils/pull/9/files#diff-be1f2d1334d30376c4dec7b53eda0f55L247) wasn't necessary and was replaced by a destructor instead.
 
 
-### Processing new bugs
+#### Processing new bugs
 Let's now analyze a new bug and try to reason about it. Let's take the first the `sanitizer_report.csv` generated and from it, the first item (dumped at [sanitizer_report_ros2dashing_asan.csv](sanitizer_report_ros2dashing_asan.csv)):
 
 ```bash
@@ -321,7 +323,7 @@ A complete report with all the bugs found is available at [sanitizer_report_ros2
 
 A further discussion into this bug and an analysis with GDB is available at [tutorial3](../tutorial3).
 
-## Looking for bugs and vulnerabilities with ThreadSanitizer (TSan)
+### Looking for bugs and vulnerabilities with ThreadSanitizer (TSan)
 
 Similar to ASan, we can use the ThreadSanitizer:
 
@@ -335,7 +337,7 @@ A complete report with all the bugs found is available at [sanitizer_report_ros2
 
 
 
-## Resources
+### Resources
 - [1] https://arxiv.org/pdf/1806.04355.pdf
 - [2] https://discourse.ros.org/t/introducing-ros2-sanitizer-report-and-analysis/9287
 - [3] https://github.com/colcon/colcon-sanitizer-reports/blob/master/README.rst

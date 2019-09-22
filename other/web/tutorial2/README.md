@@ -1,4 +1,6 @@
-# BadStore.net
+\newpage
+
+## Appendix A1, Web: BadStore.net
 
 This tutorial will walk through badstore web app hacking demo. The objective is to familiarize myself with web security assessment and to the best of my capabilities (both searching, reasoning and developing), try to come up with a) a common and strategic structure to follow when performing web assessments and b) a set of utilities to automate (as much as possible) the process.
 
@@ -22,13 +24,13 @@ This tutorial will walk through badstore web app hacking demo. The objective is 
 
 <!-- /TOC -->
 
-## Getting the infrastructure
+### Getting the infrastructure
 ```bash
 docker pull jvhoof/badstore-docker # v1.2.3
 docker run -d -p 80:80 jvhoof/badstore-docker
 ```
 
-## Introduction to the environment and background research on the structure (how to proceed)
+### Introduction to the environment and background research on the structure (how to proceed)
 I start review [@badstore.netv2.1.2006] which provides an intro to the environment. The document informs about a variety of different vulnerabilities and classifies them in different groups as follows:
 
 - Authentication
@@ -129,15 +131,15 @@ With regard the approach, [@meucci2014owasp] provides a comprehensive despcripti
 
 In the following sections we'd simply proceed with the last one which is the most common approch in most cases AFAIK
 
-## Diving into web hacking
+### Diving into web hacking
 Let's dive into it. Fetched a few books for diving a bit deeper into this and went through them. Mostly:
 - [ ] The Web Applications Hackers Handbook, second edition
 
 
-### Information gathering
+#### Information gathering
 Before diving into hacks, let's obtain some information about the website. This is somewhat nicely described at [@meucci2014owasp] and available online at https://www.owasp.org/index.php/Testing_Information_Gathering
 
-#### Fingerprinting
+##### Fingerprinting
 When one fingerprints, usually, we'll aim to obtain the following:
 
 - Whois is Details
@@ -200,7 +202,7 @@ ICMP request time out on 192.168.1.33
 
 Not very useful. Let's jump into the next topic
 
- #### robots.txt
+ ##### robots.txt
 
 Searching on `http://192.168.1.33/robots.txt` one finds the following:
 
@@ -222,7 +224,7 @@ Disallow: /supplier
 Disallow: /upload
 ```
 
-#### Finding out web tree through URL fuzzing
+##### Finding out web tree through URL fuzzing
 
 A simple search follows below:
 
@@ -236,7 +238,7 @@ A simple search follows below:
 It's also possible to provide a list of keywords and expressions but we'll leave that aside for now.
 Let's dive into pentesting.
 
-### Authentication
+#### Authentication
 
 According to [@stuttard2011web], the phases of authentication web pentesting are:
 
@@ -248,9 +250,9 @@ Or in the second edition:
 
 Let's follow this methodology in the coming subsections:
 
-#### Methodology 
+##### Methodology 
 
-##### Test password quality
+###### Test password quality
 
 Attemped to register with weak password `1234`:
 
@@ -270,26 +272,26 @@ Tested the registration format and it seems it only accepts 8 characters. Create
 
 It seems it tests the 8 characters. No limitation on the attempts to log in has been identified.
 
-##### Test for username enumeration
+###### Test for username enumeration
 
 
 
 
-##### Test for password guessing
+###### Test for password guessing
 
 
 
-##### Test account recovery
-##### Test “remember me”
-##### Test impersonation functions
-##### Test username uniqueness
-##### Test credential predictability
-##### Check for unsafe transmission
-##### Check for unsafe distribution
-##### Test for fail-open logic
-##### Testmultistageprocesses
+###### Test account recovery
+###### Test “remember me”
+###### Test impersonation functions
+###### Test username uniqueness
+###### Test credential predictability
+###### Check for unsafe transmission
+###### Check for unsafe distribution
+###### Test for fail-open logic
+###### Testmultistageprocesses
 
-#### Back to BadStore
+##### Back to BadStore
 
 For our case and according to [@badstore.netv2.1.2006], most of the areas that require authentication submit stuff in plain text and without encryption at all. Let's dive a bit into this.
 
@@ -303,7 +305,7 @@ The implications of this I presume is that pretty much anyone listening in the n
 
 ![Indeed that's the case, capture from wireshark while monitoring the network interface](background/images/2019/08/indeed-that-s-the-case-capture-from-wireshark-while-monitoring-the-network-interface.png)
 
-#### Brute force
+##### Brute force
 The objective of this section is to figure out the passwords of the different accounts in the system. For that, we first may need to figure out the accounts themselves. In this case it can easily be done (since they're directly printed) by navigating the website:
 
 ![User accounts leak](background/images/2019/08/user-accounts-leak.png)
@@ -311,16 +313,16 @@ The objective of this section is to figure out the passwords of the different ac
 From this point on, I guess one would go and try to figure out the admin account or other user's accounts. 
 
 
-#### Insufficient Authentication
+##### Insufficient Authentication
 TODO
 
-#### Weak Password Recovery Validation
+##### Weak Password Recovery Validation
 TODO
 
-## Review of the structure and classification of web vulns
+### Review of the structure and classification of web vulns
 TODO (refer)
 
-## A few sites that provide help/advice
+### A few sites that provide help/advice
 - https://www.coursera.org/learn/software-security/supplement/H1cBJ/project-2
 - https://d28rh4a8wq0iu5.cloudfront.net/softwaresec/virtual_machine/BadStore_net_v2_1_Manual.pdf
 - https://www.cs.umd.edu/class/fall2012/cmsc498L/materials/BadStore_net_v1_2_Manual.pdf

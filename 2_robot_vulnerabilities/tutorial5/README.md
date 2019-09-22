@@ -1,9 +1,11 @@
-# Static analysis of PyRobot
+\newpage
 
-## Discussing PyRobot
+## Static analysis of PyRobot
+
+### Discussing PyRobot
 This section briefly discusses `pyrobot` and provides a biased opinion on how valid the contribution is for the AI and robotic communities.
 
-### The rationale behind PyRobot
+#### The rationale behind PyRobot
 PyRobot has been developed and published by Facebook Artificial Intelligence research group. From the Facebook announcement:
 
 >PyRobot is a framework and ecosystem that enables AI researchers and students to get up and running with a robot in just a few hours, without specialized knowledge of the hardware or of details such as device drivers, control, and planning. PyRobot will help Facebook AI advance our long-term robotics research, which aims to develop embodied AI systems that can learn efficiently by interacting with the physical world. We are now open-sourcing PyRobot to help others in the AI and robotics community as well.
@@ -16,7 +18,7 @@ There's still a strong discussion in the robotics community on whether AI techni
 
 Robotics is the art of system integration and requires roboticists to care strongly about things such as determinism, real-time, security or safety. These aspects aren't often the first priority for most AI engineers (changing policies is typically what most would expect). This is a recurrent situation that's happening over and over with engineers jumping from AI-related areas to robotics. The desire of AI-oriented groups to apply "only AI" in robotics justifies the creation of yet new robotic frameworks *reinventing the wheel* unnecessarily. This happens every now and then. Most of these tools fail to grasp the technical aspects of robots and fail to provide means for complying with critical aspects in robotics.
 
-### Diving into PyRobot's architecture
+#### Diving into PyRobot's architecture
 
 According to its official paper [2], PyRobot is an open-source robotics framework for research and benchmarking. More specifically, PyRobot is defined as a *light-weight, high-level interface* **on top of ROS** *that provides a consistent set of hardware independent midlevel APIs to control different robots*.
 
@@ -49,7 +51,7 @@ There's a variety of ways to review the quality of code. One simple manner is to
 
 Let's quickly 
 
-### Results of `bandit`
+#### Results of `bandit`
 
 ```bash
 bandit -r .
@@ -142,7 +144,7 @@ Files skipped (0):
 
 The two test results above display two potential points of code injection in the code.
 
-### Results of `rats`
+#### Results of `rats`
 
 ```bash
 ...
@@ -181,7 +183,7 @@ generate randomness used for security reasons.  For security sensitive randomnes
 
 *Complete report at https://gist.github.com/vmayoral/0e7fe9b1eabeaf7d184db3a33864efd9*
 
-### Results of `safety`
+#### Results of `safety`
 
 ```bash
 safety check -r requirements.txt
@@ -213,7 +215,7 @@ Warning: unpinned requirement 'pyassimp' found in requirements.txt, unable to ch
 ╘══════════════════════════════════════════════════════════════════════════════╛
 ```
 
-## Resources
+### Resources
 - [1] https://github.com/facebookresearch/pyrobot
 - [2] https://arxiv.org/pdf/1906.08236.pdf
 - [3] https://ai.facebook.com/blog/open-sourcing-pyrobot-to-accelerate-ai-robotics-research/

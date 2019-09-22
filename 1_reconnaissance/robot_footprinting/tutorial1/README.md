@@ -1,4 +1,6 @@
-# Footprinting ROS systems
+\newpage
+
+## Footprinting ROS systems
 
 Footprinting, (also known as *reconnaissance*) is the technique used for gathering information about digital systems and the entities they belong to. To get this information, a security analyst might use various tools and technologies. This information is very useful when performing a series attacks over an specific system.
 
@@ -21,11 +23,14 @@ docker run --privileged -it basic_cybersecurity_footprinting1:latest
 ### ROS footprinting basics
 
 The first thing we do to test the capabilities of `aztarna` is to get a container with the right dependencies and the tool installed:
+
 ~~~smallcontent
 ```bash
+
 # from this directory:
 docker build -t basic_cybersecurity_footprinting1:latest .
 ...
+
 ```
 ~~~
 
@@ -33,6 +38,7 @@ Let's launch an instance of ROS in the default port and see how `aztarna` can de
 
 ~~~smallcontent
 ```bash
+
 docker run --privileged -it basic_cybersecurity_footprinting1:latest
 root@3c22d4bbf4e1:/# roscore -p 11311 &
 root@3c22d4bbf4e1:/# roscore -p 11317 &

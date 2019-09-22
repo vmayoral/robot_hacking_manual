@@ -1,8 +1,10 @@
-# Robot sanitizers in MoveIt 2
+\newpage
+
+## Robot sanitizers in MoveIt 2
 
 In this tutorial we'll apply the robot santizers over the the moveit2 alpha release code and review the results. This tutorial builds on top of [tutorial1](../tutorial1/), originally inspired by [1].
 
-## Looking for bugs and vulnerabilities in MoveIt 2 with AddressSanitizer (ASan)
+### Looking for bugs and vulnerabilities in MoveIt 2 with AddressSanitizer (ASan)
 We'll dockerize the process to simplify reproduction of results. 
 Let's compile the moveit2 code with the right flags for dynamic bugs finding:
 
@@ -65,7 +67,7 @@ colcon list --packages-up-to moveit_core --topological-graph-dot | dot -Tpng -o 
 
 Both, `geometric_shapes` and `moveit_core` depend on quite a few other packages so one would probably pick `octomap` for starters and try fixing that bug first scaliting into other packages.
 
-### Fixing bugs
+#### Fixing bugs
 As per the original [report](https://gist.github.com/vmayoral/25b3cff2c954b099eeb4d1471c1830e2) the `moveit_core` related bug detected by ASan is listed below:
 
 ```bash
@@ -196,7 +198,7 @@ root@bf916bb1a977:/opt/ros2_moveit2_ws# build-asan/moveit_core/planning_scene/te
 [  PASSED  ] 6 tests.
 ```
 
-## Looking for bugs and vulnerabilities in MoveIt 2 with ThreadSanitizer (TSan)
+### Looking for bugs and vulnerabilities in MoveIt 2 with ThreadSanitizer (TSan)
 
 To use TSan [3] we rebuild the container (uncommenting and commenting the right sections) access it and manually launch the tests:
 
@@ -208,7 +210,7 @@ colcon test --build-base=build-tsan --install-base=install-tsan --event-handlers
 
 No issues where found while running TSan (up until `moveit_core`).
 
-## Resources
+### Resources
 - [1] https://github.com/colcon/colcon-sanitizer-reports/blob/master/README.rst
 - [2] https://discourse.ros.org/t/exploring-package-dependencies/4719
 - [3] TSan Cpp manual https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual

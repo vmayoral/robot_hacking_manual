@@ -1,4 +1,6 @@
-# Robot sanitizers with Gazebo
+\newpage
+
+## Robot sanitizers with Gazebo
 
 Let's start by compiling the moveit2 workspace by hand using ASan flags:
 
@@ -7,5 +9,5 @@ colcon build --build-base=build-asan --install-base=install-asan --cmake-args -D
 ```
 
 
-## Resources
+### Resources
 - [1] https://www.usenix.org/system/files/conference/atc12/atc12-final39.pdf

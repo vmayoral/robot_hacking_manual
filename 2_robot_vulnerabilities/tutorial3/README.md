@@ -1,26 +1,33 @@
-# Debugging output of robot sanitizers with GDB, hunting and fixing bugs
+\newpage
+
+## Debugging output of robot sanitizers with GDB, hunting and fixing bugs
 
 This article aims to describe the process of introspecting memory leaks by directly connecting the debugger with the sanitizer-tests/binaries. The tutorial builds on top of the previous two articles, refer to [tutorial1](../tutorial1) and [tutorial2](../tutorial2).
 
-## Fetch the bugs
+### Fetch the bugs
 Similar to [1]:
+
+~~~smallcontent
 ```bash
 # Build the code with ASan
 colcon build --build-base=build-asan --install-base=install-asan --cmake-args -DOSRF_TESTING_TOOLS_CPP_DISABLE_MEMORY_TOOLS=ON -DINSTALL_EXAMPLES=OFF -DSECURITY=ON --no-warn-unused-cli -DCMAKE_BUILD_TYPE=Debug --mixin asan-gcc --symlink-install
 
 # Launch tests with ASan
 colcon test --build-base=build-asan --install-base=install-asan --event-handlers sanitizer_report+
-``
+```
+~~~
+
 
 The complete set of bugs found has been captured and dumped at [sanitizer_report_ros2dashing.csv](sanitizer_report_ros2dashing.csv) file. 
 
 
-## Gaining some additional understanding
+### Gaining some additional understanding
 
 Let's pick the first vulnerability and start exploring it and the structure of its code and relationships:
 
-<details><summary>First vulnerability: detected memory leak in rcl</summary>
+First flaw: detected memory leak in rcl
 
+~~~smallcontent
 ```bash
 rcl,detected memory leaks,__default_zero_allocate /opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56,4,"    
     #0 0x7f762845bd38 in __interceptor_calloc (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xded38)
@@ -45,18 +52,27 @@ rcl,detected memory leaks,__default_zero_allocate /opt/ros2_asan_ws/src/ros2/rcu
     #19 0x5565b05b99c4 in RUN_ALL_TESTS() /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/include/gtest/gtest.h:2370
     #20 0x5565b05b990a in main /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/src/gtest_main.cc:36
     #21 0x7f7626a81b96 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21b96)"
-```
 
-</details>
+```
+~~~
+
 
 This first bug seems to apply to `rcl` but crashies in `rcutils`. Let's see if we can visualize its relationship with detected bugs. First, let's plot the complete graph of relationships:
+
+~~~smallcontent
 ```bash
 colcon list --topological-graph-dot | dot -Tpng -o deps.png
 ```
+~~~
+
 This will generate a report of **all** dynamic bugs found while reviewing ROS 2 Dashing Diademata with ASan sanitizer. The plot generated is available in [deps_all.png](deps_all.png) (*warning*: this file is 27M). This is frankly to bussy to make sense of it so let's try to simplify the plot:
+
+~~~smallcontent
 ```bash
 colcon list --topological-graph-dot --packages-above-depth 1 rcutils | dot -Tpng -o deps.png
 ```
+~~~
+
 
 ![](deps_rcutils.png)
 
@@ -64,26 +80,30 @@ colcon list --topological-graph-dot --packages-above-depth 1 rcutils | dot -Tpng
 
 In this graph we can see that `rcutils` package is used by a variety of other packages and likely, it seems that the leak is happening through one of the rcl-related tests. Let's next try to reproduce the bug by finding the right test that triggers the memory leak.
 
-## Getting ready to debug
+### Getting ready to debug
 
 Let's find the test that actually allows us to reproduce this:
+~~~smallcontent
 ```bash
 # source the install directory
 source /opt/ros2_asan_ws/install-asan/setup.bash
 cd /opt/ros2_asan_ws/build-asan/rcl
 ./test_graph__rmw_fastrtps_cpp
 ```
+~~~
+
 
 this will produce:
 
-<details><summary>Dump of `test_graph__rmw_fastrtps_cpp`</summary>
+Dump of `test_graph__rmw_fastrtps_cpp`
 
+~~~smallcontent
 ```bash
 # source the worspace itself
 source install-asan/setup.bash
 # cd <whatever test dir>
   
-## Launch the actual failing test
+ ## Launch the actual failing test
 ./test_graph__rmw_fastrtps_cpp
 Running main() from /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/src/gtest_main.cc
 [==========] Running 14 tests from 2 test cases.
@@ -275,29 +295,39 @@ Indirect leak of 8 byte(s) in 1 object(s) allocated from:
     #21 0x7f527721eb96 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21b96)
 
 SUMMARY: AddressSanitizer: 103 byte(s) leaked in 5 allocation(s).
+
 ```
-</details>
+~~~
+
 
 We can clearly see that the two direct leaks are related to `/opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56`. As pointed out in the first tutorial and according to ASan documentation [8]:
 
 > LSan also differentiates between direct and indirect leaks in its output. This gives useful information about which leaks should be prioritized, because fixing the direct leaks is likely to fix the indirect ones as well.
 
 this tells us where to focus first. Direct leaks from this first report are:
-```
+
+~~~smallcontent
+```bash
 Direct leak of 56 byte(s) in 1 object(s) allocated from:
     #0 0x7f4eaf189d38 in __interceptor_calloc (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xded38)
     #1 0x7f4eae8d54d6 in __default_zero_allocate /opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56
     #2 0x7f4eae6c6c7e in rmw_names_and_types_init /opt/ros2_asan_ws/src/ros2/rmw/rmw/src/names_and_types.c:72
     ...
 ```
+~~~
+
 and
-```
+
+~~~smallcontent
+```bash
 Direct leak of 8 byte(s) in 1 object(s) allocated from:
     #0 0x7f4eaf189d38 in __interceptor_calloc (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xded38)
     #1 0x7f4eae8d54d6 in __default_zero_allocate /opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56
     #2 0x7f4eae8e7e77 in rcutils_string_array_init /opt/ros2_asan_ws/src/ros2/rcutils/src/string_array.c:54
     ...
 ```
+~~~
+
 Both correspond to the `calloc` call at https://github.com/ros2/rcutils/blob/master/src/allocator.c#L56 however with different callers:
 - https://github.com/ros2/rcutils/blob/master/src/string_array.c#L54 (1)
 - https://github.com/ros2/rmw/blob/master/rmw/src/names_and_types.c#L72 (2)
@@ -306,8 +336,10 @@ At this point, we could go ahead and inspect the part of the code that fails ``s
 
 Let's grab gdb and jump into it.
 
-## Using GDB to understand better the leak
+### Using GDB to understand better the leak
 First, let's get the environment ready for the debugging:
+
+~~~smallcontent
 ```bash
 ccache -M 20G # increase cache size
 # Add the following to your .bashrc or .zshrc file and restart your terminal:
@@ -315,6 +347,8 @@ export CC=/usr/lib/ccache/gcc
 export CXX=/usr/lib/ccache/g++
 source /opt/ros2_asan_ws/install-asan/setup.bash
 ```
+~~~
+
 
 We already know where this memory leak is happening, let's now try to identify the exact environment and cause of it using gdb. We'll follow a similar strategy to what's described at [4]:
 
@@ -328,6 +362,7 @@ Now we use two terminals:
 
 Moreover in the GDB terminal, we'll be executing the following script [4]:
 
+~~~smallcontent
 ```bash
 set pagination off
 set breakpoint pending on
@@ -350,10 +385,13 @@ commands
 end
 continue
 ```
+~~~
 
 This will fail with a message as follows:
 
-```
+
+~~~smallcontent
+```bash
 (gdb) continue
 Continuing.
 Warning:
@@ -364,6 +402,8 @@ You may have requested too many hardware breakpoints/watchpoints.
 
 Command aborted.
 ```
+~~~
+
 
 Note that this script was literally taken from [4] and there's no real certainty that the `malloc+191` offset leads to the point where we can fetch the pointer that points to the allocated portion of memory in the heap. A quick check with gdb points out that the debugger never breaks here.
 
@@ -371,14 +411,18 @@ Moreover, it seems that the way this script is coded, we need to limit the place
 
 Let's get a more comfortable environment for debugging (note that depending on what you're doing with gdb, this can be anying so feel free to remove the `~/.gdbinit` file if that's the case):
 
+~~~smallcontent
 ```bash
 wget -P ~ git.io/.gdbinit
 ```
+~~~
+
 
 Breaking in `__default_zero_allocate` shows us the information we need to diagnose the leak size:
 
 <details><summary>Debug session 1</summary>
 
+~~~smallcontent
 ```bash
 gdb ./test_graph__rmw_fastrtps_cpp
 GNU gdb (Ubuntu 8.1-0ubuntu3) 8.1.0.20180409-git
@@ -460,6 +504,8 @@ arg context = 0x603000033730
 Breakpoint 1, __default_zero_allocate (number_of_elements=1, size_of_element=88, state=0x0) at /opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56
 56	  return calloc(number_of_elements, size_of_element);
 ```
+~~~
+
 
 </details>
 
@@ -468,6 +514,7 @@ Searching, eventually we'll find:
 
 <details><summary>Debug session 2</summary>
 
+~~~smallcontent
 ```bash
 ─── Assembly ───────────────────────────────────────────────────────────────────────────
 0x00007ffff66444b8 __default_zero_allocate+8  mov    %rdi,-0x8(%rbp)
@@ -527,6 +574,8 @@ arg allocator = 0x7fffffff1330
 Thread 1 "test_graph__rmw" hit Breakpoint 1, __default_zero_allocate (number_of_elements=1, size_of_element=56, state=0x0) at /opt/ros2_asan_ws/src/ros2/rcutils/src/allocator.c:56
 56	  return calloc(number_of_elements, size_of_element);
 ```
+~~~
+
 </details>
 
 
@@ -534,6 +583,7 @@ Let's debug and play with calloc (not malloc) and free again. To do so, we'll br
 
 <details><summary>Debug session 3</summary>
 
+~~~smallcontent
 ```bash
 ─── Assembly ─────────────────────────────────────────────────────────────────────────────────
 0x00007ffff66444cc __default_zero_allocate+28 mov    %rdx,%rsi
@@ -567,12 +617,15 @@ $$0 = 88
 61 {
 62   static rcutils_allocator_t zero_allocator = {
 ```
+~~~
+
 </details>
 
 It seems that `__default_zero_allocate+39` is the point where we can fetch the memory address allocated in the heap (from `rax` register). In the example above `0x0000608000000120`. This can be double checked by putting a breakpoint at `b rcl/init.c:79` and checking the address of `context->impl`:
 
 <details><summary>Debug session 4</summary>
 
+~~~smallcontent
 ```bash
 >>> b rcl/init.c:79
 Breakpoint 15 at 0x7ffff6bba4c0: file /opt/ros2_asan_ws/src/ros2/rcl/rcl/src/rcl/init.c, line 79.
@@ -635,6 +688,8 @@ $2 = (rcl_context_t *) 0x603000033730
 >>> p context->impl
 $3 = (struct rcl_context_impl_t *) 0x608000000120
 ```
+~~~
+
 </details>
 
 
@@ -644,6 +699,7 @@ We know that the address will be in the `0x60800000XXXX` range (more or less, lo
 
 <details><summary>Debug session 5</summary>
 
+~~~smallcontent
 ```bash
 >>> x/90i $pc
 => 0x7ffff6ef8d6c <calloc+252>:	cmpb   $0x0,0xd8c0(%rax)
@@ -708,11 +764,14 @@ We know that the address will be in the `0x60800000XXXX` range (more or less, lo
    0x7ffff6ef8e74 <realloc+4>:	push   %r15
    0x7ffff6ef8e76 <realloc+6>:	push   %r14
 ```
+~~~
+
 </details>
 
 
 In short, to verify that we indeed are getting the right values for the dynamica memory allocated:
 
+~~~smallcontent
 ```bash
 # within gdb
 b main
@@ -721,9 +780,12 @@ b *(calloc-15694047)
 b rcl/init.c:79
 p context->impl
 ```
+~~~
+
 
 Putting it together in a gdb script:
 
+~~~smallcontent
 ```bash
 set pagination off
 set breakpoint pending on
@@ -746,10 +808,13 @@ commands
 end
 continue
 ```
+~~~
+
 
 (after disabling a few of the hw breakpoints) generating a big file https://gist.github.com/vmayoral/57ea38f9614cbfd1b5d7e93d92c15e13.
 Browsing through this file, let's coun the calloc counts in those cases where we allocate 56 bytes (where the leak is):
 
+~~~smallcontent
 ```bash
 cat gdbcmd1.out | grep "calloc(56)" | awk '{print $3}' | sed "s/^/cat gdbcmd1.out | grep -c /g"
 cat gdbcmd1.out | grep -c 0x000060600000af40
@@ -798,9 +863,12 @@ cat gdbcmd1.out | grep -c 0x0000606000072020
 cat gdbcmd1.out | grep -c 0x0000606000072140
 cat gdbcmd1.out | grep -c 0x0000606000072260
 ```
+~~~
+
 
 which launched gets the following output:
 
+~~~smallcontent
 ```bash
 cat gdbcmd1.out | grep "calloc(56)" | awk '{print $3}' | sed "s/^/cat gdbcmd1.out | grep -c /g" | bash
 2
@@ -849,16 +917,22 @@ cat gdbcmd1.out | grep "calloc(56)" | awk '{print $3}' | sed "s/^/cat gdbcmd1.ou
 2
 2
 ```
+~~~
+
 
 We're filtering by the address and we should expect to *always* get an even number (each calloc with its free) however we get an odd number for the address `0x000060600001dba0`:
 
+~~~smallcontent
 ```bash
 cat gdbcmd1.out  | grep "0x000060600001dba0"
 calloc(56) = 0x000060600001dba0
 ```
+~~~
+
 
 It seems this is not getting released! Let's get back to gdb and debug where does this happens with a combination as follows:
 
+~~~smallcontent
 ```bash
 set pagination off
 hbreak calloc
@@ -869,17 +943,23 @@ end
 break *(calloc-15694047) if $callocsize == 56
 printf "calloc(%d) = 0x%016llx\n", $callocsize, $rax
 ```
+~~~
+
 
 In combination with:
 
+~~~smallcontent
 ```bash
 break free
 p $rdi
 c
 ```
+~~~
+
 
 It's easy to validate that the 4th iteration is leaky. Further investigating here:
 
+~~~smallcontent
 ```bash
 >>> where
 #0  0x00007ffff6ef8d01 in calloc () from /usr/lib/x86_64-linux-gnu/libasan.so.4
@@ -903,6 +983,8 @@ It's easy to validate that the 4th iteration is leaky. Further investigating her
 #18 0x00005555555d5215 in RUN_ALL_TESTS () at /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/include/gtest/gtest.h:2370
 #19 0x00005555555d515b in main (argc=1, argv=0x7fffffff4b28) at /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/src/gtest_main.cc:36
 ```
+~~~
+
 
 Which tells us the exact same information Asan did already :). In other words, we reached the same conclusion, the problem seems to be at 
 `src/ros2/rcl/rcl/test/rcl/test_graph.cpp:342`.
@@ -911,6 +993,7 @@ Inspecting the code, it seems like key might be in the call to `rmw_names_and_ty
 
 <details><summary>Debug session 6</summary>
 
+~~~smallcontent
 ```bash
 gdb ./test_graph__rmw_fastrtps_cpp
 GNU gdb (Ubuntu 8.1-0ubuntu3) 8.1.0.20180409-git
@@ -1090,6 +1173,8 @@ bt
 #12 0x00005555555d5215 in RUN_ALL_TESTS () at /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/include/gtest/gtest.h:2370
 #13 0x00005555555d515b in main (argc=1, argv=0x7fffffff4b28) at /opt/ros2_asan_ws/install-asan/gtest_vendor/src/gtest_vendor/src/gtest_main.cc:36
 ```
+~~~
+
 </details>
 
 Note that this comes from [rcl/test/rcl/test_graph.cpp#L172](https://github.com/ros2/rcl/blob/master/rcl/test/rcl/test_graph.cpp#L172). Inspecting the code that creates the leak below, we observe that there's simply no call to such `rcl_names_and_types_fini` function.
@@ -1097,7 +1182,7 @@ Note that this comes from [rcl/test/rcl/test_graph.cpp#L172](https://github.com/
 Fix for the bug is available at https://github.com/vmayoral/rcl/commit/ec0e62cd04453f7968fa47f580289d3d06734a1d. Sent it upstream https://github.com/ros2/rcl/pull/468.
 
 
-## Resources
+### Resources
 - [1] [Tutorial 1: Robot sanitizers in ROS 2 Dashing](../tutorial1/)
 - [2] https://github.com/google/sanitizers/wiki/AddressSanitizerAndDebugger
 - [3] https://github.com/google/sanitizers/wiki/AddressSanitizerLeakSanitizerVsHeapChecker

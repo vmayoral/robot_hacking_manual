@@ -5,7 +5,7 @@ date: "2019-07-20"
 toc: true
 subject: "Markdown"
 keywords: [Robotics, Hacking, Robot]
-subtitle: "An introductory series of cybersecurity for robots with a somewhat comprehensive step-by-step tutorials."
+subtitle: "Notes and writeups about a journey in robot cybersecurity."
 lang: "en"
 titlepage: true
 titlepage-color: "313131"
@@ -19,6 +19,10 @@ pandoc-latex-fontsize:
     size: huge
 bibliography: bibliography.bib
 ...
+
+<!-- here goes the index -->
+
+\newpage
 
 # Basic robot cybersecurity
 An introductory series about security and cybersecurity for robots and related topics, with comprehensive step-by-step tutorials. The material available here is a personal learning attempt and it's disconnected from any particular organization. **By no means I want to encourage or promote the unauthorized tampering of robotic systems or related technologies**.
@@ -110,6 +114,9 @@ The following tutorials provide an introduction on how to run sanitizers in robo
 - [Tutorial 2: Robot sanitizers in MoveIt 2](2_robot_vulnerabilities/tutorial2/)
 - [Tutorial 3: Debugging output of robot sanitizers with GDB, hunting and fixing bugs](2_robot_vulnerabilities/tutorial3/)
 - Tutorial 4: Robot sanitizers with Gazebo: TODO
+- [Tutorial 5: Static analysis of PyRobot](2_robot_vulnerabilities/tutorial5/)
+- [Tutorial 6: Analyzing Turtlebot 3](2_robot_vulnerabilities/tutorial6/)
+- [Tutorial 7: Looking for vulnerabilities in navigation2](2_robot_vulnerabilities/tutorial7/)
 
 
 <!-- ///////////////////////////////////////////////////////////////// -->
