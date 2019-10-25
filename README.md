@@ -167,10 +167,10 @@ Robot forensics proposes a number of scientific tests and methods to obtain, pre
 
 Review https://github.com/Cugu/awesome-forensics
 
-- [Tutorial 1: Basic robot forensics, an unauthenticated unregistration in ROS](other/robot_forensics/tutorial1/)
-- [Tutorial 2: Locating ROS logs in memory](other/robot_forensics/tutorial2/) (**failed**)
-- [Tutorial 3: Capturing memory in Linux-based robots](other/robot_forensics/tutorial3/)
-- [Tutorial 4: Basic robot forensics 2, unauthenticated updates in publisher list for specified topic](other/robot_forensics/tutorial4/) (**ongoing**)
+- [Tutorial 1: Basic robot forensics, an unauthenticated unregistration in ROS](4_other/robot_forensics/tutorial1/)
+- [Tutorial 2: Locating ROS logs in memory](4_other/robot_forensics/tutorial2/) (**failed**)
+- [Tutorial 3: Capturing memory in Linux-based robots](4_other/robot_forensics/tutorial3/)
+- [Tutorial 4: Basic robot forensics 2, unauthenticated updates in publisher list for specified topic](4_other/robot_forensics/tutorial4/) (**ongoing**)
 
 #### Robot reversing
 Software reverse engineering (or *reversing*) is the process of extracting the knowledge or design blueprints from any software. When applied to robotics, robot reversing can be understood as the process of extracting information about the design elements in a robotic system.
