@@ -56,6 +56,7 @@ Reconnaissance is the act of gathering preliminary data or intelligence on your 
 Footprinting, (also known as *reconnaissance*) is the technique used for gathering information about digital systems and the entities they belong to.
 - [Tutorial 1: Footprinting ROS systems](1_reconnaissance/robot_footprinting/tutorial1/)
 - [Tutorial 2: Footprinting Secure ROS systems](1_reconnaissance/robot_footprinting/tutorial2/)
+- [Tutorial 3: Footprinting ROS 2 and DDS systems](1_reconnaissance/robot_footprinting/tutorial3/)
 
 #### Robot enumeration
 - Basic enumeration of a robotic system can be done with [ROSPenTo](https://github.com/jr-robotics/ROSPenTo)
@@ -115,8 +116,10 @@ The following tutorials provide an introduction on how to run sanitizers in robo
 - [Tutorial 3: Debugging output of robot sanitizers with GDB, hunting and fixing bugs](2_robot_vulnerabilities/tutorial3/)
 - Tutorial 4: Robot sanitizers with Gazebo: TODO
 - [Tutorial 5: Static analysis of PyRobot](2_robot_vulnerabilities/tutorial5/)
-- [Tutorial 6: Analyzing Turtlebot 3](2_robot_vulnerabilities/tutorial6/)
-- [Tutorial 7: Looking for vulnerabilities in navigation2](2_robot_vulnerabilities/tutorial7/)
+- [Tutorial 6: Looking for vulnerabilities in ROS 2](2_robot_vulnerabilities/tutorial6/)
+- [Tutorial 7: Analyzing Turtlebot 3](2_robot_vulnerabilities/tutorial7/)
+- [Tutorial 8: SROS and SROS 2, exploring](2_robot_vulnerabilities/tutorial8/)
+- [Tutorial 9: Looking at DDS middleware flaws](2_robot_vulnerabilities/tutorial8/)
 
 
 <!-- ///////////////////////////////////////////////////////////////// -->
@@ -225,7 +228,6 @@ WIP
 #### Standards
 WIP
 
------
 
 ## Ideas and/or future, next steps?
 A few ideas to implement/try in the future:
