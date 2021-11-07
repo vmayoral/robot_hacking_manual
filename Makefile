@@ -26,8 +26,8 @@ SOURCE_FILE := \
 				$(CURDIR)/3_robot_exploitation/tutorial11/README.md \
 				$(CURDIR)/3_robot_exploitation/tutorial12/README.md \
 				$(CURDIR)/3_robot_exploitation/tutorial13/README.md \
-				$(CURDIR)/other/README.md \
-				$(CURDIR)/other/web/tutorial2/README.md \
+				$(CURDIR)/4_other/README.md \
+				$(CURDIR)/4_other/web/tutorial2/README.md \
 				$(CURDIR)/BIBLIOGRAPHY.md
 EXTENSION := .pdf
 OUT_FILE := RHM
