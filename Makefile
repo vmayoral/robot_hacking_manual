@@ -1,5 +1,5 @@
 BUILDDIR := $(CURDIR)/build
-SOURCE_FILE := \
+SOURCE_FILES := \
 				README.md \
 				$(CURDIR)/1_reconnaissance/README.md \
 				$(CURDIR)/1_reconnaissance/robot_footprinting/tutorial1/README.md \
@@ -31,24 +31,27 @@ SOURCE_FILE := \
 				$(CURDIR)/BIBLIOGRAPHY.md
 EXTENSION := .pdf
 OUT_FILE := RHM
-PANDOC_TEMPLATE := $(CURDIR)/templates/eisvogel.tex
+PANDOC_TEMPLATE := $(CURDIR)/pandoc-latex-template/eisvogel.tex
 PANDOC_OPTIONS := \
 					--variable fontsize=10pt \
+					--from markdown \
 					--pdf-engine=xelatex \
 					--bibliography=bibliography.bib \
 					--filter pandoc-latex-fontsize \
-					--filter pandoc-citeproc --template=$(PANDOC_TEMPLATE) $(SOURCE_FILE)					
+					--citeproc \
+					--template=$(PANDOC_TEMPLATE) \
+					$(SOURCE_FILES)
 define exec_pandoc
 	@echo "Building..."
 	@pandoc $(PANDOC_OPTIONS) -o $(1)
 	@echo "Build finished for $(1)"
 endef
 .PHONY: clean all debug
-all: $(OUT_FILE)$(EXTENSION) 
-$(OUT_FILE)$(EXTENSION) : $(SOURCE_FILE) $(BUILDDIR) $(PANDOC_TEMPLATE)
+all: $(OUT_FILE)$(EXTENSION)
+$(OUT_FILE)$(EXTENSION) : $(SOURCE_FILES) $(BUILDDIR) $(PANDOC_TEMPLATE)
 	$(call exec_pandoc, $(OUT_FILE)$(EXTENSION))
 $(BUILDDIR):
-	@mkdir $(BUILDDIR)	
+	@mkdir $(BUILDDIR)
 debug: EXTENSION := .tex
 debug: $(OUT_FILE)$(EXTENSION)
 clean:

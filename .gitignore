@@ -3,3 +3,4 @@
 build/
 *.pdf
 missfont.log
+.DS_Store

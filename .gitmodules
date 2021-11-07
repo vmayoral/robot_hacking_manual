@@ -1,3 +1,6 @@
 [submodule "tools/pwnbox"]
 	path = tools/pwnbox
 	url = https://github.com/aliasrobotics/pwnbox
+[submodule "pandoc-latex-template"]
+	path = pandoc-latex-template
+	url = https://github.com/Wandmalfarbe/pandoc-latex-template
