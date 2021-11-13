@@ -38,9 +38,9 @@ I start review [@badstore.netv2.1.2006] which provides an intro to the environme
   - Insufficient Authentication
   - Weak Password Recovery Validation
 - Authorization
-  - Credential/Session Prediction 
+  - Credential/Session Prediction
   - Insufficient Authorization
-  - Insufficient Session Expiration- 
+  - Insufficient Session Expiration-
   - Session Fixation
 - Client-side Attacks
   - Content Spoofing
@@ -51,8 +51,8 @@ I start review [@badstore.netv2.1.2006] which provides an intro to the environme
   - LDAP Injection
   - OS Commanding
   - SQL Injection
-  - SSI Injection- 
-  - XPath Injection 
+  - SSI Injection-
+  - XPath Injection
 - Information Disclosure
   - Directory Indexing
   - Information Leakage
@@ -84,8 +84,8 @@ An alternative yet valid and good approach to web security is described by [@wal
   - Vulnerability Scanners
   - Input Validation
   - Blacklist Filters
-  - Whitelist Filters 
- 
+  - Whitelist Filters
+
 - Injection Attacks
   - Interpreters and Injection
   - SQL Injection
@@ -250,7 +250,7 @@ Or in the second edition:
 
 Let's follow this methodology in the coming subsections:
 
-##### Methodology 
+##### Methodology
 
 ###### Test password quality
 
@@ -310,7 +310,7 @@ The objective of this section is to figure out the passwords of the different ac
 
 ![User accounts leak](background/images/2019/08/user-accounts-leak.png)
 
-From this point on, I guess one would go and try to figure out the admin account or other user's accounts. 
+From this point on, I guess one would go and try to figure out the admin account or other user's accounts.
 
 
 ##### Insufficient Authentication
@@ -327,4 +327,4 @@ TODO (refer)
 - https://d28rh4a8wq0iu5.cloudfront.net/softwaresec/virtual_machine/BadStore_net_v2_1_Manual.pdf
 - https://www.cs.umd.edu/class/fall2012/cmsc498L/materials/BadStore_net_v1_2_Manual.pdf
 - https://medium.com/syscall59/badstore-1-2-3-walkthrough-vulnhub-7816f3001333
-- https://medium.com/@yassergersy/badstore-assignment-d93422e56b31
+- https://medium.com/yassergersy/badstore-assignment-d93422e56b31

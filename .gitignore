@@ -4,3 +4,9 @@ build/
 *.pdf
 missfont.log
 .DS_Store
+.tex
+.toc
+.aux
+.log
+.synctex.gz
+mermaid-images

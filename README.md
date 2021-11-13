@@ -1,31 +1,6 @@
----
-title: "RHM: Robot Hacking Manual"
-author: [Víctor Mayoral Vilches]
-date: "2019-07-20"
-toc: true
-subject: "Markdown"
-keywords: [Robotics, Hacking, Robot]
-subtitle: "Notes, writeups and papers about a journey in robot cybersecurity."
-lang: "en"
-titlepage: true
-titlepage-color: "313131"
-titlepage-text-color: "FFFFFF"
-titlepage-rule-color: "FFFFFF"
-titlepage-rule-height: 1
-pandoc-latex-fontsize:
-  - classes: [smallcontent]
-    size: tiny
-  - classes: [largecontent, important]
-    size: huge
-bibliography: bibliography.bib
-...
+# `RHM`: Robot Hacking Manual
 
-<!-- here goes the index -->
-
-\newpage
-
-# Basic robot cybersecurity
-An introductory series about security and cybersecurity for robots and related topics, with comprehensive step-by-step tutorials. The material available here is a personal learning attempt and it's disconnected from any particular organization. **By no means I want to encourage or promote the unauthorized tampering of robotic systems or related technologies**.
+An introductory series about security and cybersecurity for robots and related topics, with comprehensive step-by-step tutorials. The material available here is a personal learning attempt and it's disconnected from any particular organization. **By no means I want to encourage or promote the unauthorized tampering of robotic systems or related technologies. This can cause serious human harm and material damages**.
 
 ## Index
 - [Robot reconnaissance](#robot-reconnaissance)
