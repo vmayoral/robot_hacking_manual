@@ -25,6 +25,77 @@ Security is *not a product, but a process* that needs to be continuously assesse
 
 <!-- To read more on how cybersecurity in robotics compares to IT, OT or IoT, refer to [this article](https://cybersecurityrobotics.net/it-ot-iot-and-robotics-security-comparison/). -->
 
+\newpage
+
+## Terminology
+
+### Robot reconnaissance
+Reconnaissance is the act of gathering preliminary data or intelligence on your target. The data is gathered in order to better plan for your attack. Reconnaissance can be performed actively (meaning that you are directly touching the target) or passively (meaning that your recon is being performed through an intermediary).
+
+#### Robot footprinting
+Footprinting, (also known as *reconnaissance*) is the technique used for gathering information about digital systems and the entities they belong to.
+
+#### Robot enumeration
+- Basic enumeration of a robotic system can be done with [ROSPenTo](https://github.com/jr-robotics/ROSPenTo)
+
+### Robot Threat Modeling
+Threat modeling is the use of abstractions to aid in thinking about risks. The output of this activity is often named as the threat model. More commonly, a threat model enumerates the potential attackers, their capabilities and resources and their intended targets. In the context of robot cybersecurity, a threat model identifies security threats that apply to the robot and/or its components (both software and hardware) while providing means to address or mitigate them in the context of a use case.
+
+A threat model is key to a focused security defense and generally answers the following questions:
+- What are you building?
+- What can go wrong (from a security perspective)?
+- What should you do about those things that can go wrong?
+- Did you do a decent job analysing the system?
+
+
+### Bugs & vulnerability identification
+#### Static analysis
+Static analysis means inspecting the code to look for faults. Static analysis is using a program (instead of a human) to inspect the code for faults.
+
+#### Dynamic analysis
+Dynamic analysis, simply called “testing” as a rule, means executing the code while looking for errors and failures.
+
+#### Fuzzing
+FILLME
+
+#### Dynamic analysis (sanitizers)
+Sanitizers are dynamic bug finding tools. Sanitizers analyze a single program excution and output a precise analysis result valid for  that specific execution.
+
+<details><summary>More details about sanitizers</summary>
+
+As explained at https://arxiv.org/pdf/1806.04355.pdf:
+
+>sanitizers are similar to many well-known *exploit mitigations* in that both types of tools insert inlined reference monitors (IRMs) into the program to enforce a fine-grained security policy. Despite this similarity, however, exploit mitigations and sanitizers significantly differ in what they aim to achieve and how they are used
+
+The difference is better understood by the following table (also from the paper) that compares `exploit mitigations` and `sanitizers`:
+
+| | Exploit Mitigations | Sanitizers |
+|-----|-------|------|
+| **The goal is to ...** |  Mitigate attacks | Find vulnerabilities |
+| **Used in ...** | Production | Pre-release |
+| **Performance budget ...** | Very limited | Much higher |
+| **Policy violations lead to ...** | Program termination | Problem diagnosis |
+| **Violations triggered at location of bug ...** | Sometimes  | Always |
+| **Surviving benign errors is ...** | Desired | Not desired |
+
+</details>
+
+
+### Robot exploitation
+An `exploit` is a piece of software, a chunk of data, or a sequence of commands that takes advantage of a bug or vulnerability to cause unintended or unanticipated behavior to occur on computer software, hardware, or something electronic (usually computerized). Exploitation is the art of taking advantage of vulnerabilities.
+
+
+### Other
+#### Robot forensics
+Robot forensics proposes a number of scientific tests and methods to obtain, preserve and document evidence from robot-related crimes. In particular, it focuses on recovering data from robotic systems to establish who committed the crime.
+
+Review https://github.com/Cugu/awesome-forensics.
+
+#### Robot reversing
+Software reverse engineering (or *reversing*) is the process of extracting the knowledge or design blueprints from any software. When applied to robotics, robot reversing can be understood as the process of extracting information about the design elements in a robotic system.
+
+\newpage
+
 ## Literature review
 
 Arguably, the first installation of a cyber-physical system in a manufacturing plant was back in 1962 @historyofrobotics. The first human death caused by a robotic system is traced back to 1979 @firstkiller and the causes were safety-related according to the reports. From this point on, a series of actions involving agencies and corporations triggered to protect humans and environments from this machines, leading into safety standards.
