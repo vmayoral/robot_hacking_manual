@@ -1,7 +1,7 @@
 ---
-title: "**RHM `0.2`**: Robot Hacking Manual"
+title: "**RHM `0.3`**: Robot Hacking Manual"
 author: [Víctor Mayoral-Vilches]
-date: "**version `0.2`** (2021-11-12)"
+date: "**version `0.3`** (2021-11-12)"
 toc: true
 subject: "Markdown"
 keywords: [Robotics, Cybersecurity, Hacking, Pentesting, Offensive]

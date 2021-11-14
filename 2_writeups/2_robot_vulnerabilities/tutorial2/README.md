@@ -5,7 +5,7 @@
 In this tutorial we'll apply the robot santizers over the the moveit2 alpha release code and review the results. This tutorial builds on top of [tutorial1](../tutorial1/), originally inspired by [1].
 
 ### Looking for bugs and vulnerabilities in MoveIt 2 with AddressSanitizer (ASan)
-We'll dockerize the process to simplify reproduction of results. 
+We'll dockerize the process to simplify reproduction of results.
 Let's compile the moveit2 code with the right flags for dynamic bugs finding:
 
 ```bash
@@ -57,7 +57,7 @@ moveit_core                             +
 
 This translates as follows[2]:
 
-![](deps.png)
+![](images/2019/deps2_.png)
 
 ```bash
 # made with:
