@@ -1,13 +1,13 @@
 \newpage
 
-Consider:
+Consider from past work:
 - Cobot
-- xArm
 - AMR
-- Drone autopilot
-- TurtleBot 3
-- ROS
+- xArm
 - ROS 2
+  - TurtleBot 3
+- ROS
+- Drone autopilot
 - DDS
 
 ## Other case studies

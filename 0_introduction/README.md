@@ -27,6 +27,16 @@ Security is *not a product, but a process* that needs to be continuously assesse
 
 \newpage
 
+## Literature review
+
+Arguably, the first installation of a cyber-physical system in a manufacturing plant was back in 1962 @historyofrobotics. The first human death caused by a robotic system is traced back to 1979 @firstkiller and the causes were safety-related according to the reports. From this point on, a series of actions involving agencies and corporations triggered to protect humans and environments from this machines, leading into safety standards.
+
+Security however hasn't started being addressed in robotics until recently. Following after @mcclean2013preliminary early assessment, in one of the first published articles on the topic @lera2016ciberseguridad already warns about the security dangers of the Robot Operating System (ROS) @quigley2009ros. Following from this publication, the same group in Spain authored a series of articles touching into robot cybersecurity [@lera2016cybersecurity; @lera2017cybersecurity; @guerrero2017empirical; @balsa2017cybersecurity; @rodriguez2018message]. Around the same time period, @dieber2016application} led a series of publications that researched cybersecurity in robotics proposing defensive blueprints for robots built around ROS [@Dieber:2017:SRO:3165321.3165569; @dieber2017safety; @SecurecomROS; @taurer2018secure; @dieber2019security]. Their work introduced additions to the ROS APIs to support modern cryptography and security measures. Contemporary to @dieber2016application's work, @white2016sros also started delivering a series of articles [@caiazza2017security; @white2018procedurally; @white2019sros1; @caiazza2019enhancing; @white2019network; @white2019black] proposing defensive mechanisms for ROS.
+
+A bit more than a year after that, starting in 2018, it's possible to observe how more groups start showing interest for the field and contribute. @vilches2018introducing initiated a series of security research efforts attempting to define offensive security blueprints and methodologies in robotics that led to various contributions [@vilches2018volatile; @kirschgens2018robot; @mayoral2018aztarna; @mayoral2020alurity; @mayoral2020can; @lacava2020current; @mayoral2020devsecops; @mayoral2020industrial]. Most notably, this group released publicly a framework for conducting security assessments in robotics @vilches2018introducing, a vulnerability scoring mechanism for robots @mayoral2018towardsRVSS, a robotics Capture-The-Flag environment for robotics whereto learn how to train robot cybersecurity engineers @mendia2018robotics or a robot-specific vulnerability database that third parties could use to track their threat landscape @mayoral2019introducing, among others. In 2021, @zhu2021cybersecurity published a comprehensive introduction of this emerging topic for theoreticians and practitioners working in the field to foster a sub-community in robotics and allow more contributors to become part of the robot cybersecurity effort.
+
+\newpage
+
 ## Terminology
 
 ### Robot reconnaissance
@@ -91,17 +101,6 @@ Review https://github.com/Cugu/awesome-forensics.
 
 #### Robot reversing
 Software reverse engineering (or *reversing*) is the process of extracting the knowledge or design blueprints from any software. When applied to robotics, robot reversing can be understood as the process of extracting information about the design elements in a robotic system.
-
-\newpage
-
-## Literature review
-
-Arguably, the first installation of a cyber-physical system in a manufacturing plant was back in 1962 @historyofrobotics. The first human death caused by a robotic system is traced back to 1979 @firstkiller and the causes were safety-related according to the reports. From this point on, a series of actions involving agencies and corporations triggered to protect humans and environments from this machines, leading into safety standards.
-
-Security however hasn't started being addressed in robotics until recently. Following after @mcclean2013preliminary early assessment, in one of the first published articles on the topic @lera2016ciberseguridad already warns about the security dangers of the Robot Operating System (ROS) @quigley2009ros. Following from this publication, the same group in Spain authored a series of articles touching into robot cybersecurity [@lera2016cybersecurity; @lera2017cybersecurity; @guerrero2017empirical; @balsa2017cybersecurity; @rodriguez2018message]. Around the same time period, @dieber2016application} led a series of publications that researched cybersecurity in robotics proposing defensive blueprints for robots built around ROS [@Dieber:2017:SRO:3165321.3165569; @dieber2017safety; @SecurecomROS; @taurer2018secure; @dieber2019security]. Their work introduced additions to the ROS APIs to support modern cryptography and security measures. Contemporary to @dieber2016application's work, @white2016sros also started delivering a series of articles [@caiazza2017security; @white2018procedurally; @white2019sros1; @caiazza2019enhancing; @white2019network; @white2019black] proposing defensive mechanisms for ROS.
-
-A bit more than a year after that, starting in 2018, it's possible to observe how more groups start showing interest for the field and contribute. @vilches2018introducing initiated a series of security research efforts attempting to define offensive security blueprints and methodologies in robotics that led to various contributions [@vilches2018volatile; @kirschgens2018robot; @mayoral2018aztarna; @mayoral2020alurity; @mayoral2020can; @lacava2020current; @mayoral2020devsecops; @mayoral2020industrial]. Most notably, this group released publicly a framework for conducting security assessments in robotics @vilches2018introducing, a vulnerability scoring mechanism for robots @mayoral2018towardsRVSS, a robotics Capture-The-Flag environment for robotics whereto learn how to train robot cybersecurity engineers @mendia2018robotics or a robot-specific vulnerability database that third parties could use to track their threat landscape @mayoral2019introducing, among others. In 2021, @zhu2021cybersecurity published a comprehensive introduction of this emerging topic for theoreticians and practitioners working in the field to foster a sub-community in robotics and allow more contributors to become part of the robot cybersecurity effort.
-
 
 \newpage
 

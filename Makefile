@@ -12,14 +12,11 @@ SOURCE_FILES := \
 SOURCE_FILES := $(SOURCE_FILES) \
 				$(CURDIR)/0_introduction/README.md \
 
-## Findings ############
-SOURCE_FILES := $(SOURCE_FILES) \
-				$(CURDIR)/FINDINGS.md \
-
 ## Case studies ############
 SOURCE_FILES := $(SOURCE_FILES) \
 				$(CURDIR)/1_case_studies/README.md \
 				$(CURDIR)/1_case_studies/0_cobot/README.md \
+				$(CURDIR)/1_case_studies/1_amr/README.md \
 				$(CURDIR)/1_case_studies/OTHER.md
 
 # ## Reconnaissance ##########
@@ -60,6 +57,10 @@ SOURCE_FILES := $(SOURCE_FILES) \
 # SOURCE_FILES := $(SOURCE_FILES) \
 # 				$(CURDIR)/4_other/README.md \
 # 				$(CURDIR)/4_other/web/tutorial2/README.md \
+
+## Findings ############
+SOURCE_FILES := $(SOURCE_FILES) \
+				$(CURDIR)/FINDINGS.md \
 
 ## Bibliography #############
 SOURCE_FILES := $(SOURCE_FILES) \

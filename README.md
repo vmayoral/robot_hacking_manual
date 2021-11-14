@@ -9,8 +9,9 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
 - [**Contribute back**](CONTRIBUTE.md)
 - [**Introduction**](0_introduction/README.md)
   - [About robot cybersecurity](0_introduction/README.md#about-robot-cybersecurity)
-- **Case studies**
+- <ins>**Case studies**</ins>
   - [Universal Robots UR3](1_case_studies/0_cobot/README.md) (hacking a collaborative robot arm)
+  -
 - [**Writeups**]()
   - [Reconaissance]()
     - [Footprinting]()

@@ -6,7 +6,7 @@
 
 In 2017, IOActive, a world-leader firm in cybersecurity services opened a report [^21] where among others, described several flaws found in Universal Robots collaborative robots. These included: [RVD#6: UR3, UR5, UR10 Stack-based buffer overflow](https://github.com/aliasrobotics/RVD/issues/6), [RVD#15: Insecure transport in Universal Robots's robot-to-robot communications](https://github.com/aliasrobotics/RVD/issues/15), [RVD#34: Universal Robots Controller supports wireless mouse/keyboards on their USB interface](https://github.com/aliasrobotics/RVD/issues/34), [RVD#672: CB3.1 3.4.5-100 hard-coded public credentials for controller](https://github.com/aliasrobotics/RVD/issues/672), [RVD#673: CB3.1 3.4.5-100 listen and execution of arbitrary URScript code](https://github.com/aliasrobotics/RVD/issues/673).
 
-In late 2019 I re-engaged with this work and started reseaching how insecure these popular robots were. As of 2021, these flaws remain an issue in affecting most of the robots from Universal Robots. Here're some of the novel findings my research led to:
+In late 2019 I re-engaged with this work and started researching how insecure these popular robots were. As of 2021, these flaws remain an issue in affecting most of the robots from Universal Robots. Here're some of the novel findings my research led to:
 
 | CVE ID | Description | Scope    |  CVSS    | Notes  |
 |--------|-------------|----------|----------|--------|
@@ -193,9 +193,11 @@ root@0ad90f762e89:/etc/lynis# ./lynis audit system
 
 ```
 
-The incomplete trace of Lynis above already provides a number of hints on how to start breaking the system. I'll leave it there and jump into some examples of the findings:
+The incomplete trace of Lynis above already provides a number of hints on how to start breaking the system. I'll leave it there and jump into some examples of the findings.
 
-### Denial of Service exploiting an SSH vulnerability in Universal Robots
+### Vulnerabilities
+
+#### Denial of Service exploiting an SSH vulnerability in Universal Robots
 
 [RVD#1410](https://github.com/aliasrobotics/RVD/issues/1410) shows a) evidence that Universal Robots cares very little about security and b) the importance of having a security team working with your engineers.
 
@@ -211,14 +213,14 @@ Having tested this far, we're somewhat certain that, if you own a UR3, UR5 or UR
 [![asciicast](https://asciinema.org/a/315015.svg)](https://asciinema.org/a/315015)
 
 
-### UnZip 6.0 allows remote attackers to cause a denial of service (infinite loop) via empty bzip2 data in a ZIP archive
+#### UnZip 6.0 allows remote attackers to cause a denial of service (infinite loop) via empty bzip2 data in a ZIP archive
 
 This is a fun one, so we decided to make a exploit, add it to `robotsploit` and record it. UR3, UR5 and UR10, powered by CB3.1 (with all the firmware versions we tested), are vulnerable to this security bug. A lack of security maintenance of UnZip allows one to perform Denial of Service. The video below shows how we can prevent the system from operating in normal conditions by simply unzipping a specially-crafted zip file.
 
 [![asciicast](https://asciinema.org/a/J41V4mjoEAwVdfPBPstEdasTY.svg)](https://asciinema.org/a/J41V4mjoEAwVdfPBPstEdasTY)
 
 
-### User enumeration in Universal Robots Control Box CB3.x
+#### User enumeration in Universal Robots Control Box CB3.x
 
 We found that the Universal Robots' Controllers' file system based in Debian is subject to CVE-2016-6210 which allows attackers to perform unauthenticated user enumeration. The flaw affects OpenSSH which is exposed by default in port 22.
 
@@ -226,7 +228,7 @@ The reason why OpenSSH is vulnerable is because before version 7.3, when SHA256 
 
 [![asciicast](https://asciinema.org/a/315015.svg)](https://asciinema.org/a/315015)
 
-### Integer overflow in the get_data function, zipimport.c in Python 2.7
+#### Integer overflow in the get_data function, zipimport.c in Python 2.7
 
 In this bug we explored an integer overflow in the `get_data` function in `zipimport.c` in CPython (aka Python) before `2.7.12`, `3.x` before `3.4.5`, and `3.5.x` before `3.5.2` allows remote attackers to have unspecified impact via a negative data size value, which triggers a heap-based buffer overflow.
 
@@ -235,7 +237,7 @@ The video below demonstrates how this flaw affects firmware versions CB3.1 `1.12
 [![asciicast](https://asciinema.org/a/315891.svg)](https://asciinema.org/a/315891)
 
 
-### Unprotected intellectual property in Universal Robots controller CB 3.1 across firmware versions
+#### Unprotected intellectual property in Universal Robots controller CB 3.1 across firmware versions
 
 This is **one of the most concerning bugs found**. Connected to [RVD#1487](https://github.com/aliasrobotics/RVD/issues/1487), the lack of protected Intellectual Property (IP) from third parties allows an attacker to exfiltrate all intellectual property living into the robot and acquired from UR+ platform or other means.
 
