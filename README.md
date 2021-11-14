@@ -2,16 +2,16 @@
 
 The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity for robots, with an attempt to provide comprehensive case studies and step-by-step tutorials with the intent to raise awareness in the field and highlight the importance of taking a *security-first*[^0] approach. The material available here is also a personal learning attempt and it's disconnected from any particular organization. Content is provided as is and **by no means I encourage or promote the unauthorized tampering of robotic systems or related technologies**.
 
-- [Disclaimer](DISCLAIMER.md)
-- [History](MOTIVATION.md#history)
-- [Motivation](MOTIVATION.md#motivation)
-- [A containerized approach](MOTIVATION.md#a-containerized-approach)
-- [Contribute back](CONTRIBUTE.md)
-- [Introduction](0_introduction/README.md)
+- [**Disclaimer**](DISCLAIMER.md)
+- [**History**](MOTIVATION.md#history)
+- [**Motivation**](MOTIVATION.md#motivation)
+- [**A containerized approach**](MOTIVATION.md#a-containerized-approach)
+- [**Contribute back**](CONTRIBUTE.md)
+- [**Introduction**](0_introduction/README.md)
   - [About robot cybersecurity](0_introduction/README.md#about-robot-cybersecurity)
-- Case studies
-  - [Universal Robots UR3](0_case_studies/0_cobot/README.md) (hacking a collaborative robot arm)
-- [Writeups]()
+- **Case studies**
+  - [Universal Robots UR3](1_case_studies/0_cobot/README.md) (hacking a collaborative robot arm)
+- [**Writeups**]()
   - [Reconaissance]()
     - [Footprinting]()
       - [Tutorial 1: Footprinting ROS systems](2_writeups/1_reconnaissance/robot_footprinting/tutorial1/)
@@ -24,7 +24,7 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
       - [Tutorial 1: Robot sanitizers in ROS 2 Dashing](2_writeups/2_robot_vulnerabilities/tutorial1/)
       - [Tutorial 2: Robot sanitizers in MoveIt 2](2_writeups/2_robot_vulnerabilities/tutorial2/)
       - [Tutorial 3: Debugging output of robot sanitizers with GDB, hunting and fixing bugs](2_writeups/2_robot_vulnerabilities/tutorial3/)
-      - Tutorial 4: Robot sanitizers with Gazebo: TODO
+      - ~~Tutorial 4: Robot sanitizers with Gazebo~~
       - [Tutorial 5: Static analysis of PyRobot](2_writeups/2_robot_vulnerabilities/tutorial5/)
       - [Tutorial 6: Looking for vulnerabilities in ROS 2](2_writeups/2_robot_vulnerabilities/tutorial6/)
       - [Tutorial 7: Analyzing Turtlebot 3](2_writeups/2_robot_vulnerabilities/tutorial7/)
@@ -50,7 +50,7 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
     - [Tutorial 1: Basic robot forensics, an unauthenticated unregistration in ROS](2_writeups/4_other/robot_forensics/tutorial1/)
     - [Tutorial 2: Locating ROS logs in memory](2_writeups/4_other/robot_forensics/tutorial2/) (**failed**)
     - [Tutorial 3: Capturing memory in Linux-based robots](2_writeups/4_other/robot_forensics/tutorial3/)
-    - [Tutorial 4: Basic robot forensics 2, unauthenticated updates in publisher list for specified topic](2_writeups/4_other/robot_forensics/tutorial4/) (**ongoing**)
+    - [Tutorial 4: Basic robot forensics 2, unauthenticated updates in publisher list for specified topic](2_writeups/4_other/robot_forensics/tutorial4/) (**unfinished**)
   - [Hardening]()
     - [Tutorial 1: A study of container technologies](2_writeups/4_other/hardening/tutorial1/README.md)
 
