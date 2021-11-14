@@ -35,8 +35,6 @@ Reconnaissance is the act of gathering preliminary data or intelligence on your 
 #### Robot footprinting
 Footprinting, (also known as *reconnaissance*) is the technique used for gathering information about digital systems and the entities they belong to.
 
-#### Robot enumeration
-- Basic enumeration of a robotic system can be done with [ROSPenTo](https://github.com/jr-robotics/ROSPenTo)
 
 ### Robot Threat Modeling
 Threat modeling is the use of abstractions to aid in thinking about risks. The output of this activity is often named as the threat model. More commonly, a threat model enumerates the potential attackers, their capabilities and resources and their intended targets. In the context of robot cybersecurity, a threat model identifies security threats that apply to the robot and/or its components (both software and hardware) while providing means to address or mitigate them in the context of a use case.
