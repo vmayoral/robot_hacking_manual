@@ -64,7 +64,7 @@ Static analysis means inspecting the code to look for faults. Static analysis is
 Dynamic analysis, simply called “testing” as a rule, means executing the code while looking for errors and failures.
 
 #### Fuzzing
-FILLME
+Formally a sub-class of dynamic testing but we separated for convenience, fuzzing or fuzz testing implies challenging the security of your robotic software in a pseudo-automated manner providing invalid or random data as inputs wherever possible and looking for anomalous behaviors.
 
 #### Dynamic analysis (sanitizers)
 Sanitizers are dynamic bug finding tools. Sanitizers analyze a single program excution and output a precise analysis result valid for  that specific execution.
@@ -92,6 +92,22 @@ The difference is better understood by the following table (also from the paper)
 ### Robot exploitation
 An `exploit` is a piece of software, a chunk of data, or a sequence of commands that takes advantage of a bug or vulnerability to cause unintended or unanticipated behavior to occur on computer software, hardware, or something electronic (usually computerized). Exploitation is the art of taking advantage of vulnerabilities.
 
+### Robot penetration testing (RPT)
+
+Robot Penetration Testing (*robot pentesting* or RPT) is an offensive activity that seeks to find as many robot vulnerabilities as possible to risk-assess and  prioritize them. Relevant attacks are performed on the robot in order to confirm vulnerabilities. This exercise is effective at providing a thorough list of vulnerabilities, and should ideally be performed before shipping a product, and periodically after.
+
+In a nutshell, robot penetration testing allows you to get a realistic and practical input of how vulnerable your robot is within a scope. A team of security researchers would then challenge the security of a robotic technology, find as many vulnerabilities as possible and develop exploits to take advantage of them.
+
+See @dieber2020penetration for an example applied to ROS systems.
+
+
+### Robot red teaming (RRT)
+
+Robot red teaming is a targeted offensive cyber security exercise, suitable for use cases that have been already exposed to security flaws and wherein the objective is to fulfill a particular objective (attacker's goal). While robot penetration testing is much more effective at providing a thorough list of vulnerabilities and improvements to be made, a red team assessment provides a more accurate measure of a given technology’s preparedness for remaining resilient against cyber-attacks.
+
+Overall, robot red teaming comprises a full-scope and multi-layered targeted (with specific goals) offensive attack simulation designed to measure how well your robotic technology can withstand an attack.
+
+### Robot red teaming
 
 ### Other
 #### Robot forensics
