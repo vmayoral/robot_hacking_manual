@@ -153,3 +153,7 @@ RUN /bin/bash -c ". /opt/ros/$DISTRO/setup.bash \
 # Install RTPS dissector
 #######################
 RUN pip3 install git+https://github.com/vmayoral/scapy@rtps
+
+WORKDIR /opt
+COPY configs configs
+COPY exploits exploits
