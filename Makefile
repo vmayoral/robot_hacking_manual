@@ -69,6 +69,7 @@ SOURCE_FILES := $(SOURCE_FILES) \
 
 EXTENSION := .pdf
 EXTENSION_TEX := .tex
+EXTENSION_HTML := .html
 EXTENSION_MD := .md
 OUT_FILE := RHM
 PANDOC_TEMPLATE := $(CURDIR)/pandoc-latex-template/eisvogel.tex
@@ -81,11 +82,34 @@ PANDOC_OPTIONS := \
 					--citeproc \
 					--template=$(PANDOC_TEMPLATE) \
 					$(SOURCE_FILES)
+
+PANDOC_OPTIONS_HTML := \
+					--katex \
+					--from markdown+tex_math_single_backslash \
+					--filter pandoc-sidenote \
+					--bibliography=bibliography.bib \
+					--to html5+smart \
+					--citeproc \
+					--template=template \
+					--css=css/theme.css \
+					--css=css/skylighting-solarized-theme.css \
+					--toc \
+					--output index.html \
+					$(SOURCE_FILES)
+
+
 define exec_pandoc
 	@echo "Building..."
 	@pandoc $(PANDOC_OPTIONS) -o $(1)
 	@echo "Build finished for $(1)"
 endef
+
+define exec_pandoc_html
+	@echo "Building..."
+	@pandoc $(PANDOC_OPTIONS_HTML) -o $(1)
+	@echo "Build finished for $(1)"
+endef
+
 
 .PHONY: clean all debug
 
@@ -101,12 +125,16 @@ tex:
 md:
 	$(call exec_pandoc, $(OUT_FILE)$(EXTENSION_MD))
 
+html:
+	$(call exec_pandoc_html, $(OUT_FILE)$(EXTENSION_HTML))
+
 debug: EXTENSION := .tex
 debug: $(OUT_FILE)$(EXTENSION)
 clean:
 	@rm -rfv $(BUILDDIR)
 	@rm -fv $(OUT_FILE)$(EXTENSION) $(eval EXTENSION := .md)
 	@rm -fv $(OUT_FILE)$(EXTENSION) $(eval EXTENSION := .tex)
+	@rm -fv $(OUT_FILE)$(EXTENSION) $(eval EXTENSION := .html)
 	@rm -fv $(OUT_FILE)$(EXTENSION) $(eval EXTENSION := .aux)
 	@rm -fv $(OUT_FILE)$(EXTENSION) $(eval EXTENSION := .toc)
 	@rm -fv $(OUT_FILE)$(EXTENSION) $(eval EXTENSION := .log)
