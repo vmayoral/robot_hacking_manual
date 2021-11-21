@@ -14,10 +14,10 @@ jobs:
         python-version: 3.9
 
     # Install sphinx and dependencies
-    - name: install sphinx and dependencies
+    - name: install pandoc and template dependencies
       run: |
         python3 -m pip install --upgrade pip
-        sudo apt-get install -y pandoc pandoc-sidenote
+        sudo apt-get install -y pandoc pandoc-sidenote pandoc-citeproc
 
     # Build
     - name: Build documentation
