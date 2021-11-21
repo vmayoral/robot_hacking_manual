@@ -85,7 +85,8 @@ RUN wget https://github.com/oci-labs/rmw_build/raw/master/rmw_opendds.repos \
     && wget https://github.com/oci-labs/rmw_build/raw/master/ros2.repos  -O opendds_ros2.repos \
     && vcs import src < rmw_opendds.repos \
     && vcs import src < opendds_ros2.repos \
-    && git clone https://github.com/ros2/rosidl_dds src/rosidl_dds
+    && git clone https://github.com/ros2/rosidl_dds src/rosidl_dds \
+    && git clone https://github.com/ROBOTIS-GIT/turtlebot3 -b foxy-devel src/turtlebot3
 
 # Build in two steps as defined @ https://github.com/oci-labs/rmw_build/blob/master/build_all.sh
 # Build rmw
@@ -99,7 +100,7 @@ RUN /bin/bash -c ". /opt/ros/$DISTRO/setup.bash \
       && colcon build --merge-install \
         --packages-up-to rmw_opendds_cpp rcl_interfaces examples_rclcpp_minimal_publisher \
         examples_rclcpp_minimal_subscriber examples_rclcpp_minimal_service \
-        examples_rclcpp_minimal_client"
+        examples_rclcpp_minimal_client turtlebot3_teleop"
 
 
 # #######################
@@ -179,5 +180,3 @@ RUN echo "alias poc='/usr/bin/byobu -f /opt/configs/pocs.conf attach'" >> /root/
 
 ENV TURTLEBOT3_MODEL='burger' \
     GAZEBO_MODEL_PATH=/usr/share/gazebo-11/models:/opt/ros/foxy/share/turtlebot3_gazebo/models
-
-ENTRYPOINT ["/bin/bash"]

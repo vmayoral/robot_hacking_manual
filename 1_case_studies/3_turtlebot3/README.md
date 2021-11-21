@@ -14,7 +14,7 @@ Like in previous cases, when possible, we'll facilitate a Docker-based environme
 docker build -t hacking_tb3:foxy --build-arg DISTRO=foxy .
 
 # Run headless
-docker run -it hacking_tb3:foxy
+docker run -it hacking_tb3:foxy /bin/bash
 # (inside of the container)
 byobu -f configs/pocs_headless.conf attach
 
