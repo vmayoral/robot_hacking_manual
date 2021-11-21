@@ -20,44 +20,44 @@ SOURCE_FILES := $(SOURCE_FILES) \
 				$(CURDIR)/1_case_studies/2_ros2/README.md \
 				$(CURDIR)/1_case_studies/OTHER.md
 
-# ## Reconnaissance ##########
-# SOURCE_FILES := $(SOURCE_FILES) \
-# 				$(CURDIR)/2_writeups/1_reconnaissance/README.md \
-# 				$(CURDIR)/2_writeups/1_reconnaissance/robot_footprinting/tutorial1/README.md \
-# 				$(CURDIR)/2_writeups/1_reconnaissance/robot_footprinting/tutorial2/README.md
-#
-# ## Vulnerabilities #########
-# SOURCE_FILES := $(SOURCE_FILES) \
-# 				$(CURDIR)/2_writeups/2_robot_vulnerabilities/README.md \
-# 				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial1/README.md \
-# 				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial2/README.md \
-# 				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial3/README.md \
-# 				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial4/README.md \
-# 				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial5/README.md \
-# 				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial6/README.md \
-# 				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial7/README.md
-#
-# ## Exploitation #############
-# SOURCE_FILES := $(SOURCE_FILES) \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial1/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial2/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial3/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial4/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial5/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial6/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial7/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial8/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial9/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial10/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial11/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial12/README.md \
-# 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial13/README.md
-#
-# ## Other ####################
-# SOURCE_FILES := $(SOURCE_FILES) \
-# 				$(CURDIR)/2_writeups/4_other/README.md \
-# 				$(CURDIR)/2_writeups/4_other/web/tutorial2/README.md \
+## Reconnaissance ##########
+SOURCE_FILES := $(SOURCE_FILES) \
+				$(CURDIR)/2_writeups/1_reconnaissance/README.md \
+				$(CURDIR)/2_writeups/1_reconnaissance/robot_footprinting/tutorial1/README.md \
+				$(CURDIR)/2_writeups/1_reconnaissance/robot_footprinting/tutorial2/README.md
+
+## Vulnerabilities #########
+SOURCE_FILES := $(SOURCE_FILES) \
+				$(CURDIR)/2_writeups/2_robot_vulnerabilities/README.md \
+				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial1/README.md \
+				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial2/README.md \
+				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial3/README.md \
+				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial4/README.md \
+				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial5/README.md \
+				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial6/README.md \
+				$(CURDIR)/2_writeups/2_robot_vulnerabilities/tutorial7/README.md
+
+## Exploitation #############
+SOURCE_FILES := $(SOURCE_FILES) \
+				$(CURDIR)/2_writeups/3_robot_exploitation/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial1/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial2/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial3/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial4/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial5/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial6/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial7/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial8/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial9/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial10/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial11/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial12/README.md \
+				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial13/README.md
+
+## Other ####################
+SOURCE_FILES := $(SOURCE_FILES) \
+				$(CURDIR)/2_writeups/4_other/README.md \
+				$(CURDIR)/2_writeups/4_other/web/tutorial2/README.md \
 
 ## Findings ############
 SOURCE_FILES := $(SOURCE_FILES) \
