@@ -22,13 +22,13 @@ jobs:
     # Build
     - name: Build documentation
       run: |
-        cd sphinx; make html
+        make html
 
     # Fixup
     - name: Fixup
       run: |
         mkdir deploy
-        cp .nojekyll index.html deploy/
+        cp RHM.html deploy/index.html
         cp -r css images fonts LICENSE deploy/
 
     # Deploy
