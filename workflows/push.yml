@@ -1,0 +1,42 @@
+name: Build documentation and deploy
+on: push
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    # Set up Python 3
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9
+
+    # Install sphinx and dependencies
+    - name: install sphinx and dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        apt-get install -y pandoc pandoc-sidenote
+
+    # Build
+    - name: Build documentation
+      run: |
+        cd sphinx; make html
+
+    # Fixup
+    - name: Fixup
+      run: |
+        mkdir deploy
+        cp .nojekyll index.html LICENSE.txt README.md krs.repos deploy/
+        cp -r sphinx site deploy/
+
+    # Deploy
+    - name: Push
+      uses: s0/git-publish-subdir-action@develop
+      env:
+        REPO: self
+        BRANCH: gh-pages # The branch name where you want to push the assets
+        FOLDER: deploy   # The directory where your assets are generated
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub will automatically add this - you don't need to bother getting a token
+        MESSAGE: "Build: ({sha}) {msg}" # The commit message
