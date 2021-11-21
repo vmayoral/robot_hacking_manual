@@ -4,4 +4,5 @@ set -e
 # setup ros2 environment
 source /opt/ros/*/setup.bash
 
-exec "$@"
+# exec "$@"
+/bin/bash "$@"

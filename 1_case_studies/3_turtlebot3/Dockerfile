@@ -180,3 +180,7 @@ RUN echo "alias poc='/usr/bin/byobu -f /opt/configs/pocs.conf attach'" >> /root/
 
 ENV TURTLEBOT3_MODEL='burger' \
     GAZEBO_MODEL_PATH=/usr/share/gazebo-11/models:/opt/ros/foxy/share/turtlebot3_gazebo/models
+
+COPY ./entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bash"]
