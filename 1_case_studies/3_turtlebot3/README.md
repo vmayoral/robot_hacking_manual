@@ -19,6 +19,9 @@ docker run -it hacking_tb3:foxy -c "/usr/bin/byobu -f /opt/configs/pocs_headless
 # Run headless sharing host's network
 docker run -it --privileged --net=host hacking_tb3:foxy -c "/usr/bin/byobu -f /opt/configs/pocs_headless.conf attach"
 
+# Run headless sharing host's network, and with some nodes launched using OpenDDS
+docker run -it --privileged --net=host hacking_tb3:foxy -c "/usr/bin/byobu -f /opt/configs/pocs_headless_opendds.conf attach"
+
 
 # Run, using X11
 xhost + # (careful with this)
@@ -29,6 +32,14 @@ docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $HOME/.Xa
 ### Searching for TB3s around (reconnaissance)
 
 ```bash
-## From another terminal
 python3 exploits/footprint.py 2> /dev/null
+```
+
+It'll find the CycloneDDS node `teleop_keyboard`, which respond to the crafted package and identify the corresponding endpoint.
+
+
+### Messing up with TB3's traffic
+
+```bash
+python3 exploits/reflection.py 2> /dev/null
 ```
