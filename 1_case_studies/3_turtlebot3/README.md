@@ -25,7 +25,7 @@ docker run -it --privileged --net=host hacking_tb3:foxy -c "/usr/bin/byobu -f /o
 
 # Run, using X11
 xhost + # (careful with this)
-docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $HOME/.Xauthority:/home/xilinx/.Xauthority hacking_tb3:foxy -c "/usr/bin/byobu -f /opt/configs/pocs.conf attach"
+docker run -it --privileged --net=host -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $HOME/.Xauthority:/home/xilinx/.Xauthority hacking_tb3:foxy -c "/usr/bin/byobu -f /opt/configs/pocs.conf attach"
 
 ```
 
