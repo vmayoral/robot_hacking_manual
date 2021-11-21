@@ -28,8 +28,8 @@ jobs:
     - name: Fixup
       run: |
         mkdir deploy
-        cp .nojekyll index.html LICENSE.txt README.md krs.repos deploy/
-        cp -r sphinx site deploy/
+        cp .nojekyll index.html deploy/
+        cp -r css images fonts LICENSE deploy/
 
     # Deploy
     - name: Push
