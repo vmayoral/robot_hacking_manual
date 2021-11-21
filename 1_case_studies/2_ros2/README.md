@@ -116,10 +116,13 @@ docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $HOME/.Xa
 
 ### ROS 2 reconnaissance
 
+```bash
+## terminal 1 - ROS 2 Node
+docker run -it --net=host hacking_ros2:foxy -c "source /opt/opendds_ws/install/setup.bash; RMW_IMPLEMENTATION=rmw_cyclonedds_cpp /opt/opendds_ws/install/lib/examples_rclcpp_minimal_publisher/publisher_lambda"
 
-python run.py list.txt -t 10 -b blk.lst -p -o out.csv 31337 7400
-
-python run.py filter list.txt -t 10 -b blk.lst -p -o out.csv 31337 7400
+## terminal 2 - Attacker (reconnaissance)
+python3 exploits/footprint.py 2> /dev/null
+```
 
 
 

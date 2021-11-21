@@ -154,6 +154,15 @@ RUN /bin/bash -c ". /opt/ros/$DISTRO/setup.bash \
 #######################
 RUN pip3 install git+https://github.com/vmayoral/scapy@rtps
 
+#######################
+# Install CycloneDDS
+#######################
+RUN apt-get update && apt-get install -y \
+      ros-foxy-rmw-cyclonedds-cpp \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /opt
 COPY configs configs
 COPY exploits exploits
+
+ENTRYPOINT ["/bin/bash"]
