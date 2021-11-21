@@ -40,6 +40,8 @@ It'll find the CycloneDDS node `teleop_keyboard`, which respond to the crafted p
 
 ### Messing up with TB3's traffic
 
+![](../../images/2021/tb3_reflection.gif)
+
 ```bash
 python3 exploits/reflection.py 2> /dev/null
 ```
