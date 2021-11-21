@@ -14,12 +14,12 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
   - [Mobile Industrial Robots' MiR100](1_case_studies/1_amr/README.md) (hacking an industrial mobile robot)
   - [Robot Operating System 2](1_case_studies/2_ros2/README.md) (hacking ROS 2)
 - [**Writeups**]()
-  - [Reconaissance]()
+  - <ins>Reconaissance</ins>
     - [Footprinting]()
       - [Tutorial 1: Footprinting ROS systems](2_writeups/1_reconnaissance/robot_footprinting/tutorial1/)
       - [Tutorial 2: Footprinting Secure ROS systems](2_writeups/1_reconnaissance/robot_footprinting/tutorial2/)
       - [Tutorial 3: Footprinting ROS 2 and DDS systems](2_writeups/1_reconnaissance/robot_footprinting/tutorial3/)
-  - [Vulnerability research]()
+  - <ins>Vulnerability research</ins>
     - [Static analysis]()
       - [Tutorial 5: Static analysis of PyRobot](2_writeups/2_robot_vulnerabilities/tutorial5/)
     - [Dynamic analysis]()
@@ -32,7 +32,7 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
       - [Tutorial 7: Analyzing Turtlebot 3](2_writeups/2_robot_vulnerabilities/tutorial7/)
       - [Tutorial 8: SROS and SROS 2, exploring](2_writeups/2_robot_vulnerabilities/tutorial8/)
       - [Tutorial 9: Looking at DDS middleware flaws](2_writeups/2_robot_vulnerabilities/tutorial8/)
-  - [Exploitation]()
+  - <ins>Exploitation</ins>
     - [General]()
       - [Tutorial 1: Buffer overflows](2_writeups/3_robot_exploitation/tutorial1/)
       - [Tutorial 2: Building shellcode](2_writeups/3_robot_exploitation/tutorial2/)
@@ -48,12 +48,12 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
       - [Tutorial 11: Unauthenticated registration/unregistration with ROS Master API](2_writeups/3_robot_exploitation/tutorial11/)
       - [Tutorial 12: Unauthenticated updates in publisher list for specified topic](2_writeups/3_robot_exploitation/tutorial12)
       - [Tutorial 13: Sockets left open and in CLOSE_WAIT state in ROS](2_writeups/3_robot_exploitation/tutorial13)
-  - [Forensics]()
+  - <ins>Forensics</ins>
     - [Tutorial 1: Basic robot forensics, an unauthenticated unregistration in ROS](2_writeups/4_other/robot_forensics/tutorial1/)
     - [Tutorial 2: Locating ROS logs in memory](2_writeups/4_other/robot_forensics/tutorial2/) (**failed**)
     - [Tutorial 3: Capturing memory in Linux-based robots](2_writeups/4_other/robot_forensics/tutorial3/)
     - [Tutorial 4: Basic robot forensics 2, unauthenticated updates in publisher list for specified topic](2_writeups/4_other/robot_forensics/tutorial4/) (**unfinished**)
-  - [Hardening]()
+  - <ins>Hardening</ins>
     - [Tutorial 1: A study of container technologies](2_writeups/4_other/hardening/tutorial1/README.md)
 
 [^0]: Read on what a security-first approach in [here](https://www.darkreading.com/edge-articles/a-security-first-approach-to-devops).
