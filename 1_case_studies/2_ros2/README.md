@@ -8,6 +8,13 @@ This case study will analyze the security of ROS 2[^1] and demonstrate how flaws
 
 [^1]: ROS 2 is the second edition of ROS targeting commercial solutions and including additional capabilities. ROS 2 (Robot Operating System 2) is an open source software development kit for robotics  applications. The purpose of ROS 2 is to offer a standard software platform to developers across industries that will carry them from research and prototyping through to deployment and  production. ROS 2 builds on the success of ROS 1, which is used today in myriad robotics applications  around the world.
 
+The following security flaws are exploited:
+
+| CVE ID | Description | Scope    |  CVSS    | Notes  |
+|--------|-------------|----------|----------|--------|
+| | | |
+
+
 ### Dissecting ROS 2 network interactions
 
 To hack ROS 2, we'll be using a network dissector of the underlying default  communication middleware that ROS 2 uses: DDS. DDS stands for Data Distribution Service and is a middleware technology used in critical applications like autonomous driving, industrial and consumer robotics, healthcare machinery or  military tactical systems, among others.
@@ -30,8 +37,6 @@ rtps_package = RTPS(
     magic=b"RTPS",
 )
 ```
-
-
 
 Let's get started by dockerizing an arbitrary targeted ROS 2 system.
 
@@ -168,12 +173,17 @@ opendds_crasher = (
         ]
     )
 )
-
-#### Run setup (inside container)
-```bash
-byobu -f configs/poc.conf attach
 ```
 
+Let's try this out in the dockerized environment using byobu to facilitate the setup:
+
+```bash
+# Launch container
+docker run -it hacking_ros2:foxy /bin/bash
+
+# (inside of the container), launch conriguration
+byobu -f configs/poc.conf attach
+```
 
 
 ### Credit
