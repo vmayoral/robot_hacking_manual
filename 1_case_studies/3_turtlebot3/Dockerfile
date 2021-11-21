@@ -1,9 +1,3 @@
-# build: docker build -t tb3nav2_demo .
-# run: docker run -it tb3nav2_demo /bin/bash
-# run-with-gui:
-#       xhost + (careful with this)
-#       docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $HOME/.Xauthority:/home/xilinx/.Xauthority tb3nav2_demo:latest
-
 ARG DISTRO=foxy
 FROM ros:$DISTRO
 
@@ -169,6 +163,13 @@ RUN apt-get update && apt-get install -y \
       ros-$DISTRO-key-teleop \
     && rm -rf /var/lib/apt/lists/*
 
+#######################
+# Install CycloneDDS
+#######################
+RUN apt-get update && apt-get install -y \
+      ros-foxy-rmw-cyclonedds-cpp \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY configs configs
 COPY exploits exploits
 
@@ -178,3 +179,5 @@ RUN echo "alias poc='/usr/bin/byobu -f /opt/configs/pocs.conf attach'" >> /root/
 
 ENV TURTLEBOT3_MODEL='burger' \
     GAZEBO_MODEL_PATH=/usr/share/gazebo-11/models:/opt/ros/foxy/share/turtlebot3_gazebo/models
+
+ENTRYPOINT ["/bin/bash"]

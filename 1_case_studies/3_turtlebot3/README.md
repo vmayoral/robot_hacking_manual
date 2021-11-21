@@ -1,49 +1,33 @@
 \newpage
 
-## Robot Operating System (ROS) 2
+## TurtleBot 3 (TB3)
 
-The Robot Operating System (ROS) is the de *facto* standard for robot application development [@Quigley09]. It's a framework for creating robot behaviors that comprises various stacks and capabilities for message passing, perception, navigation, manipulation or security, among others. It's [estimated](https://www.businesswire.com/news/home/20190516005135/en/Rise-ROS-55-total-commercial-robots-shipped) that by 2024, 55% of the total commercial robots will be shipping at least one ROS package.
-ROS is to roboticists what Linux is to computer scientists.
-
-This case study will analyze the default security of ROS 2[^1] and evaluate a ROS 2 robot from a security standpoint, the TurtleBot 3.
-
-[^1]: ROS 2 is the second edition of ROS targeting commercial solutions and including additional capabilities. ROS 2 (Robot Operating System 2) is an open source software development kit for robotics  applications. The purpose of ROS 2 is to offer a standard software platform to developers across industries that will carry them from research and prototyping through to deployment and  production. ROS 2 builds on the success of ROS 1, which is used today in myriad robotics applications  around the world.
+Building on top of the previous [ROS 2 case study](../2_ros2), this piece aims to demonstrate how ROS 2 vulnerabilities can be translated directly into complete robots and how attackers could exploit them.
 
 
-TurtleBot 3 `navigation2` demonstration.
+### Dockerized environment
+Like in previous cases, when possible, we'll facilitate a Docker-based environment so that you can try things out yourself! Here's this one:
 
-## Build from source and run
 
 ```bash
 # Build
-docker build -t tb3nav2_demo .
+docker build -t hacking_tb3:foxy --build-arg DISTRO=foxy .
+
+# Run headless
+docker run -it hacking_tb3:foxy
+# (inside of the container)
+byobu -f configs/pocs_headless.conf attach
 
 # Run, using X11
 xhost + # (careful with this)
-docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $HOME/.Xauthority:/home/xilinx/.Xauthority tb3nav2_demo:latest
-
-# Run setup (inside container)
+docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $HOME/.Xauthority:/home/xilinx/.Xauthority hacking_tb3:foxy
+# (inside of the container)
 byobu -f configs/poc.conf attach
 ```
 
-## Use pre-built containers
+### Searching for TB3s around (reconnaissance)
 
-### `galactic`
 ```bash
-docker pull registry.gitlab.com/xilinxrobotics/tb3nav2_demo:galactic
-xhost + # (careful with this)
-docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $HOME/.Xauthority:/home/xilinx/.Xauthority registry.gitlab.com/xilinxrobotics/tb3nav2_demo:galactic
-
-# Run setup (inside container)
-byobu -f configs/poc.conf attach
-```
-
-### `foxy`
-```bash
-docker pull registry.gitlab.com/xilinxrobotics/tb3nav2_demo:foxy
-xhost + # (careful with this)
-docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v $HOME/.Xauthority:/home/xilinx/.Xauthority registry.gitlab.com/xilinxrobotics/tb3nav2_demo:foxy
-
-# Run setup (inside container)
-byobu -f configs/poc.conf attach
+## From another terminal
+python3 exploits/footprint.py 2> /dev/null
 ```
