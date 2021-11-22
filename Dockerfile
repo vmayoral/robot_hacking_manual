@@ -18,9 +18,10 @@ RUN wget https://github.com/jgm/pandoc/releases/download/2.16.2/pandoc-2.16.2-1-
 #     cd pandoc-sidenote && stack build && stack install
 
 RUN apt-get install -y  cabal-install && \
-    cabal update && cabal install pandoc-sidenote
-
-# /root/.cabal/bin/pandoc-sidenote
-
+    cabal update && cabal install pandoc-sidenote && \
+    ln -s /root/.cabal/bin/pandoc-sidenote /usr/bin/pandoc-sidenote
 RUN pip3 install pandoc-latex-fontsize
 COPY . /robot_hacking_manual
+
+WORKDIR /robot_hacking_manual
+RUN make clean; make html

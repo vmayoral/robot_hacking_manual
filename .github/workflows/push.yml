@@ -22,7 +22,8 @@ jobs:
               sudo dpkg -i pandoc-2.16.2-1-amd64.deb
 
         sudo apt-get install -y cabal-install && \
-            cabal update && cabal install pandoc-sidenote
+            cabal update && cabal install pandoc-sidenote && \
+            sudo ln -s /root/.cabal/bin/pandoc-sidenote /usr/bin/pandoc-sidenote
 
         pip3 install pandoc-latex-fontsize
 
