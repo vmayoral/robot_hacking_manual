@@ -13,11 +13,18 @@ jobs:
       with:
         python-version: 3.9
 
-    # Install sphinx and dependencies
+    # Install pandoc and dependencies
     - name: install pandoc and template dependencies
       run: |
         python3 -m pip install --upgrade pip
-        sudo apt-get install -y pandoc pandoc-sidenote pandoc-citeproc
+        sudo apt-get install -y curl wget python3 python3-pip git
+        wget https://github.com/jgm/pandoc/releases/download/2.16.2/pandoc-2.16.2-1-amd64.deb && \
+              dpkg -i pandoc-2.16.2-1-amd64.deb
+
+        apt-get install -y  cabal-install && \
+            cabal update && cabal install pandoc-sidenote
+
+        pip3 install pandoc-latex-fontsize
 
     # Build
     - name: Build documentation
