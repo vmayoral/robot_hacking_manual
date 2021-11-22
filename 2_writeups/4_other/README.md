@@ -1,3 +1,0 @@
-\newpage
-
-# Appendices
