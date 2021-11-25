@@ -9,19 +9,60 @@
   <title>RHM 0.3: Robot Hacking Manual</title>
   <link rel="stylesheet" href="css/theme.css" />
   <link rel="stylesheet" href="css/skylighting-solarized-theme.css" />
+  <link rel="stylesheet" href="css/header__e6gvei.css" />
   
 </head>
 <body>
 
-<header>
-<h1 class="title"><strong>RHM <code>0.3</code></strong>: Robot Hacking Manual</h1>
-<blockquote class="metadata">
-<p class="subtitle"><strong>From robotics to cybersecurity</strong>. Papers, notes and writeups from a journey into robot cybersecurity</p>
-<p class="author">
-      Víctor Mayoral-Vilches
-  </p>
-<p class="date before-toc"><time datetime="<strong>version <code>0.3</code></strong> (2021-11-21)"><strong>version <code>0.3</code></strong> (2021-11-21)</time></p>
-</blockquote>
+
+<header class="header-section global-section">
+  <div class="__e6gvei_div __e6gvei header-wrap global-wrap global-flex">
+    <div class="__e6gvei header-logo global-flex">
+      <h1 class="__e6gvei no-logo"><a href="https://cybersecurityrobotics.net">Cybersecurity <br>Robotics</a></h1>
+    </div>
+    <div class="__e6gvei header-nav global-flex">
+      <input id="toggle" type="checkbox">
+      <label for="toggle" class="__e6gvei nav-label hamburger">
+        <span class="__e6gvei hamburger-inner">
+          <span class="__e6gvei hamburger-bar"></span>
+          <span class="__e6gvei hamburger-bar"></span>
+          <span class="__e6gvei hamburger-bar"></span>
+        </span>
+      </label>
+      <div class="__e6gvei nav-toggle">
+        <nav>
+          <ul>
+            <li class="__e6gvei nav-item-home">
+              <a href="https://cybersecurityrobotics.net/" class="__e6gvei">Home</a>
+            </li>
+            <li class="__e6gvei nav-item-manual">
+              <a href="https://rhm.cybersecurityrobotics.net/" class="__e6gvei is-active">Manual</a>
+            </li>
+            <li class="__e6gvei nav-item-resources">
+              <a href="https://cybersecurityrobotics.net/resources/">Resources</a>
+            </li>
+            <li class="__e6gvei nav-item-contact">
+              <a href="https://cybersecurityrobotics.net/contact/">Contact</a>
+            </li>
+
+            <li class="__e6gvei members-login-panel-section">
+              <a class="__e6gvei members-signin" href="https://cybersecurityrobotics.net/signin/">Sign in</a>
+              <a class="__e6gvei members-signup" href="https://cybersecurityrobotics.net/signup/">Sign up</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="title"><strong>RHM <code>0.3</code></strong>: Robot Hacking Manual</h1>
+  <blockquote class="metadata">
+    <p class="subtitle"><strong>From robotics to cybersecurity</strong>. Papers, notes and writeups from a journey into robot cybersecurity</p>
+      <p class="author">
+          Víctor Mayoral-Vilches
+      </p>
+      <p class="date before-toc"><time datetime="<strong>version <code>0.3</code></strong> (2021-11-21)"><strong>version <code>0.3</code></strong> (2021-11-21)</time></p>
+    </blockquote>
 </header>
 
 <nav id="TOC" role="doc-toc">
@@ -220,17 +261,6 @@
   <li><a href="#reproducing-the-flaw">Reproducing the flaw</a></li>
   <li><a href="#automating-the-exploitation">Automating the exploitation</a></li>
   <li><a href="#resources-20">Resources</a></li>
-  </ul></li>
-  </ul></li>
-  <li><a href="#appendices">Appendices</a>
-  <ul>
-  <li><a href="#appendix-a1-web-badstore.net">Appendix A1, Web: BadStore.net</a>
-  <ul>
-  <li><a href="#getting-the-infrastructure">Getting the infrastructure</a></li>
-  <li><a href="#introduction-to-the-environment-and-background-research-on-the-structure-how-to-proceed">Introduction to the environment and background research on the structure (how to proceed)</a></li>
-  <li><a href="#diving-into-web-hacking">Diving into web hacking</a></li>
-  <li><a href="#review-of-the-structure-and-classification-of-web-vulns">Review of the structure and classification of web vulns</a></li>
-  <li><a href="#a-few-sites-that-provide-helpadvice">A few sites that provide help/advice</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#findings">Findings</a></li>
@@ -8673,299 +8703,6 @@ root@9a78bba9592e:~/tutorial# ls -lh build/1_staticnx
 <li>[3] rosmaster leaves sockets in CLOSE_WAIT state. Retrieved from https://github.com/ros/ros_comm/issues/610.</li>
 <li>[4] Close CLOSE_WAIT sockets by default. Retrieved from https://github.com/ros/ros_comm/pull/1104.</li>
 </ul>
-<h1 id="appendices">Appendices</h1>
-<h2 id="appendix-a1-web-badstore.net">Appendix A1, Web: BadStore.net</h2>
-<p>This tutorial will walk through badstore web app hacking demo. The objective is to familiarize myself with web security assessment and to the best of my capabilities (both searching, reasoning and developing), try to come up with a) a common and strategic structure to follow when performing web assessments and b) a set of utilities to automate (as much as possible) the process.</p>
-<p><strong>Expected outcomes</strong>: - structure to perform a web assessment - tools to automate the assessment process</p>
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
-<ul>
-<li><a href="#badstorenet">BadStore.net</a>
-<ul>
-<li><a href="#getting-the-infrastructure">Getting the infrastructure</a></li>
-<li><a href="#introduction-to-the-environment-and-background-research-on-the-structure-how-to-proceed">Introduction to the environment and background research on the structure (how to proceed)</a></li>
-<li><a href="#diving-into-web-hacking">Diving into web hacking</a>
-<ul>
-<li><a href="#information-gathering">Information gathering</a>
-<ul>
-<li><a href="#fingerprinting">Fingerprinting</a></li>
-<li><a href="#finding-out-web-tree-through-url-fuzzing">Finding out web tree through URL fuzzing</a></li>
-</ul></li>
-<li><a href="#authentication">Authentication</a>
-<ul>
-<li><a href="#brute-force">Brute force</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#review-of-the-structure-and-classification-of-web-vulns">Review of the structure and classification of web vulns</a></li>
-<li><a href="#a-few-sites-that-provide-helpadvice">A few sites that provide help/advice</a></li>
-</ul></li>
-</ul>
-<!-- /TOC -->
-<h3 id="getting-the-infrastructure">Getting the infrastructure</h3>
-<div class="sourceCode" id="cb276"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb276-1"><a href="#cb276-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull jvhoof/badstore-docker <span class="co"># v1.2.3</span></span>
-<span id="cb276-2"><a href="#cb276-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">-p</span> 80:80 jvhoof/badstore-docker</span></code></pre></div>
-<h3 id="introduction-to-the-environment-and-background-research-on-the-structure-how-to-proceed">Introduction to the environment and background research on the structure (how to proceed)</h3>
-<p>I start review <span class="citation" data-cites="badstore.netv2.1.2006">(<a href="#ref-badstore.netv2.1.2006" role="doc-biblioref">v2.1. 2006</a>)</span> which provides an intro to the environment. The document informs about a variety of different vulnerabilities and classifies them in different groups as follows:</p>
-<ul>
-<li>Authentication
-<ul>
-<li>Brute Force</li>
-<li>Insufficient Authentication</li>
-<li>Weak Password Recovery Validation</li>
-</ul></li>
-<li>Authorization
-<ul>
-<li>Credential/Session Prediction</li>
-<li>Insufficient Authorization</li>
-<li>Insufficient Session Expiration-</li>
-<li>Session Fixation</li>
-</ul></li>
-<li>Client-side Attacks
-<ul>
-<li>Content Spoofing</li>
-<li>Cross-site Scripting (XSS)</li>
-</ul></li>
-<li>Command Execution
-<ul>
-<li>Buffer Overflow</li>
-<li>Format String Attack</li>
-<li>LDAP Injection</li>
-<li>OS Commanding</li>
-<li>SQL Injection</li>
-<li>SSI Injection-</li>
-<li>XPath Injection</li>
-</ul></li>
-<li>Information Disclosure
-<ul>
-<li>Directory Indexing</li>
-<li>Information Leakage</li>
-<li>Path Traversal</li>
-<li>Predictable Resource Location</li>
-</ul></li>
-<li>Logical Attacks
-<ul>
-<li>Abuse of Functionality</li>
-<li>Denial of Service</li>
-<li>Insufficient Anti-automation</li>
-<li>Insufficient Process Validation</li>
-</ul></li>
-</ul>
-<p>An alternative yet valid and good approach to web security is described by <span class="citation" data-cites="walden2008integrating">(<a href="#ref-walden2008integrating" role="doc-biblioref">Walden 2008</a>)</span> where he proposes the following structure:</p>
-<ul>
-<li>Web Application Input
-<ul>
-<li>HTTP Requests</li>
-<li>URLs</li>
-<li>Cookies</li>
-<li>Form Parameterse. Encodings</li>
-</ul></li>
-<li>Client-side Technologies
-<ul>
-<li>Javascript Security</li>
-<li>Java Security Model</li>
-<li>ActiveX Trust Model</li>
-<li>Bypassing Client Security</li>
-</ul></li>
-<li>Input-based Attacks
-<ul>
-<li>Path Traversal</li>
-<li>Web Testing Proxies</li>
-<li>Vulnerability Scanners</li>
-<li>Input Validation</li>
-<li>Blacklist Filters</li>
-<li>Whitelist Filters</li>
-</ul></li>
-<li>Injection Attacks
-<ul>
-<li>Interpreters and Injection</li>
-<li>SQL Injection</li>
-<li>Shell Injection</li>
-<li>File Inclusion</li>
-<li>XML Injection</li>
-<li>Separating Code and Data</li>
-</ul></li>
-<li>Cross-Site Attacks
-<ul>
-<li>Stored Cross-Site Scripting</li>
-<li>Reflected Cross-Site Scripting</li>
-<li>HTTP Header Injection</li>
-<li>Cross-Site Request Forgery</li>
-<li>Output Encoding</li>
-</ul></li>
-<li>Authentication
-<ul>
-<li>Basic, Digest, and Form Authentication</li>
-<li>Passwords</li>
-<li>SSL</li>
-<li>Session Management</li>
-</ul></li>
-</ul>
-<p>OWASP provides yet another methodology and structure at https://www.owasp.org/images/1/19/OTGv4.pdf which mainly defines the following sub-categories for active testing:</p>
-<ul>
-<li>Information Gathering</li>
-<li>Configuration and Deployment Management Testing</li>
-<li>Identity Management Testing</li>
-<li>Authentication Testing</li>
-<li>Authorization Testing</li>
-<li>Session Management Testing</li>
-<li>Input Validation Testing</li>
-<li>Error Handling</li>
-<li>Cryptography</li>
-<li>Business Logic Testing</li>
-<li>Client Side Testing</li>
-</ul>
-<p>We’ll be sticking with the first structure and complement it with a review at the very end that should provide a final (justified on experience) classification.</p>
-<p>With regard the approach, <span class="citation" data-cites="meucci2014owasp">(<a href="#ref-meucci2014owasp" role="doc-biblioref">Meucci and Muller 2014</a>)</span> provides a comprehensive despcription of different ways to proceed: - Manual inspection and reviews - Threat modelling (led by NIST 800-30 [11], https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-30r1.pdf) - Source code review - Penetration testing (cheap)</p>
-<p>In the following sections we’d simply proceed with the last one which is the most common approch in most cases AFAIK</p>
-<h3 id="diving-into-web-hacking">Diving into web hacking</h3>
-<p>Let’s dive into it. Fetched a few books for diving a bit deeper into this and went through them. Mostly: - [ ] The Web Applications Hackers Handbook, second edition</p>
-<h4 id="information-gathering">Information gathering</h4>
-<p>Before diving into hacks, let’s obtain some information about the website. This is somewhat nicely described at <span class="citation" data-cites="meucci2014owasp">(<a href="#ref-meucci2014owasp" role="doc-biblioref">Meucci and Muller 2014</a>)</span> and available online at https://www.owasp.org/index.php/Testing_Information_Gathering</p>
-<h5 id="fingerprinting">Fingerprinting</h5>
-<p>When one fingerprints, usually, we’ll aim to obtain the following:</p>
-<ul>
-<li>Whois is Details</li>
-<li>Software used and version</li>
-<li>OS Details</li>
-<li>Sub Domains</li>
-<li>File Name and File Path</li>
-<li>Scripting Platform &amp; CMS Details</li>
-<li>Contact Details</li>
-</ul>
-<p>We’ll ommit the first one (since it’s running in a docker container and it’s a demo setup) but let’s look into the others and see what we can fetch:</p>
-<div class="sourceCode" id="cb277"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb277-1"><a href="#cb277-1" aria-hidden="true" tabindex="-1"></a><span class="ex">whatweb</span> 192.168.1.0/24</span>
-<span id="cb277-2"><a href="#cb277-2" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.0</span> ERROR: Network is unreachable <span class="at">-</span> connect<span class="er">(</span><span class="ex">2</span><span class="kw">)</span> <span class="cf">for</span> <span class="st">&quot;192.168.1.0&quot;</span> port 80</span>
-<span id="cb277-3"><a href="#cb277-3" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.0</span> [ Unassigned]</span>
-<span id="cb277-4"><a href="#cb277-4" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.1</span> [200 OK] Cookies[SESSION], Country[RESERVED][ZZ], HTTPServer[micro_httpd], HttpOnly[SESSION], IP[192.168.1.1], JQuery[1.6.3], PasswordField[pass], Script[text/javascript], Title[movistar], X-Frame-Options[sameorigin], micro_httpd</span>
-<span id="cb277-5"><a href="#cb277-5" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.8</span> ERROR: No route to host <span class="at">-</span> connect<span class="er">(</span><span class="ex">2</span><span class="kw">)</span> <span class="cf">for</span> <span class="st">&quot;192.168.1.8&quot;</span> port 80</span>
-<span id="cb277-6"><a href="#cb277-6" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.9</span> ERROR: No route to host <span class="at">-</span> connect<span class="er">(</span><span class="ex">2</span><span class="kw">)</span> <span class="cf">for</span> <span class="st">&quot;192.168.1.9&quot;</span> port 80</span>
-<span id="cb277-7"><a href="#cb277-7" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.5</span> ERROR: No route to host <span class="at">-</span> connect<span class="er">(</span><span class="ex">2</span><span class="kw">)</span> <span class="cf">for</span> <span class="st">&quot;192.168.1.5&quot;</span> port 80</span>
-<span id="cb277-8"><a href="#cb277-8" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span>
-<span id="cb277-9"><a href="#cb277-9" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.10</span> [ Unassigned]</span>
-<span id="cb277-10"><a href="#cb277-10" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.24</span> [ Unassigned]</span>
-<span id="cb277-11"><a href="#cb277-11" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.33</span> [200 OK] Apache[2.4.10], Country[RESERVED][ZZ], HTTPServer[Debian Linux][Apache/2.4.10 <span class="er">(</span><span class="ex">Debian</span><span class="kw">)</span><span class="ex">],</span> IP[192.168.1.33], Meta-Refresh-Redirect[/cgi-bin/badstore.cgi]</span>
-<span id="cb277-12"><a href="#cb277-12" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.18</span> [ Unassigned]</span>
-<span id="cb277-13"><a href="#cb277-13" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.12</span> ERROR: No route to host <span class="at">-</span> connect<span class="er">(</span><span class="ex">2</span><span class="kw">)</span> <span class="cf">for</span> <span class="st">&quot;192.168.1.12&quot;</span> port 80</span>
-<span id="cb277-14"><a href="#cb277-14" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.13</span> ERROR: No route to host <span class="at">-</span> connect<span class="er">(</span><span class="ex">2</span><span class="kw">)</span> <span class="cf">for</span> <span class="st">&quot;192.168.1.13&quot;</span> port 80</span>
-<span id="cb277-15"><a href="#cb277-15" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.6</span> ERROR: No route to host <span class="at">-</span> connect<span class="er">(</span><span class="ex">2</span><span class="kw">)</span> <span class="cf">for</span> <span class="st">&quot;192.168.1.6&quot;</span> port 80</span>
-<span id="cb277-16"><a href="#cb277-16" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.25</span> ERROR: No route to host <span class="at">-</span> connect<span class="er">(</span><span class="ex">2</span><span class="kw">)</span> <span class="cf">for</span> <span class="st">&quot;192.168.1.25&quot;</span> port 80</span>
-<span id="cb277-17"><a href="#cb277-17" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.16</span> ERROR: No route to host <span class="at">-</span> connect<span class="er">(</span><span class="ex">2</span><span class="kw">)</span> <span class="cf">for</span> <span class="st">&quot;192.168.1.16&quot;</span> port 80</span>
-<span id="cb277-18"><a href="#cb277-18" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.11</span> ERROR: No route to host <span class="at">-</span> connect<span class="er">(</span><span class="ex">2</span><span class="kw">)</span> <span class="cf">for</span> <span class="st">&quot;192.168.1.11&quot;</span> port 80</span></code></pre></div>
-<p>That already tells us quite a bit!</p>
-<p>Targetting the particular IP address:</p>
-<div class="sourceCode" id="cb278"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb278-1"><a href="#cb278-1" aria-hidden="true" tabindex="-1"></a><span class="ex">whatweb</span> 192.168.1.33</span>
-<span id="cb278-2"><a href="#cb278-2" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.33</span> [200 OK] Apache[2.4.10], Country[RESERVED][ZZ], HTTPServer[Debian Linux][Apache/2.4.10 <span class="er">(</span><span class="ex">Debian</span><span class="kw">)</span><span class="ex">],</span> IP[192.168.1.33], Meta-Refresh-Redirect[/cgi-bin/badstore.cgi]</span>
-<span id="cb278-3"><a href="#cb278-3" aria-hidden="true" tabindex="-1"></a><span class="ex">http://192.168.1.33/cgi-bin/badstore.cgi</span> [200 OK] Apache[2.4.10], Country[RESERVED][ZZ], Frame, HTTPServer[Debian Linux][Apache/2.4.10 <span class="er">(</span><span class="ex">Debian</span><span class="kw">)</span><span class="ex">],</span> IP[192.168.1.33], Title[Welcome to BadStore.net v1.2.3s <span class="at">-</span> The most insecure store on the <span class="st">&#39;Net!]</span></span></code></pre></div>
-<p>We now know we’re dealing with an Apache that’s installed into Debian. We also happen to know the version of Apache that’s running.</p>
-<p>Let’s try some other tools:</p>
-<div class="sourceCode" id="cb279"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb279-1"><a href="#cb279-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./httprint</span> <span class="at">-h</span> 192.168.1.33 <span class="at">-s</span> signatures.txt</span>
-<span id="cb279-2"><a href="#cb279-2" aria-hidden="true" tabindex="-1"></a><span class="ex">httprint</span> v0.301 <span class="er">(</span><span class="ex">beta</span><span class="kw">)</span> <span class="ex">-</span> web server fingerprinting tool</span>
-<span id="cb279-3"><a href="#cb279-3" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">c</span><span class="kw">)</span> <span class="ex">2003-2005</span> net-square solutions pvt. ltd. <span class="at">-</span> see readme.txt</span>
-<span id="cb279-4"><a href="#cb279-4" aria-hidden="true" tabindex="-1"></a><span class="ex">http://net-square.com/httprint/</span></span>
-<span id="cb279-5"><a href="#cb279-5" aria-hidden="true" tabindex="-1"></a><span class="ex">httprint@net-square.com</span></span>
-<span id="cb279-6"><a href="#cb279-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb279-7"><a href="#cb279-7" aria-hidden="true" tabindex="-1"></a><span class="ex">--------------------------------------------------</span></span>
-<span id="cb279-8"><a href="#cb279-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Host:</span> 192.168.1.33</span>
-<span id="cb279-9"><a href="#cb279-9" aria-hidden="true" tabindex="-1"></a><span class="ex">ICMP</span> request time out on 192.168.1.33</span>
-<span id="cb279-10"><a href="#cb279-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb279-11"><a href="#cb279-11" aria-hidden="true" tabindex="-1"></a><span class="ex">--------------------------------------------------</span></span></code></pre></div>
-<p>Not very useful. Let’s jump into the next topic</p>
-<p>##### robots.txt</p>
-<p>Searching on <code>http://192.168.1.33/robots.txt</code> one finds the following:</p>
-<div class="sourceCode" id="cb280"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb280-1"><a href="#cb280-1" aria-hidden="true" tabindex="-1"></a> <span class="co"># /robots.txt file for http://www.badstore.net/</span></span>
-<span id="cb280-2"><a href="#cb280-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># mail webmaster@badstore.net for constructive criticism</span></span>
-<span id="cb280-3"><a href="#cb280-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb280-4"><a href="#cb280-4" aria-hidden="true" tabindex="-1"></a><span class="ex">User-agent:</span> badstore_webcrawler</span>
-<span id="cb280-5"><a href="#cb280-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Disallow:</span></span>
-<span id="cb280-6"><a href="#cb280-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb280-7"><a href="#cb280-7" aria-hidden="true" tabindex="-1"></a><span class="ex">User-agent:</span> googlebot</span>
-<span id="cb280-8"><a href="#cb280-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Disallow:</span> /cgi-bin</span>
-<span id="cb280-9"><a href="#cb280-9" aria-hidden="true" tabindex="-1"></a><span class="ex">Disallow:</span> /scanbot <span class="co"># We like Google</span></span>
-<span id="cb280-10"><a href="#cb280-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb280-11"><a href="#cb280-11" aria-hidden="true" tabindex="-1"></a><span class="ex">User-agent:</span> <span class="pp">*</span></span>
-<span id="cb280-12"><a href="#cb280-12" aria-hidden="true" tabindex="-1"></a><span class="ex">Disallow:</span> /backup</span>
-<span id="cb280-13"><a href="#cb280-13" aria-hidden="true" tabindex="-1"></a><span class="ex">Disallow:</span> /cgi-bin</span>
-<span id="cb280-14"><a href="#cb280-14" aria-hidden="true" tabindex="-1"></a><span class="ex">Disallow:</span> /supplier</span>
-<span id="cb280-15"><a href="#cb280-15" aria-hidden="true" tabindex="-1"></a><span class="ex">Disallow:</span> /upload</span></code></pre></div>
-<h5 id="finding-out-web-tree-through-url-fuzzing">Finding out web tree through URL fuzzing</h5>
-<p>A simple search follows below:</p>
-<div class="sourceCode" id="cb281"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb281-1"><a href="#cb281-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[+]</span> [13:54:37] <span class="at">-</span> [200] <span class="at">-</span> [/backup/] <span class="at">-</span><span class="op">&gt;</span> http://192.168.1.33/backup/</span>
-<span id="cb281-2"><a href="#cb281-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[+]</span> [13:54:37] <span class="at">-</span> [200] <span class="at">-</span> [/backup/] <span class="at">-</span><span class="op">&gt;</span> http://192.168.1.33/backup/</span>
-<span id="cb281-3"><a href="#cb281-3" aria-hidden="true" tabindex="-1"></a><span class="ex">[+]</span> <span class="at">-[200]</span> <span class="at">-http:</span>//192.168.1.33/backup/</span>
-<span id="cb281-4"><a href="#cb281-4" aria-hidden="true" tabindex="-1"></a><span class="ex">[+]</span> <span class="at">-[200]</span> <span class="at">-http:</span>//192.168.1.33/backup/</span></code></pre></div>
-<p>It’s also possible to provide a list of keywords and expressions but we’ll leave that aside for now. Let’s dive into pentesting.</p>
-<h4 id="authentication">Authentication</h4>
-<p>According to <span class="citation" data-cites="stuttard2011web">(<a href="#ref-stuttard2011web" role="doc-biblioref">Stuttard and Pinto 2011</a>)</span>, the phases of authentication web pentesting are:</p>
-<figure>
-<img src="background/images/2019/09/bla.png" alt="Testing the authentication mechanism, from Stuttard and Pinto (2011)" /><figcaption aria-hidden="true">Testing the authentication mechanism, from <span class="citation" data-cites="stuttard2011web">Stuttard and Pinto (<a href="#ref-stuttard2011web" role="doc-biblioref">2011</a>)</span></figcaption>
-</figure>
-<p>Or in the second edition:</p>
-<figure>
-<img src="background/images/2019/09/second-edition.png" alt="Testing the authentication mechanism, from Stuttard and Pinto (2011) (second edition)" /><figcaption aria-hidden="true">Testing the authentication mechanism, from <span class="citation" data-cites="stuttard2011web">Stuttard and Pinto (<a href="#ref-stuttard2011web" role="doc-biblioref">2011</a>)</span> (second edition)</figcaption>
-</figure>
-<p>Let’s follow this methodology in the coming subsections:</p>
-<h5 id="methodology">Methodology</h5>
-<h6 id="test-password-quality">Test password quality</h6>
-<p>Attemped to register with weak password <code>1234</code>:</p>
-<ul>
-<li>username: test@gmail.com</li>
-<li>password: 1234</li>
-</ul>
-<figure>
-<img src="background/images/2019/09/weak-registration-attempt.png" alt="Weak registration attempt" /><figcaption aria-hidden="true">Weak registration attempt</figcaption>
-</figure>
-<p>Seems it is valid because it allows me to log in successfully:</p>
-<figure>
-<img src="background/images/2019/09/log-in-successful-after-registration-with-weak-password.png" alt="Log in successful after registration with weak password" /><figcaption aria-hidden="true">Log in successful after registration with weak password</figcaption>
-</figure>
-<p>Tested the registration format and it seems it only accepts 8 characters. Created another username:</p>
-<ul>
-<li>username: hola@gmail.com</li>
-<li>password: 12345678</li>
-</ul>
-<p>It seems it tests the 8 characters. No limitation on the attempts to log in has been identified.</p>
-<h6 id="test-for-username-enumeration">Test for username enumeration</h6>
-<h6 id="test-for-password-guessing">Test for password guessing</h6>
-<h6 id="test-account-recovery">Test account recovery</h6>
-<h6 id="test-remember-me">Test “remember me”</h6>
-<h6 id="test-impersonation-functions">Test impersonation functions</h6>
-<h6 id="test-username-uniqueness">Test username uniqueness</h6>
-<h6 id="test-credential-predictability">Test credential predictability</h6>
-<h6 id="check-for-unsafe-transmission">Check for unsafe transmission</h6>
-<h6 id="check-for-unsafe-distribution">Check for unsafe distribution</h6>
-<h6 id="test-for-fail-open-logic">Test for fail-open logic</h6>
-<h6 id="testmultistageprocesses">Testmultistageprocesses</h6>
-<h5 id="back-to-badstore">Back to BadStore</h5>
-<p>For our case and according to <span class="citation" data-cites="badstore.netv2.1.2006">(<a href="#ref-badstore.netv2.1.2006" role="doc-biblioref">v2.1. 2006</a>)</span>, most of the areas that require authentication submit stuff in plain text and without encryption at all. Let’s dive a bit into this.</p>
-<figure>
-<img src="background/images/2019/08/indeed-the-parameters-are-sent-in-plan-text.png" alt="Indeed the parameters are sent in plain text" /><figcaption aria-hidden="true">Indeed the parameters are sent in plain text</figcaption>
-</figure>
-<p>Something similar happens when logging in:</p>
-<figure>
-<img src="background/images/2019/08/logging-in-isn-t-secured.png" alt="Logging in isn’t secured" /><figcaption aria-hidden="true">Logging in isn’t secured</figcaption>
-</figure>
-<p>The implications of this I presume is that pretty much anyone listening in the network can literally obtain all the related information. Let’s make a simple test using wireshark:</p>
-<figure>
-<img src="background/images/2019/08/indeed-that-s-the-case-capture-from-wireshark-while-monitoring-the-network-interface.png" alt="Indeed that’s the case, capture from wireshark while monitoring the network interface" /><figcaption aria-hidden="true">Indeed that’s the case, capture from wireshark while monitoring the network interface</figcaption>
-</figure>
-<p>##### Brute force The objective of this section is to figure out the passwords of the different accounts in the system. For that, we first may need to figure out the accounts themselves. In this case it can easily be done (since they’re directly printed) by navigating the website:</p>
-<figure>
-<img src="background/images/2019/08/user-accounts-leak.png" alt="User accounts leak" /><figcaption aria-hidden="true">User accounts leak</figcaption>
-</figure>
-<p>From this point on, I guess one would go and try to figure out the admin account or other user’s accounts.</p>
-<h5 id="insufficient-authentication">Insufficient Authentication</h5>
-<p>TODO</p>
-<h5 id="weak-password-recovery-validation">Weak Password Recovery Validation</h5>
-<p>TODO</p>
-<h3 id="review-of-the-structure-and-classification-of-web-vulns">Review of the structure and classification of web vulns</h3>
-<p>TODO (refer)</p>
-<h3 id="a-few-sites-that-provide-helpadvice">A few sites that provide help/advice</h3>
-<ul>
-<li>https://www.coursera.org/learn/software-security/supplement/H1cBJ/project-2</li>
-<li>https://d28rh4a8wq0iu5.cloudfront.net/softwaresec/virtual_machine/BadStore_net_v2_1_Manual.pdf</li>
-<li>https://www.cs.umd.edu/class/fall2012/cmsc498L/materials/BadStore_net_v1_2_Manual.pdf</li>
-<li>https://medium.com/syscall59/badstore-1-2-3-walkthrough-vulnhub-7816f3001333</li>
-<li>https://medium.com/yassergersy/badstore-assignment-d93422e56b31</li>
-</ul>
 <h1 id="findings">Findings</h1>
 <p>A (likely incomplete) list of the security findings contributed while building this manual is summarized below. This list is provided as a reference of what type of security flaws one should expect in modern robot technologies.</p>
 <p>Refer to each one of the security flaws and/or the corresponding advisories for additional details:</p>
@@ -9464,9 +9201,6 @@ McClean, Jarrod, Christopher Stull, Charles Farrar, and David Mascareñas. 2013.
 <div id="ref-mendia2018robotics" class="csl-entry" role="doc-biblioentry">
 Mendia, Gorka Olalde, Lander Usategui San Juan, Xabier Perez Bascaran, Asier Bilbao Calvo, Alejandro Hernández Cordero, Irati Zamalloa Ugarte, Aday Muñiz Rosas, et al. 2018. <span>“Robotics CTF (RCTF), a Playground for Robot Hacking.”</span> <em>arXiv Preprint arXiv:1810.02690</em>.
 </div>
-<div id="ref-meucci2014owasp" class="csl-entry" role="doc-biblioentry">
-Meucci, Matteo, and A Muller. 2014. <span>“Owasp Testing Guide.”</span> <em>V4. 0,//OWASP Foundation</em>, no. s 453.
-</div>
 <div id="ref-quigley2009ros" class="csl-entry" role="doc-biblioentry">
 Quigley, Morgan, Ken Conley, Brian Gerkey, Josh Faust, Tully Foote, Jeremy Leibs, Rob Wheeler, and Andrew Y Ng. 2009. <span>“ROS: An Open-Source Robot Operating System.”</span> In <em>ICRA Workshop on Open Source Software</em>, 3:5. 3.2. Kobe, Japan.
 </div>
@@ -9482,17 +9216,11 @@ Rodrı́guez-Lera, Francisco J, Vicente Matellán-Olivera, Jesús Balsa-Comerón
 <div id="ref-1673343" class="csl-entry" role="doc-biblioentry">
 Stoneburner, G. 2006. <span>“Toward a Unified Security-Safety Model.”</span> <em>Computer</em> 39 (8): 96–97. <a href="https://doi.org/10.1109/MC.2006.283">https://doi.org/10.1109/MC.2006.283</a>.
 </div>
-<div id="ref-stuttard2011web" class="csl-entry" role="doc-biblioentry">
-Stuttard, Dafydd, and Marcus Pinto. 2011. <em>The Web Application Hacker’s Handbook: Finding and Exploiting Security Flaws</em>. John Wiley &amp; Sons.
-</div>
 <div id="ref-safetysecurity" class="csl-entry" role="doc-biblioentry">
 Swinscow-Hall, Duncan. 2017. <span>“The Interaction Between Safety and Security.”</span> <a href="https://wwwf.imperial.ac.uk/blog/security-institute/2017/01/03/the-relationship-between-safety-and-security/" class="uri">https://wwwf.imperial.ac.uk/blog/security-institute/2017/01/03/the-relationship-between-safety-and-security/</a>.
 </div>
 <div id="ref-taurer2018secure" class="csl-entry" role="doc-biblioentry">
 Taurer, Sebastian, Bernhard Dieber, and Peter Schartner. 2018. <span>“Secure Data Recording and Bio-Inspired Functional Integrity for Intelligent Robots.”</span> In <em>2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)</em>, 8723–28. IEEE.
-</div>
-<div id="ref-badstore.netv2.1.2006" class="csl-entry" role="doc-biblioentry">
-v2.1., BadStore.net. 2006. <span>“Hacking BadStore.netA Hands-on Approach to Web Application Vulnerability Discovery and Exploitation.”</span>
 </div>
 <div id="ref-vilches2018towards" class="csl-entry" role="doc-biblioentry">
 Vilches, Vı́ctor Mayoral, Endika Gil-Uriarte, Irati Zamalloa Ugarte, Gorka Olalde Mendia, Rodrigo Izquierdo Pisón, Laura Alzola-Kirschgens, Asier Bilbao Calvo, Alejandro Hernández Cordero, Lucas Apa, and César Cerrudo. 2018. <span>“Towards an Open Standard for Assessing the Severity of Robot Security Vulnerabilities, the Robot Vulnerability Scoring System (RVSS).”</span> <em>arXiv Preprint arXiv:1807.10357</em>.
@@ -9502,9 +9230,6 @@ Vilches, Vı́ctor Mayoral, Lander Usategui San Juan, Bernhard Dieber, Unai Ayuc
 </div>
 <div id="ref-vilches2018aztarna" class="csl-entry" role="doc-biblioentry">
 Vilches, Vı́ctor Mayoral, Gorka Olalde Mendia, Xabier Perez Baskaran, Alejandro Hernández Cordero, Lander Usategui San Juan, Endika Gil-Uriarte, Odei Olalde Saez de Urabain, and Laura Alzola-Kirschgens. 2018. <span>“Aztarna, a Footprinting Tool for Robots.”</span> <em>arXiv Preprint arXiv:1812.09490</em>.
-</div>
-<div id="ref-walden2008integrating" class="csl-entry" role="doc-biblioentry">
-Walden, James. 2008. <span>“Integrating Web Application Security into the IT Curriculum.”</span> In <em>Proceedings of the 9th ACM SIGITE Conference on Information Technology Education</em>, 187–92. ACM.
 </div>
 <div id="ref-white2019sros1" class="csl-entry" role="doc-biblioentry">
 White, Ruffin, Gianluca Caiazza, Henrik Christensen, and Agostino Cortesi. 2019. <span>“Sros1: Using and Developing Secure Ros1 Systems.”</span> In <em>Robot Operating System (ROS)</em>, 373–405. Springer.
