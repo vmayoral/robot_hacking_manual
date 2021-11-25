@@ -32,25 +32,65 @@ $for(include-before)$
 $include-before$
 $endfor$
 
-<header>
-<h1 class="title">$title$</h1>
-<blockquote class="metadata">
-$if(subtitle)$
-<p class="subtitle">$subtitle$</p>
-$endif$
-$if(author)$
-<p class="author">
-  $if(author-url)$
-    <a href="$author-url$">$author$</a>
-  $else$
-    $author$
+
+<header class="header-section global-section">
+  <div class="__e6gvei_div __e6gvei header-wrap global-wrap global-flex">
+    <div class="__e6gvei header-logo global-flex">
+      <h1 class="__e6gvei no-logo"><a href="https://cybersecurityrobotics.net">Cybersecurity <br>Robotics</a></h1>
+    </div>
+    <div class="__e6gvei header-nav global-flex">
+      <input id="toggle" type="checkbox">
+      <label for="toggle" class="__e6gvei nav-label hamburger">
+        <span class="__e6gvei hamburger-inner">
+          <span class="__e6gvei hamburger-bar"></span>
+          <span class="__e6gvei hamburger-bar"></span>
+          <span class="__e6gvei hamburger-bar"></span>
+        </span>
+      </label>
+      <div class="__e6gvei nav-toggle">
+        <nav>
+          <ul>
+            <li class="__e6gvei nav-item-home">
+              <a href="https://cybersecurityrobotics.net/" class="__e6gvei">Home</a>
+            </li>
+            <li class="__e6gvei nav-item-manual">
+              <a href="https://rhm.cybersecurityrobotics.net/" class="__e6gvei is-active">Manual</a>
+            </li>
+            <li class="__e6gvei nav-item-resources">
+              <a href="https://cybersecurityrobotics.net/resources/">Resources</a>
+            </li>
+            <li class="__e6gvei nav-item-contact">
+              <a href="https://cybersecurityrobotics.net/contact/">Contact</a>
+            </li>
+
+            <li class="__e6gvei members-login-panel-section">
+              <a class="__e6gvei members-signin" href="https://cybersecurityrobotics.net/signin/">Sign in</a>
+              <a class="__e6gvei members-signup" href="https://cybersecurityrobotics.net/signup/">Sign up</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="title">$title$</h1>
+  <blockquote class="metadata">
+  $if(subtitle)$
+  <p class="subtitle">$subtitle$</p>
   $endif$
-</p>
-$endif$
-$if(date)$
-<p class="date $if(toc)$before-toc$endif$"><time datetime="$date$">$date$</time></p>
-$endif$
-</blockquote>
+  $if(author)$
+  <p class="author">
+    $if(author-url)$
+      <a href="$author-url$">$author$</a>
+    $else$
+      $author$
+    $endif$
+  </p>
+  $endif$
+  $if(date)$
+  <p class="date $if(toc)$before-toc$endif$"><time datetime="$date$">$date$</time></p>
+  $endif$
+  </blockquote>
 </header>
 
 $if(toc)$

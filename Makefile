@@ -54,10 +54,10 @@ SOURCE_FILES := $(SOURCE_FILES) \
 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial12/README.md \
 				$(CURDIR)/2_writeups/3_robot_exploitation/tutorial13/README.md
 
-## Other ####################
-SOURCE_FILES := $(SOURCE_FILES) \
-				$(CURDIR)/2_writeups/4_other/README.md \
-				$(CURDIR)/2_writeups/4_other/web/tutorial2/README.md \
+# ## Appendices ####################
+# SOURCE_FILES := $(SOURCE_FILES) \
+# 				$(CURDIR)/2_writeups/4_other/README.md \
+# 				$(CURDIR)/2_writeups/4_other/web/tutorial2/README.md \
 
 ## Findings ############
 SOURCE_FILES := $(SOURCE_FILES) \
@@ -93,6 +93,7 @@ PANDOC_OPTIONS_HTML := \
 					--template=template \
 					--css=css/theme.css \
 					--css=css/skylighting-solarized-theme.css \
+					--css=css/header__e6gvei.css \
 					--toc \
 					--output index.html \
 					$(SOURCE_FILES)

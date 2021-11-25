@@ -18,14 +18,14 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
   - [TurtleBot 3](1_case_studies/3_turtlebot3/) (hacking TurtleBot 3)
 - [**Writeups**]()
   - <ins>Reconaissance</ins>
-    - [Footprinting]()
+    - Footprinting
       - [Tutorial 1: Footprinting ROS systems](2_writeups/1_reconnaissance/robot_footprinting/tutorial1/)
       - [Tutorial 2: Footprinting Secure ROS systems](2_writeups/1_reconnaissance/robot_footprinting/tutorial2/)
       - [Tutorial 3: Footprinting ROS 2 and DDS systems](2_writeups/1_reconnaissance/robot_footprinting/tutorial3/)
   - <ins>Vulnerability research</ins>
-    - [Static analysis]()
+    - Static analysis
       - [Tutorial 5: Static analysis of PyRobot](2_writeups/2_robot_vulnerabilities/tutorial5/)
-    - [Dynamic analysis]()
+    - Dynamic analysis
       - [Tutorial 1: Robot sanitizers in ROS 2 Dashing](2_writeups/2_robot_vulnerabilities/tutorial1/)
       - [Tutorial 2: Robot sanitizers in MoveIt 2](2_writeups/2_robot_vulnerabilities/tutorial2/)
       - [Tutorial 3: Debugging output of robot sanitizers with GDB, hunting and fixing bugs](2_writeups/2_robot_vulnerabilities/tutorial3/)
@@ -36,7 +36,7 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
       - [Tutorial 8: SROS and SROS 2, exploring](2_writeups/2_robot_vulnerabilities/tutorial8/)
       - [Tutorial 9: Looking at DDS middleware flaws](2_writeups/2_robot_vulnerabilities/tutorial8/)
   - <ins>Exploitation</ins>
-    - [General]()
+    - General
       - [Tutorial 1: Buffer overflows](2_writeups/3_robot_exploitation/tutorial1/)
       - [Tutorial 2: Building shellcode](2_writeups/3_robot_exploitation/tutorial2/)
       - [Tutorial 3: Exploiting](2_writeups/3_robot_exploitation/tutorial3/)
@@ -47,7 +47,7 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
       - [Tutorial 8: Linux Binary Protections](https://github.com/nnamon/linux-exploitation-course/blob/master/lessons/5_protections/lessonplan.md) (external)
       - [Tutorial 9: Building a pwnbox](2_writeups/3_robot_exploitation/tutorial9/)
       - [Tutorial 10: Bypassing NX with Return Oriented Programming](2_writeups/3_robot_exploitation/tutorial10/) (**WIP, unfinished**)
-    - [Robotics-specific]()
+    - Robotics-specific
       - [Tutorial 11: Unauthenticated registration/unregistration with ROS Master API](2_writeups/3_robot_exploitation/tutorial11/)
       - [Tutorial 12: Unauthenticated updates in publisher list for specified topic](2_writeups/3_robot_exploitation/tutorial12)
       - [Tutorial 13: Sockets left open and in CLOSE_WAIT state in ROS](2_writeups/3_robot_exploitation/tutorial13)
