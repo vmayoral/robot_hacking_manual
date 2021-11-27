@@ -4,7 +4,6 @@
 
 Building on top of the previous [ROS 2 case study](../2_ros2), this piece aims to demonstrate how ROS 2 vulnerabilities can be translated directly into complete robots and how attackers could exploit them.
 
-
 ### Dockerized environment
 Like in previous cases, when possible, we'll facilitate a Docker-based environment so that you can try things out yourself! Here's this one:
 
@@ -14,7 +13,10 @@ Like in previous cases, when possible, we'll facilitate a Docker-based environme
 docker build -t hacking_tb3:foxy --build-arg DISTRO=foxy .
 
 # Run headless
-docker run -it hacking_tb3:foxy -c "/usr/bin/byobu -f /opt/configs/pocs_headless.conf attach"
+docker run -it hacking_tb3:foxy -c "/bin/bash"
+
+# Run headless with byobu config using both Fast-DDS and RTI's Connext
+docker run -it hacking_tb3:foxy -c "/usr/bin/byobu -f /opt/configs/pocs_headless_connext.conf attach"
 
 # Run headless sharing host's network
 docker run -it --privileged --net=host hacking_tb3:foxy -c "/usr/bin/byobu -f /opt/configs/pocs_headless.conf attach"
@@ -45,3 +47,30 @@ It'll find the CycloneDDS node `teleop_keyboard`, which respond to the crafted p
 ```bash
 python3 exploits/reflection.py 2> /dev/null
 ```
+
+
+### Crashing TB3s running DDS's "best in the world"
+
+![](../../images/2021/rti_connext.png)
+
+
+<!-- Elaborate on this -->
+
+Vulnerability Title
+
+Segmentation Fault while receiving malformed packet in RTI Connext DDS
+High-level overview of the vulnerability and the possible effect of using it
+
+Serializer in RTI would segmentation fault while receiving a malformed form of packet. This would cause runtimes to exit immediately and causing an denial of service.
+Detailed description of the vulnerability
+
+RTICdrStream_skipStringAndGetLength does not check for any type of malformed packet, thus while using results from RTICdrStream_align, it will commit a segmentation fault.
+How did you find this vulnerability?
+
+afl-unicorn
+Can you identify exploitability?
+
+DoS
+Can you identify root cause?
+
+RTICdrStream_skipStringAndGetLength does not check for any type of malformed packet, thus while using results from RTICdrStream_align, it will commit a segmentation fault. We compiled test programs in static mode, gcc5.4, Linux 3, C. Both publisher and subscriber is affected.
