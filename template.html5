@@ -1,134 +1,152 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="$lang$" xml:lang="$lang$"$if(dir)$ dir="$dir$"$endif$>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="$lang$" xml:lang="$lang$" $if(dir)$ dir="$dir$" $endif$>
+
 <head>
   <meta charset="utf-8" />
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E16HFC9TSD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-E16HFC9TSD');
+  </script>
   <meta name="generator" content="pandoc-markdown-css-theme" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-$for(author-meta)$
+  $for(author-meta)$
   <meta name="author" content="$author-meta$" />
-$endfor$
-$if(date-meta)$
+  $endfor$
+  $if(date-meta)$
   <meta name="dcterms.date" content="$date-meta$" />
-$endif$
-$if(keywords)$
+  $endif$
+  $if(keywords)$
   <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$" />
-$endif$
-$if(description-meta)$
+  $endif$
+  $if(description-meta)$
   <meta name="description" content="$description-meta$" />
-$endif$
+  $endif$
   <title>$if(title-prefix)$$title-prefix$ – $endif$$pagetitle$</title>
-$for(css)$
+  $for(css)$
   <link rel="stylesheet" href="$css$" />
-$endfor$
-$if(math)$
+  $endfor$
+  $if(math)$
   $math$
-$endif$
-$for(header-includes)$
+  $endif$
+  $for(header-includes)$
   $header-includes$
-$endfor$
+  $endfor$
 </head>
+
 <body>
-$for(include-before)$
-$include-before$
-$endfor$
+  $for(include-before)$
+  $include-before$
+  $endfor$
 
 
-<header class="header-section global-section">
-  <div class="__e6gvei_div __e6gvei header-wrap global-wrap global-flex">
-    <div class="__e6gvei header-logo global-flex">
-      <h1 class="__e6gvei no-logo"><a href="https://cybersecurityrobotics.net">Cybersecurity <br>Robotics</a></h1>
-    </div>
-    <div class="__e6gvei header-nav global-flex">
-      <input id="toggle" type="checkbox">
-      <label for="toggle" class="__e6gvei nav-label hamburger">
-        <span class="__e6gvei hamburger-inner">
-          <span class="__e6gvei hamburger-bar"></span>
-          <span class="__e6gvei hamburger-bar"></span>
-          <span class="__e6gvei hamburger-bar"></span>
-        </span>
-      </label>
-      <div class="__e6gvei nav-toggle">
-        <nav>
-          <ul>
-            <li class="__e6gvei nav-item-home">
-              <a href="https://cybersecurityrobotics.net/" class="__e6gvei">Home</a>
-            </li>
-            <li class="__e6gvei nav-item-manual">
-              <a href="https://rhm.cybersecurityrobotics.net/" class="__e6gvei is-active">Manual</a>
-            </li>
-            <li class="__e6gvei nav-item-resources">
-              <a href="https://cybersecurityrobotics.net/resources/">Resources</a>
-            </li>
-            <li class="__e6gvei nav-item-contact">
-              <a href="https://cybersecurityrobotics.net/contact/">Contact</a>
-            </li>
+  <header class="header-section global-section">
+    <div class="__e6gvei_div __e6gvei header-wrap global-wrap global-flex">
+      <div class="__e6gvei header-logo global-flex">
+        <h1 class="__e6gvei no-logo"><a href="https://cybersecurityrobotics.net">Cybersecurity <br>Robotics</a></h1>
+      </div>
+      <div class="__e6gvei header-nav global-flex">
+        <input id="toggle" type="checkbox">
+        <label for="toggle" class="__e6gvei nav-label hamburger">
+          <span class="__e6gvei hamburger-inner">
+            <span class="__e6gvei hamburger-bar"></span>
+            <span class="__e6gvei hamburger-bar"></span>
+            <span class="__e6gvei hamburger-bar"></span>
+          </span>
+        </label>
+        <div class="__e6gvei nav-toggle">
+          <nav>
+            <ul>
+              <li class="__e6gvei nav-item-home">
+                <a href="https://cybersecurityrobotics.net/" class="__e6gvei">Home</a>
+              </li>
+              <li class="__e6gvei nav-item-manual">
+                <a href="https://rhm.cybersecurityrobotics.net/" class="__e6gvei is-active">Manual</a>
+              </li>
+              <li class="__e6gvei nav-item-resources">
+                <a href="https://cybersecurityrobotics.net/resources/">Resources</a>
+              </li>
+              <li class="__e6gvei nav-item-contact">
+                <a href="https://cybersecurityrobotics.net/contact/">Contact</a>
+              </li>
 
-            <li class="__e6gvei members-login-panel-section">
-              <a class="__e6gvei members-signin" href="https://cybersecurityrobotics.net/signin/">Sign in</a>
-              <a class="__e6gvei members-signup" href="https://cybersecurityrobotics.net/signup/">Sign up</a>
-            </li>
-          </ul>
-        </nav>
+              <li class="__e6gvei members-login-panel-section">
+                <a class="__e6gvei members-signin" href="https://cybersecurityrobotics.net/signin/">Sign in</a>
+                <a class="__e6gvei members-signup" href="https://cybersecurityrobotics.net/signup/">Sign up</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
-  </div>
 
-  <h1 class="title">$title$</h1>
-  <blockquote class="metadata">
-  $if(subtitle)$
-  <p class="subtitle">$subtitle$</p>
-  $endif$
-  $if(author)$
-  <p class="author">
-    $if(author-url)$
-      <a href="$author-url$">$author$</a>
-    $else$
-      $author$
+    <h1 class="title">$title$</h1>
+    <blockquote class="metadata">
+      $if(subtitle)$
+      <p class="subtitle">$subtitle$</p>
+      $endif$
+      $if(author)$
+      <p class="author">
+        $if(author-url)$
+        <a href="$author-url$">$author$</a>
+        $else$
+        $author$
+        $endif$
+      </p>
+      $endif$
+      $if(date)$
+      <p class="date $if(toc)$before-toc$endif$"><time datetime="$date$">$date$</time></p>
+      $endif$
+    </blockquote>
+  </header>
+
+  $if(toc)$
+  <nav id="$idprefix$TOC" role="doc-toc">
+    $if(return-url)$
+    <a href="$return-url$">$if(return-text)$$return-text$$else$← Return$endif$</a><br>
     $endif$
-  </p>
+    <strong>Contents</strong><label for="contents">⊕</label>
+    <input type="checkbox" id="contents">
+    $table-of-contents$
+  </nav>
   $endif$
-  $if(date)$
-  <p class="date $if(toc)$before-toc$endif$"><time datetime="$date$">$date$</time></p>
-  $endif$
-  </blockquote>
-</header>
 
-$if(toc)$
-<nav id="$idprefix$TOC" role="doc-toc">
+  <main>
+    $body$
+  </main>
+
   $if(return-url)$
-  <a href="$return-url$">$if(return-text)$$return-text$$else$← Return$endif$</a><br>
+  <footer>
+    <p class="signoff">
+      <a href="$return-url$">$if(return-text)$$return-text$$else$← Return$endif$</a>
+    </p>
+  </footer>
   $endif$
-  <strong>Contents</strong><label for="contents">⊕</label>
-  <input type="checkbox" id="contents">
-  $table-of-contents$
-</nav>
-$endif$
-
-<main>
-$body$
-</main>
-
-$if(return-url)$
-<footer>
-<p class="signoff">
-  <a href="$return-url$">$if(return-text)$$return-text$$else$← Return$endif$</a>
-</p>
-</footer>
-$endif$
-<script>
-;(function() {
-  // Non-essential if user has JavaScript off. Just makes checkboxes look nicer.
-  var selector = '.task-list > li > input[type="checkbox"]';
-  var checkboxes = document.querySelectorAll(selector);
-  Array.from(checkboxes).forEach((checkbox) => {
-    var wasChecked = checkbox.checked;
-    checkbox.disabled = false;
-    checkbox.addEventListener('click', (ev) => {ev.target.checked = wasChecked});
-  });
-})();
-</script>
-$for(include-after)$
-$include-after$
-$endfor$
+  <script>
+    ;
+    (function() {
+      // Non-essential if user has JavaScript off. Just makes checkboxes look nicer.
+      var selector = '.task-list > li > input[type="checkbox"]';
+      var checkboxes = document.querySelectorAll(selector);
+      Array.from(checkboxes).forEach((checkbox) => {
+        var wasChecked = checkbox.checked;
+        checkbox.disabled = false;
+        checkbox.addEventListener('click', (ev) => {
+          ev.target.checked = wasChecked
+        });
+      });
+    })();
+  </script>
+  $for(include-after)$
+  $include-after$
+  $endfor$
 </body>
+
 </html>
