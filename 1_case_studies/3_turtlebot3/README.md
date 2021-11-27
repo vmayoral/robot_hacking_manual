@@ -49,64 +49,38 @@ python3 exploits/reflection.py 2> /dev/null
 ```
 
 
-### Crashing TB3s running DDS's "best in the world"
+### Crashing TB3s running "best in the world" DDS: RTI Connext
 
-This section will exploit CVE-2021-38435, which RTI [forgot to credit back](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071). We found the following:
+![](../../images/2021/connext_crasher.png)
+
+![An RTPS package with an incorrect parameterLength](images/2021/connext_crasher.pdf)
+
+
+Real Time Innovations (RTI) is one of the leading DDS vendors. They claim to have customers across use cases in medical, aerospace, industry and military. They throw periodic webinars about security however beyond these marketing actions, their practices and security-awareness don't seem to live up to the security industry standards. This section will demonstrate how to exploit the already disclosed CVE-2021-38435 in the TurtleBot 3 with RTI Connext, which  [RTI decided not to credit back to the original security researchers](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071) (us 😜).
+
+Out of the research we reported the following can be extracted:
+
 
 | CVE ID | Description | Scope    |  CVSS    | Notes  |
 |--------|-------------|----------|----------|--------|
 | CVE-2021-38435 | RTI Connext DDS Professional, Connext DDS Secure Versions 4.2x to 6.1.0, and Connext DDS Micro Versions  3.0.0 and later do not correctly calculate the size when allocating the buffer, which may result in a buffer  overflow | ConnextDDS, ROS 2<sub>*</sub>   | [8.6](https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H/E:P/RL:O/RC:C/CR:M/AR:H) | Segmentation fault via network   [>= 6.1.0](https://community.rti.com/kb/ics-cert-security-notice-ics-vu-575352-vu770071) |
 
-The interest of this flaw is that it somewhat shows how easy it is to compromise the *best in the world* DDS solution:
 
-![](../../images/2021/rti_connext.png)
+The security flaw in this case affects solely RTI Connext DDS and is a segmentation fault caused by a [malformed RTPS packet](exploits/crash_connext.py) which can be triggered remotely over the network.
 
-
-```bash
-Thread 6 "talker" received signal SIGSEGV, Segmentation fault.
-[Switching to Thread 0x7ffb9f7fe700 (LWP 497)]
-0x00007ffba68e9cbb in RTICdrStream_skipStringAndGetLength ()
---Type <RET> for more, q to quit, c to continue without paging--
-  .1/lib/x64Linux3gcc5.4.0/libnddscore.so
-(gdb) bt
-#0  0x00007ffba68e9cbb in RTICdrStream_skipStringAndGetLength () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#1  0x00007ffba65bf590 in DISCBuiltin_getDataHolderDeserializedSize () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#2  0x00007ffba65c03db in DISCBuiltin_deserializeDataHolder () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#3  0x00007ffba65a549a in DISCBuiltinTopicParticipantDataPlugin_deserializeParameterValue () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#4  0x00007ffba65eb427 in PRESTypePlugin_deserializeParameterSequence () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#5  0x00007ffba65a5712 in DISCBuiltinTopicParticipantDataPlugin_deserialize () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#6  0x00007ffba665b608 in PRESCstReaderCollator_storeSampleData () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#7  0x00007ffba6680605 in PRESCstReaderCollator_newAnonData () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#8  0x00007ffba672904a in PRESPsService_readerSampleListenerOnNewDataAnon () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#9  0x00007ffba688a267 in COMMENDAnonReaderService_onSubmessage () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#10 0x00007ffba689c8b4 in MIGInterpreter_parse () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#11 0x00007ffba6820725 in COMMENDActiveFacadeReceiver_loop () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#12 0x00007ffba69b894a in RTIOsapiThreadChild_onSpawned () from /opt/rti.com/rti_connext_dds-5.3.1/lib/x64Linux3gcc5.4.0/libnddscore.so
-#13 0x00007ffba776b609 in start_thread (arg=<optimized out>) at pthread_create.c:477
-#14 0x00007ffba78a7293 in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
-```
+In a nutshell, Connext serializer in RTI Connext throws an error while digesting this package, which leads the corresponding ROS 2 Node to exit immediately, causing denial of service. In addition, depending on the Node's computations, it may also lead to safety issues due to the fact that the communication is interrupted immediately. The flaw affects both publishers and subscribers, and an attacker could selectively *crash* specific Nodes which may compromise the robot computational graph for achieving *beyond-DoS* malicious objectives.
 
 
-<!-- Elaborate on this -->
+The interest of this flaw is that <ins>it somewhat shows how easy it is to compromise a computational graph built with the *best in the world* DDS solution😓 </ins> (see screenshot from RTI Connext's site below, their words):
 
-Vulnerability Title
+![RTI Connext's website claim to be the "best in the world" at connecting intelligent, distributed systems.](../../images/2021/rti_connext.png)
 
-Segmentation Fault while receiving malformed packet in RTI Connext DDS
-High-level overview of the vulnerability and the possible effect of using it
 
-Serializer in RTI would segmentation fault while receiving a malformed form of packet. This would cause runtimes to exit immediately and causing an denial of service.
-Detailed description of the vulnerability
 
-RTICdrStream_skipStringAndGetLength does not check for any type of malformed packet, thus while using results from RTICdrStream_align, it will commit a segmentation fault.
-How did you find this vulnerability?
+The following clip depicts how the flaw is exploited in a simulated TurtleBot 3 robot. Note how the teleoperation Node is first launched and stopped, demonstrating how the corresponding topics' velocity values are set to zero after the Node finishes. This avoids the robot to move in an undesired manner. If *instead of stopping the teleoperation Node manually, we crash it using CVE-2021-38435*, we can observe how the last velocities are kept infinitely, leading to robot  to crash into the wall.
 
-afl-unicorn
-Can you identify exploitability?
+![Demonstration of CVE-2021-38435 in a simulated TurtleBot 3](../../images/2021/tb3_connext_simulation.gif)
 
-DoS
-Can you identify root cause?
-
-RTICdrStream_skipStringAndGetLength does not check for any type of malformed packet, thus while using results from RTICdrStream_align, it will commit a segmentation fault. We compiled test programs in static mode, gcc5.4, Linux 3, C. Both publisher and subscriber is affected.
 
 
 ### Crashing a simple ROS 2 Node with RTI's Connext DDS
