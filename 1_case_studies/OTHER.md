@@ -1,14 +1,11 @@
 \newpage
 
 Consider from past work:
-- Cobot
-- AMR
 - xArm
-- ROS 2
-  - TurtleBot 3
 - ROS
+- DDS (reuse RTI's and OpenDDS's demonstrators)
+- RTI alone?
 - Drone autopilot
-- DDS
 
 ## Other case studies
 

@@ -151,9 +151,10 @@ Though DDS implementations comply with [OMG's DDS's specification](https://www.o
 
 Each RTPS package `RTPSSubMessage_DATA` submessage can have multiple parameters. One of such parameters is `PID_METATRAFFIC_MULTICAST_LOCATOR`. Defined on [OMG's RTPS spec](https://www.omg.org/spec/DDSI-RTPS/2.5/PDF), it allows to hint which address should be used for multicast interactions. Unfortunately, there's no whitelisting of which IPs are to be included in here and all implementations allow for arbitrary IPs in this field. By modifying this value through a package, an attacker could hint a ROS 2 Node (through its underlying DDS implementation) to use a new multicast IP address (e.g. a malicious server that generates continuous traffic and responses to overload the stack and generate unwanted traffic) which can be used to trigger reflection (or amplification) attacks.
 
-![](../../images/2021/ros2_crasher.png)
+![](../../images/2021/ros2_reflection.png)
 
-![An RTPS package with an incorrect parameterLength](images/2021/ros2_crasher.pdf)
+![An RTPS package that triggers a reflection attack](images/2021/ros2_reflection.pdf)
+
 
 Here's an example of such package crafted with our dissector:
 
