@@ -103,57 +103,58 @@ RUN /bin/bash -c ". /opt/ros/$DISTRO/setup.bash \
         examples_rclcpp_minimal_client turtlebot3_teleop"
 
 
-#######################
-# Install RTI Connext DDS
-#######################
-## From archives
+# NOTE: uncomment at your own risk
+# #######################
+# # Install RTI Connext DDS
+# #######################
+# ## From archives
+# #
+# # # set up environment
+# # ENV NDDSHOME /opt/rti.com/rti_connext_dds-6.0.1
+# # WORKDIR $NDDSHOME
+# # # ADD https://s3.amazonaws.com/RTI/Bundles/6.1.0/Evaluation/rti_connext_dds-6.1.0-lm-x64Linux4gcc7.3.0.run ./
+# # COPY ./rti ./
+# # RUN chmod +x ./rti_connext_dds-6.1.0-lm-x64Linux4gcc7.3.0.run
+# # RUN yes | ./rti_connext_dds-6.1.0-lm-x64Linux4gcc7.3.0.run && \
+# #     mv y/*/* ./ && rm -rf y
+# #
+# # # set RTI DDS environment
+# # ENV CONNEXTDDS_DIR $NDDSHOME
+# # ENV PATH "$NDDSHOME/bin":$PATH
+# # ENV LD_LIBRARY_PATH "$NDDSHOME/lib/x64Linux4gcc7.3.0":$LD_LIBRARY_PATH
+# # # set RTI openssl environment
+# # ENV PATH "$NDDSHOME/third_party/openssl-1.1.1k/x64Linux4gcc7.3.0/release/bin":$PATH
+# # ENV LD_LIBRARY_PATH "$NDDSHOME/third_party/openssl-1.1.1k/x64Linux4gcc7.3.0/release/lib":$LD_LIBRARY_PATH
+#
+# ## From deb files
+# # install RTI Connext
+# ENV RTI_NC_LICENSE_ACCEPTED yes
+# RUN apt-get update && apt-get install -y \
+#       ros-$DISTRO-rmw-connext-cpp \
+#     && rm -rf /var/lib/apt/lists/*
 #
 # # set up environment
-# ENV NDDSHOME /opt/rti.com/rti_connext_dds-6.0.1
-# WORKDIR $NDDSHOME
-# # ADD https://s3.amazonaws.com/RTI/Bundles/6.1.0/Evaluation/rti_connext_dds-6.1.0-lm-x64Linux4gcc7.3.0.run ./
-# COPY ./rti ./
-# RUN chmod +x ./rti_connext_dds-6.1.0-lm-x64Linux4gcc7.3.0.run
-# RUN yes | ./rti_connext_dds-6.1.0-lm-x64Linux4gcc7.3.0.run && \
-#     mv y/*/* ./ && rm -rf y
-#
-# # set RTI DDS environment
-# ENV CONNEXTDDS_DIR $NDDSHOME
+# ENV NDDSHOME /opt/rti.com/rti_connext_dds-5.3.1
 # ENV PATH "$NDDSHOME/bin":$PATH
-# ENV LD_LIBRARY_PATH "$NDDSHOME/lib/x64Linux4gcc7.3.0":$LD_LIBRARY_PATH
-# # set RTI openssl environment
-# ENV PATH "$NDDSHOME/third_party/openssl-1.1.1k/x64Linux4gcc7.3.0/release/bin":$PATH
-# ENV LD_LIBRARY_PATH "$NDDSHOME/third_party/openssl-1.1.1k/x64Linux4gcc7.3.0/release/lib":$LD_LIBRARY_PATH
-
-## From deb files
-# install RTI Connext
-ENV RTI_NC_LICENSE_ACCEPTED yes
-RUN apt-get update && apt-get install -y \
-      ros-$DISTRO-rmw-connext-cpp \
-    && rm -rf /var/lib/apt/lists/*
-
-# set up environment
-ENV NDDSHOME /opt/rti.com/rti_connext_dds-5.3.1
-ENV PATH "$NDDSHOME/bin":$PATH
-ENV LD_LIBRARY_PATH "$NDDSHOME/lib/x64Linux3gcc5.4.0":$LD_LIBRARY_PATH
-# ENV LD_LIBRARY_PATH "$NDDSHOME/lib/x64Linux4gcc7.3.0":$LD_LIBRARY_PATH
-
-# install RTI Security
-WORKDIR $NDDSHOME
-# ADD https://s3.amazonaws.com/RTI/Bundles/5.3.1/Evaluation/rti_connext_dds_secure-5.3.1-eval-x64Linux3gcc5.4.0.tar.gz ./
-COPY rti/rti_connext_dds_secure-5.3.1-eval-x64Linux3gcc5.4.0.tar.gz ./
-RUN tar -xvf rti_connext_dds_secure-5.3.1-eval-x64Linux3gcc5.4.0.tar.gz -C ./
-# COPY ./rti ./
-RUN rtipkginstall rti_security_plugins-5.3.1-eval-x64Linux3gcc5.4.0.rtipkg && \
-    rtipkginstall openssl-1.0.2n-5.3.1-host-x64Linux.rtipkg && \
-    tar -xvf openssl-1.0.2n-target-x64Linux3gcc5.4.0.tar.gz
-ENV PATH "$NDDSHOME/openssl-1.0.2n/x64Linux3gcc5.4.0/release/bin":$PATH
-ENV LD_LIBRARY_PATH "$NDDSHOME/openssl-1.0.2n/x64Linux3gcc5.4.0/release/lib":$LD_LIBRARY_PATH
-
-# # install RTI QoS
+# ENV LD_LIBRARY_PATH "$NDDSHOME/lib/x64Linux3gcc5.4.0":$LD_LIBRARY_PATH
+# # ENV LD_LIBRARY_PATH "$NDDSHOME/lib/x64Linux4gcc7.3.0":$LD_LIBRARY_PATH
+#
+# # install RTI Security
 # WORKDIR $NDDSHOME
-# COPY rti/NDDS_QOS_PROFILES.xml ./
-# ENV NDDS_QOS_PROFILES "$NDDSHOME/NDDS_QOS_PROFILES.xml"
+# # ADD https://s3.amazonaws.com/RTI/Bundles/5.3.1/Evaluation/rti_connext_dds_secure-5.3.1-eval-x64Linux3gcc5.4.0.tar.gz ./
+# COPY rti/rti_connext_dds_secure-5.3.1-eval-x64Linux3gcc5.4.0.tar.gz ./
+# RUN tar -xvf rti_connext_dds_secure-5.3.1-eval-x64Linux3gcc5.4.0.tar.gz -C ./
+# # COPY ./rti ./
+# RUN rtipkginstall rti_security_plugins-5.3.1-eval-x64Linux3gcc5.4.0.rtipkg && \
+#     rtipkginstall openssl-1.0.2n-5.3.1-host-x64Linux.rtipkg && \
+#     tar -xvf openssl-1.0.2n-target-x64Linux3gcc5.4.0.tar.gz
+# ENV PATH "$NDDSHOME/openssl-1.0.2n/x64Linux3gcc5.4.0/release/bin":$PATH
+# ENV LD_LIBRARY_PATH "$NDDSHOME/openssl-1.0.2n/x64Linux3gcc5.4.0/release/lib":$LD_LIBRARY_PATH
+#
+# # # install RTI QoS
+# # WORKDIR $NDDSHOME
+# # COPY rti/NDDS_QOS_PROFILES.xml ./
+# # ENV NDDS_QOS_PROFILES "$NDDSHOME/NDDS_QOS_PROFILES.xml"
 
 #######################
 # Install RTPS dissector

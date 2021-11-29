@@ -7,6 +7,7 @@ Building on top of the previous [ROS 2 case study](../2_ros2), this piece aims t
 ### Dockerized environment
 Like in previous cases, when possible, we'll facilitate a Docker-based environment so that you can try things out yourself! Here's this one:
 
+**NOTE**: RTI Connext setup process has been commented so you'll need to go ahead, uncomment that block in the Dockerfile and build at your own risk.
 
 ```bash
 # Build
@@ -96,3 +97,14 @@ RMW_IMPLEMENTATION=rmw_connext_cpp ros2 run demo_nodes_cpp talker
 # split 2
 sudo python3 exploits/crash_connext.py 2> /dev/null
 ```
+
+### Credit
+Part of this research is the result of a cooperation among various security researchers across groups as reported in [this advisory](https://us-cert.cisa.gov/ics/advisories/icsa-21-315-02). The following individuals took part on it (alphabetical order):
+
+- [Chizuru Toyama](https://www.linkedin.com/in/chizuru-toyama-0a070427/)
+- [Erik Boasson](https://www.linkedin.com/in/erik-boasson-21344912/)
+- [Federico Maggi](https://www.linkedin.com/in/phretor)
+- [Mars Cheng](https://www.linkedin.com/in/marscheng93/)
+- Patrick Kuo
+- [Ta-Lun Yen](https://www.linkedin.com/in/evsfy/)
+- [Víctor Mayoral-Vilches](https://www.linkedin.com/in/vmayoral/)
