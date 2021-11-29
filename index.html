@@ -147,6 +147,7 @@
     <li><a href="#messing-up-with-tb3s-traffic">Messing up with TB3’s traffic</a></li>
     <li><a href="#crashing-tb3s-running-best-in-the-world-dds-rti-connext">Crashing TB3s running “best in the world” DDS: RTI Connext</a></li>
     <li><a href="#crashing-a-simple-ros-2-node-with-rtis-connext-dds">Crashing a simple ROS 2 Node with RTI’s Connext DDS</a></li>
+    <li><a href="#credit-1">Credit</a></li>
     </ul></li>
     </ul></li>
     <li><a href="#reconnaissance">Reconnaissance</a>
@@ -1550,9 +1551,9 @@
     <h3 id="ros-2-reflection-attack">ROS 2 reflection attack</h3>
     <p><a href="https://asciinema.org/a/450475"><img src="https://asciinema.org/a/450475.svg" alt="ROS 2 reflection attack" /></a></p>
     <p>Each RTPS package <code>RTPSSubMessage_DATA</code> submessage can have multiple parameters. One of such parameters is <code>PID_METATRAFFIC_MULTICAST_LOCATOR</code>. Defined on <a href="https://www.omg.org/spec/DDSI-RTPS/2.5/PDF">OMG’s RTPS spec</a>, it allows to hint which address should be used for multicast interactions. Unfortunately, there’s no whitelisting of which IPs are to be included in here and all implementations allow for arbitrary IPs in this field. By modifying this value through a package, an attacker could hint a ROS 2 Node (through its underlying DDS implementation) to use a new multicast IP address (e.g. a malicious server that generates continuous traffic and responses to overload the stack and generate unwanted traffic) which can be used to trigger reflection (or amplification) attacks.</p>
-    <p><img src="../../images/2021/ros2_crasher.png" /></p>
+    <p><img src="../../images/2021/ros2_reflection.png" /></p>
     <figure>
-    <embed src="images/2021/ros2_crasher.pdf" /><figcaption aria-hidden="true">An RTPS package with an incorrect parameterLength</figcaption>
+    <embed src="images/2021/ros2_reflection.pdf" /><figcaption aria-hidden="true">An RTPS package that triggers a reflection attack</figcaption>
     </figure>
     <p>Here’s an example of such package crafted with our dissector:</p>
     <div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scapy.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span>
@@ -1892,6 +1893,7 @@
     <p>Building on top of the previous <a href="../2_ros2">ROS 2 case study</a>, this piece aims to demonstrate how ROS 2 vulnerabilities can be translated directly into complete robots and how attackers could exploit them.</p>
     <h3 id="dockerized-environment">Dockerized environment</h3>
     <p>Like in previous cases, when possible, we’ll facilitate a Docker-based environment so that you can try things out yourself! Here’s this one:</p>
+    <p><strong>NOTE</strong>: RTI Connext setup process has been commented so you’ll need to go ahead, uncomment that block in the Dockerfile and build at your own risk.</p>
     <div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build</span></span>
     <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> hacking_tb3:foxy <span class="at">--build-arg</span> DISTRO=foxy .</span>
     <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1970,6 +1972,17 @@
     <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
     <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># split 2</span></span>
     <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> python3 exploits/crash_connext.py <span class="dv">2</span><span class="op">&gt;</span> /dev/null</span></code></pre></div>
+    <h3 id="credit-1">Credit</h3>
+    <p>Part of this research is the result of a cooperation among various security researchers across groups as reported in <a href="https://us-cert.cisa.gov/ics/advisories/icsa-21-315-02">this advisory</a>. The following individuals took part on it (alphabetical order):</p>
+    <ul>
+    <li><a href="https://www.linkedin.com/in/chizuru-toyama-0a070427/">Chizuru Toyama</a></li>
+    <li><a href="https://www.linkedin.com/in/erik-boasson-21344912/">Erik Boasson</a></li>
+    <li><a href="https://www.linkedin.com/in/phretor">Federico Maggi</a></li>
+    <li><a href="https://www.linkedin.com/in/marscheng93/">Mars Cheng</a></li>
+    <li>Patrick Kuo</li>
+    <li><a href="https://www.linkedin.com/in/evsfy/">Ta-Lun Yen</a></li>
+    <li><a href="https://www.linkedin.com/in/vmayoral/">Víctor Mayoral-Vilches</a></li>
+    </ul>
     <h1 id="reconnaissance">Reconnaissance</h1>
     <h2 id="footprinting-ros-systems">Footprinting ROS systems</h2>
     <p>Footprinting, (also known as <em>reconnaissance</em>) is the technique used for gathering information about digital systems and the entities they belong to. To get this information, a security analyst might use various tools and technologies. This information is very useful when performing a series attacks over an specific system.</p>
