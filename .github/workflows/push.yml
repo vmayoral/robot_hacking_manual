@@ -37,7 +37,7 @@ jobs:
       run: |
         mkdir deploy
         cp RHM.html deploy/index.html
-        cp -r css images fonts LICENSE deploy/
+        cp -r css images fonts LICENSE CNAME deploy/
 
     # Deploy
     - name: Push
