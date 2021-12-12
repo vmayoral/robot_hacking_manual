@@ -58,5 +58,36 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
     - [Tutorial 4: Basic robot forensics 2, unauthenticated updates in publisher list for specified topic](2_writeups/4_other/robot_forensics/tutorial4/) (**unfinished**)
   - <ins>Hardening</ins>
     - [Tutorial 1: A study of container technologies](2_writeups/4_other/hardening/tutorial1/README.md)
+- **Talks**:
+
+  - <ins>2016</ins>
+    - [Securing ROS over the wire, in the graph, and through the kernel](https://vimeo.com/187705073), ROSCon 2016
+  - <ins>2017</ins>
+    - [Hacking Robots Before Skynet](https://www.youtube.com/watch?v=LK43J-p1H3o), Ekoparty Security Conference 2017
+    - [An Experimental Security Analysis of an Industrial Robot Controller](https://www.youtube.com/watch?v=tGcNefddfZM), IEEE Symposium on Security and Privacy 2017
+    - [SROS: Current Progress and Developments](https://vimeo.com/236172830), ROSCon 2017
+    - [Breaking the Laws of Robotics: Attacking Industrial Robots](https://www.youtube.com/watch?v=RKLUWnzIaP4), Black Hat USA 2017
+  - <ins>2018</ins>
+    - [Introducing the Robot Security Framework](https://www.youtube.com/watch?v=Gv4O2Xw8MUk&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=11) (spanish), Navaja Negra Conference 2018
+    - [Arm DDS Security library: Adding secure security to ROS2](https://vimeo.com/292703899), ROSCon 2018
+    - [Leveraging DDS Security in ROS 2](https://vimeo.com/292703074), ROSCon 2018
+  - <ins>2019</ins>
+    - [Defensive and offensive robot security](https://www.youtube.com/watch?v=aEQgga_MnO8&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=9), ROS-Industrial Conference 2019
+    - [Black Block Recorder: Immutable Black Box Logging via rosbag2 and DLTs](https://vimeo.com/378682905), ROSCon 2019
+  - <ins>2020</ins>
+    - [Current security threat landscape in robotics](https://www.youtube.com/watch?v=5pWqROTERgU&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=10), European Robotics Forum (ERF) 2020
+    - [Security in ROS & ROS 2 robot setups](https://www.youtube.com/watch?v=n7BvyUgKP-M&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=11), European Robotics Forum (ERF) 2020
+    - [Akerbeltz, industrial robot ransomware](https://www.youtube.com/watch?v=5dYmpKH_3EM), International Workshop on Engineering Resilient Robot Software Systems, International Conference on Robotic Computing (IRC 2020).
+    - [Zero Trust Architecture in Robotics](https://www.youtube.com/watch?v=jfPw8gH1i2I), Workshop on Security and Privacy in Robotics, ICRA 2020
+    - [The cybersecurity status of PX4](https://www.youtube.com/watch?v=phHYfAqjOuQ&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=13), PX4 Developer Summit Virtual 2020
+    - [Detecting Insecure Code Patterns in Industrial Robot Programs](https://dl.acm.org/doi/10.1145/3320269.3384735#sec-supp), Proceedings of the 15th ACM Asia Conference on Computer and Communications Security 2020
+    - [Protecting robot endpoints against cyber-threats](https://www.youtube.com/watch?v=jo_L9Ra8UqU&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=14), ROS-Industrial Conference 2020
+    - [Robots and Privacy](https://www.youtube.com/watch?v=Yu3lgESCB8M), Shmoocon 2020
+  - <ins>2021</ins>
+    - [Uncovering Planned Obsolescence Practices in Robotics and What This Means for Cybersecurity](https://www.youtube.com/watch?v=PnVq_ThrDVI&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=15), BlackHat USA 2021
+    - The Data Distribution Service (DDS) Protocol is Critical: Let's Use it Securely! (*to appear*), BlackHat Europe 2021
+    - Breaking ROS 2 security assumptions: Targeting the top 6 DDS implementations (*to appear*), ROS-Industrial Conference 2021
+
+
 
 [^0]: Read on what a security-first approach in [here](https://www.darkreading.com/edge-articles/a-security-first-approach-to-devops).
