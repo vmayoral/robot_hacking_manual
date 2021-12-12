@@ -2,7 +2,6 @@
 
 Consider from past work:
 - xArm
-- ROS
 - DDS (reuse RTI's and OpenDDS's demonstrators)
 - RTI alone?
 - Drone autopilot
