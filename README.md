@@ -59,7 +59,6 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
   - <ins>Hardening</ins>
     - [Tutorial 1: A study of container technologies](2_writeups/4_other/hardening/tutorial1/README.md)
 - **Talks**:
-
   - <ins>2016</ins>
     - [Securing ROS over the wire, in the graph, and through the kernel](https://vimeo.com/187705073), ROSCon 2016
   - <ins>2017</ins>
@@ -87,7 +86,6 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
     - [Uncovering Planned Obsolescence Practices in Robotics and What This Means for Cybersecurity](https://www.youtube.com/watch?v=PnVq_ThrDVI&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=15), BlackHat USA 2021
     - The Data Distribution Service (DDS) Protocol is Critical: Let's Use it Securely! (*to appear*), BlackHat Europe 2021
     - Breaking ROS 2 security assumptions: Targeting the top 6 DDS implementations (*to appear*), ROS-Industrial Conference 2021
-
 
 
 [^0]: Read on what a security-first approach in [here](https://www.darkreading.com/edge-articles/a-security-first-approach-to-devops).
