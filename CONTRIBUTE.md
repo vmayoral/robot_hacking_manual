@@ -5,6 +5,9 @@ Content's made with an open and commercially friendly license so so that you can
 
 # PDF versions
 
-Download [`RHM v0.3`](https://github.com/vmayoral/robot_hacking_manual/releases/download/0.3/RHM.pdf).
+Download [`RHM v0.4`](https://github.com/vmayoral/robot_hacking_manual/releases/download/0.4/RHM.pdf).
 
-PDF versions are generated for every release. Check out all the releases [here](https://github.com/vmayoral/robot_hacking_manual/releases).
+PDF versions are generated for every release. Check out all the releases [here](https://github.com/vmayoral/robot_hacking_manual/releases):
+
+- [`RHM v0.4`](https://github.com/vmayoral/robot_hacking_manual/releases/download/0.4/RHM.pdf)
+- [`RHM v0.3`](https://github.com/vmayoral/robot_hacking_manual/releases/download/0.3/RHM.pdf)
