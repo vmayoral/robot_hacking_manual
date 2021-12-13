@@ -74,6 +74,7 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
   - <ins>2019</ins>
     - [Defensive and offensive robot security](https://www.youtube.com/watch?v=aEQgga_MnO8&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=9), ROS-Industrial Conference 2019
     - [Black Block Recorder: Immutable Black Box Logging via rosbag2 and DLTs](https://vimeo.com/378682905), ROSCon 2019
+    - *Lessons learned on real-time and security* ([slides](https://aliasrobotics.com/files/realtimesecurity.pdf)), ROS 2 Real-Time Workshop, ROSCon 2019
   - <ins>2020</ins>
     - [Current security threat landscape in robotics](https://www.youtube.com/watch?v=5pWqROTERgU&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=10), European Robotics Forum (ERF) 2020
     - [Security in ROS & ROS 2 robot setups](https://www.youtube.com/watch?v=n7BvyUgKP-M&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=11), European Robotics Forum (ERF) 2020
