@@ -4,7 +4,6 @@ Consider from past work:
 - xArm
 - DDS (reuse RTI's and OpenDDS's demonstrators)
 - RTI alone?
-- Drone autopilot
 
 ## Other case studies
 

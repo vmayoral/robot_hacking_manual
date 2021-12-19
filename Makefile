@@ -20,6 +20,9 @@ SOURCE_FILES := $(SOURCE_FILES) \
 				$(CURDIR)/1_case_studies/4_ros/README.md \
 				$(CURDIR)/1_case_studies/2_ros2/README.md \
 				$(CURDIR)/1_case_studies/3_turtlebot3/README.md
+				$(CURDIR)/1_case_studies/4_ros/README.md
+				$(CURDIR)/1_case_studies/5_px4/README.md
+
 
 ## Reconnaissance ##########
 SOURCE_FILES := $(SOURCE_FILES) \
