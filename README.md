@@ -91,4 +91,13 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
     - Breaking ROS 2 security assumptions: Targeting the top 6 DDS implementations (*to appear*), ROS-Industrial Conference 2021
 
 
+### Robot hacks
+A non-exhaustive list of robot hacks due to cybersecurity issues.
+
+| Codename | Robots affected | Researchers | Description | Date |
+|-------|-------------|-------------|------|
+| | [Enabot Ebo Air](https://na.enabot.com/shop/air001) | Modux[^1] |  Researchers from Modux found a security *flaw* in Enabot Ebo Air #robot and responsibly disclosed their findings. Attack vectors could lead to remote-controlled *robot* spy units. Major entry point appears to be a hardcoded system administrator password that is weak and shared across all of these robots. Researchers also found information disclosure issues that could lead attackers to exfiltrate home (e.g. home WiFi password) that could then be used to pivot into other devices through local network. | 21-07-2022 |
+
+
 [^0]: Read on what a security-first approach in [here](https://www.darkreading.com/edge-articles/a-security-first-approach-to-devops).
+[^1]: Serious security issues uncovered with the Enabot Smart Robot https://www.modux.co.uk/post/serious-security-issues-uncovered-with-the-enabot-smart-robot
