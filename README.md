@@ -92,7 +92,7 @@ The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity
 
 
 ### Robot hacks
-A non-exhaustive list of cybersecurity research in robotics and other robot hacks due to cybersecurity issues.
+A non-exhaustive list of cybersecurity research in robotics and various robot hacks due to cybersecurity issues.
 
 | 👹 Codename/theme | 🤖 Robots affected | 👨‍🔬 Researchers | 📖 Description | 📅 Date |
 |-----|-------|-------------|-------------|------|
