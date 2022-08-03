@@ -1,6 +1,6 @@
 # `RHM`: Robot Hacking Manual
 
-[<ins>Download in PDF `RHM v0.4`<ins>](https://github.com/vmayoral/robot_hacking_manual/releases/download/0.4/RHM.pdf) ┃ <span style="background-color: #FFFF00">[Read online](https://rhm.cybersecurityrobotics.net/)</span> | <span style="background-color: #FFFF00">[Robot hacks](https://github.com/vmayoral/robot_hacking_manual#robot-hacks)</span>
+[<ins>Download in PDF `RHM v0.5`<ins>](https://github.com/vmayoral/robot_hacking_manual/releases/download/0.5/RHM.pdf) ┃ <span style="background-color: #FFFF00">[Read online](https://rhm.cybersecurityrobotics.net/)</span> | <span style="background-color: #FFFF00">[Robot hacks](https://github.com/vmayoral/robot_hacking_manual#robot-hacks)</span>
 
 The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity for robots, with an attempt to provide comprehensive case studies and step-by-step tutorials with the intent to raise awareness in the field and highlight the importance of taking a *security-first*[^0] approach. The material available here is also a personal learning attempt and it's disconnected from any particular organization. Content is provided as is and **by no means I encourage or promote the unauthorized tampering of robotic systems or related technologies**.
 
@@ -20,8 +20,10 @@ Cite this work:
 - [**Motivation**](MOTIVATION.md#motivation)
 - [**A containerized approach**](MOTIVATION.md#a-containerized-approach)
 - [**Contribute back**](CONTRIBUTE.md)
+- [**Cite this work**](0_introduction/README.md#cite-this-work)
 - [**Introduction**](0_introduction/README.md)
   - [About robot cybersecurity](0_introduction/README.md#about-robot-cybersecurity)
+  - [Robot hacks](0_introduction/README.md#robot-hacks)
 - <ins>**Case studies**</ins>
   - [Universal Robots' UR3](1_case_studies/0_cobot/) (hacking a collaborative robot arm)
   - [Mobile Industrial Robots' MiR100](1_case_studies/1_amr/) (hacking an industrial mobile robot)
