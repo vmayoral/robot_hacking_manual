@@ -20,10 +20,10 @@ Cite this work:
 - [**Motivation**](MOTIVATION.md#motivation)
 - [**A containerized approach**](MOTIVATION.md#a-containerized-approach)
 - [**Contribute back**](CONTRIBUTE.md)
-- [**Cite this work**](0_introduction/README.md#cite-this-work)
+- [**Cite this work**](https://github.com/vmayoral/robot_hacking_manual/blob/master/0_introduction/README.md#cite-this-work)
 - [**Introduction**](0_introduction/README.md)
   - [About robot cybersecurity](0_introduction/README.md#about-robot-cybersecurity)
-  - [Robot hacks](0_introduction/README.md#robot-hacks)
+  - [Robot hacks](https://github.com/vmayoral/robot_hacking_manual#robot-hacks)
 - <ins>**Case studies**</ins>
   - [Universal Robots' UR3](1_case_studies/0_cobot/) (hacking a collaborative robot arm)
   - [Mobile Industrial Robots' MiR100](1_case_studies/1_amr/) (hacking an industrial mobile robot)
@@ -103,6 +103,8 @@ Cite this work:
     - [The Data Distribution Service (DDS) Protocol is Critical: Let's Use it Securely!](https://www.youtube.com/watch?v=7IV49wKxs4c), BlackHat Europe 2021
     - [Breaking ROS 2 security assumptions: Targeting the top 6 DDS implementations](https://www.youtube.com/watch?v=aO3MEm8SCmU), ROS-Industrial Conference 2021
     - [DDS and ROS 2 cybersecurity](https://www.youtube.com/watch?v=SZXOOYDsjxc&t=1008s), ROS 2 Security Working Group
+  - <ins>2022</ins>
+    - A Deep Dive Into The DDS Protocol (*to appear*), S4x22 Security Conference
 
 
 ### Robot hacks

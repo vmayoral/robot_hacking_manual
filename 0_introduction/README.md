@@ -327,6 +327,7 @@ Investing in robot cybersecurity by either building your own security team or re
 - <ins>2019</ins>
   - [Defensive and offensive robot security](https://www.youtube.com/watch?v=aEQgga_MnO8&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=9), ROS-Industrial Conference 2019
   - [Black Block Recorder: Immutable Black Box Logging via rosbag2 and DLTs](https://vimeo.com/378682905), ROSCon 2019
+  - *Lessons learned on real-time and security* ([slides](https://aliasrobotics.com/files/realtimesecurity.pdf)), ROS 2 Real-Time Workshop, ROSCon 2019
 - <ins>2020</ins>
   - [Current security threat landscape in robotics](https://www.youtube.com/watch?v=5pWqROTERgU&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=10), European Robotics Forum (ERF) 2020
   - [Security in ROS & ROS 2 robot setups](https://www.youtube.com/watch?v=n7BvyUgKP-M&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=11), European Robotics Forum (ERF) 2020
@@ -338,8 +339,11 @@ Investing in robot cybersecurity by either building your own security team or re
   - [Robots and Privacy](https://www.youtube.com/watch?v=Yu3lgESCB8M), Shmoocon 2020
 - <ins>2021</ins>
   - [Uncovering Planned Obsolescence Practices in Robotics and What This Means for Cybersecurity](https://www.youtube.com/watch?v=PnVq_ThrDVI&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=15), BlackHat USA 2021
-  - The Data Distribution Service (DDS) Protocol is Critical: Let's Use it Securely! (*to appear*), BlackHat Europe 2021
-  - Breaking ROS 2 security assumptions: Targeting the top 6 DDS implementations (*to appear*), ROS-Industrial Conference 2021
+  - [The Data Distribution Service (DDS) Protocol is Critical: Let's Use it Securely!](https://www.youtube.com/watch?v=7IV49wKxs4c), BlackHat Europe 2021
+  - [Breaking ROS 2 security assumptions: Targeting the top 6 DDS implementations](https://www.youtube.com/watch?v=aO3MEm8SCmU), ROS-Industrial Conference 2021
+  - [DDS and ROS 2 cybersecurity](https://www.youtube.com/watch?v=SZXOOYDsjxc&t=1008s), ROS 2 Security Working Group
+- <ins>2022</ins>
+  - A Deep Dive Into The DDS Protocol (*to appear*), S4x22 Security Conference
 
 
 
