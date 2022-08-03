@@ -38,6 +38,7 @@ jobs:
         mkdir deploy
         cp RHM.html deploy/index.html
         cp -r css images fonts LICENSE CNAME deploy/
+        cp .gitmodules deploy/
 
     # Deploy
     - name: Push
