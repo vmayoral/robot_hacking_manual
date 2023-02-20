@@ -27,9 +27,9 @@ Cite this work:
 - <ins>**Case studies**</ins>
   - [Universal Robots' UR3](1_case_studies/0_cobot/) (hacking a collaborative robot arm)
   - [Mobile Industrial Robots' MiR100](1_case_studies/1_amr/) (hacking an industrial mobile robot)
-  - [Robot Operating System](1_case_studies/3_turtlebot3/) (hacking ROS 1)
+  - [Robot Operating System](1_case_studies/4_ros/) (hacking ROS 1)
   - [Robot Operating System 2](1_case_studies/2_ros2/) (hacking ROS 2)
-  - [TurtleBot 3](1_case_studies/4_ros/) (hacking TurtleBot 3)
+  - [TurtleBot 3](1_case_studies/3_turtlebot3/) (hacking TurtleBot 3)
   - [PX4 autopilot](1_case_studies/5_px4/)
 - [**Writeups**]()
   - <ins>Reconaissance</ins>
