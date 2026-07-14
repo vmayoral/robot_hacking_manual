@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use the Robot Hacking Manual, please cite the paper below."
+title: Robot Hacking Manual (RHM)
+type: software
+version: "0.5"
+authors:
+  - given-names: Víctor
+    family-names: Mayoral-Vilches
+repository-code: https://github.com/vmayoral/robot_hacking_manual
+url: https://cybersecurityrobotics.com/robot-hacking-manual/
+preferred-citation:
+  type: article
+  title: Robot Hacking Manual (RHM)
+  authors:
+    - given-names: Víctor
+      family-names: Mayoral-Vilches
+  year: 2022
+  journal: arXiv
+  url: https://arxiv.org/abs/2203.04765

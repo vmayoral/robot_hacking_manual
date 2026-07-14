@@ -1,6 +1,6 @@
 # `RHM`: Robot Hacking Manual
 
-[<ins>Download in PDF `RHM v0.5`<ins>](https://github.com/vmayoral/robot_hacking_manual/releases/download/0.5/RHM.pdf) ┃ <span style="background-color: #FFFF00">[Read online](https://rhm.cybersecurityrobotics.net/)</span> | <span style="background-color: #FFFF00">[Robot hacks](https://github.com/vmayoral/robot_hacking_manual#robot-hacks)</span>
+[<ins>Download in PDF `RHM v0.5`<ins>](https://github.com/vmayoral/robot_hacking_manual/releases/download/0.5/RHM.pdf) ┃ <span style="background-color: #FFFF00">[Read online](https://rhm.cybersecurityrobotics.net/)</span> | [Research note](https://cybersecurityrobotics.com/robot-hacking-manual/) | [v0.4 archival note](https://cybersecurityrobotics.com/robot-hacking-manual-rhm-v0-4/) | <span style="background-color: #FFFF00">[Robot hacks](https://github.com/vmayoral/robot_hacking_manual#robot-hacks)</span>
 
 The *Robot Hacking Manual* (`RHM`) is an introductory series about cybersecurity for robots, with an attempt to provide comprehensive case studies and step-by-step tutorials with the intent to raise awareness in the field and highlight the importance of taking a *security-first*[^0] approach. The material available here is also a personal learning attempt and it's disconnected from any particular organization. Content is provided as is and **by no means I encourage or promote the unauthorized tampering of robotic systems or related technologies**.
 
@@ -88,7 +88,7 @@ Cite this work:
   - <ins>2019</ins>
     - [Defensive and offensive robot security](https://www.youtube.com/watch?v=aEQgga_MnO8&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=9), ROS-Industrial Conference 2019
     - [Black Block Recorder: Immutable Black Box Logging via rosbag2 and DLTs](https://vimeo.com/378682905), ROSCon 2019
-    - *Lessons learned on real-time and security* ([slides](https://aliasrobotics.com/files/realtimesecurity.pdf)), ROS 2 Real-Time Workshop, ROSCon 2019
+    - *Lessons learned on real-time and security* ([slides](https://aliasrobotics.com/files/realtimesecurity.pdf), [research note](https://cybersecurityrobotics.com/real-time-security-for-robotics/)), ROS 2 Real-Time Workshop, ROSCon 2019
   - <ins>2020</ins>
     - [Current security threat landscape in robotics](https://www.youtube.com/watch?v=5pWqROTERgU&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=10), European Robotics Forum (ERF) 2020
     - [Security in ROS & ROS 2 robot setups](https://www.youtube.com/watch?v=n7BvyUgKP-M&list=PLf4Fnww4KiFdjCAfs04ynv40xbpqFPibm&index=11), European Robotics Forum (ERF) 2020
@@ -145,10 +145,10 @@ A non-exhaustive list of cybersecurity research in robotics containing various r
 [^11]: The week of Mobile Industrial Robots' bugs https://news.aliasrobotics.com/the-week-of-mobile-industrial-robots-bugs/
 [^12]: Securing disinfection robots in times of COVID-19 https://news.aliasrobotics.com/securing-uvdrobots/
 [^13]: Insecure robots during COVID-19 https://www.youtube.com/watch?v=1lNNYpSP8Dg (see https://www.youtube.com/watch?v=QFubEoWm7bA for a version in spanish)
-[^14]: Industrial robot ransomware: Akerbeltz https://arxiv.org/pdf/1912.07714.pdf
-[^15]: Robot teardown, stripping industrial robots for good https://aliasrobotics.com/files/robot_teardown_paper.pdf
-[^16]: Case study, hacking the *Robot Operating System (ROS) 2* https://github.com/vmayoral/robot_hacking_manual/tree/master/1_case_studies/2_ros2. See https://news.aliasrobotics.com/alias-robotics-dds-ros2-vulnerabilities/ and https://www.prnewswire.com/news-releases/alias-robotics-discovers-numerous-and-dangerous-vulnerabilities-in-the-robot-operating-systems-ros-communications-that-can-have-devastating-consequences-301513741.html for public announcements. See https://www.robotics247.com/article/alias_robotics_claims_to_find_security_flaws_in_ros_2_open_robotics_responds for some public discussions
-[^17]: SROS2: Usable Cyber Security Tools for ROS 2 https://aliasrobotics.com/files/SROS2.pdf
+[^14]: Industrial robot ransomware: Akerbeltz https://arxiv.org/pdf/1912.07714.pdf ([HTML reading edition](https://cybersecurityrobotics.com/research/akerbeltz-industrial-robot-ransomware/))
+[^15]: Robot teardown, stripping industrial robots for good https://aliasrobotics.com/files/robot_teardown_paper.pdf ([HTML reading edition](https://cybersecurityrobotics.com/research/robot-teardown/))
+[^16]: Case study, hacking the *Robot Operating System (ROS) 2* https://github.com/vmayoral/robot_hacking_manual/tree/master/1_case_studies/2_ros2. See the [research note](https://cybersecurityrobotics.com/hacking-ros-2/), https://news.aliasrobotics.com/alias-robotics-dds-ros2-vulnerabilities/ and https://www.prnewswire.com/news-releases/alias-robotics-discovers-numerous-and-dangerous-vulnerabilities-in-the-robot-operating-systems-ros-communications-that-can-have-devastating-consequences-301513741.html for public announcements. See https://www.robotics247.com/article/alias_robotics_claims_to_find_security_flaws_in_ros_2_open_robotics_responds for some public discussions
+[^17]: SROS2: Usable Cyber Security Tools for ROS 2 https://aliasrobotics.com/files/SROS2.pdf ([paper](https://cybersecurityrobotics.com/research/sros2-security-tools-for-ros2/), [research note](https://cybersecurityrobotics.com/sros2-cyber-security-tools-for-ros-2/))
 [^18]: Alias Robotics Claims to Find Security Flaws in ROS 2; Open Robotics Responds https://www.robotics247.com/article/alias_robotics_claims_to_find_security_flaws_in_ros_2_open_robotics_responds
 [^19]: Hacker detects a kill switch to take down the gun-toting robot dog https://interestingengineering.com/innovation/gun-toting-robot-dog-kill-switch
 [^20]: Hacker Finds Kill Switch for Submachine Gun–Wielding Robot Dog https://www.vice.com/en/article/akeexk/hacker-finds-kill-switch-for-submachine-gun-wielding-robot-dog
